@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" office:version="1.2" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" office:mimetype="application/vnd.oasis.opendocument.spreadsheet">
+<office:body><office:spreadsheet><table:table table:name="Sheet1">
+<table:table-row>
+<table:table-cell table:formula="of:=[.B1]+1"/>
+<table:table-cell table:formula="of:=[.A1]+1"/>
+<table:table-cell table:formula="of:=[.A1]*2"/>
+<table:table-cell office:value-type="float" office:value="5"/>
+<table:table-cell table:formula="of:=[.D1]+1"/>
+<table:table-cell table:formula="of:=[.F1]"/>
+<table:table-cell table:formula="of:=ISERROR([.A1])"/>
+<table:table-cell table:formula="of:=IFERROR([.A1];&quot;x&quot;)"/>
+<table:table-cell table:formula="of:=[.A1]&amp;&quot;t&quot;"/>
+<table:table-cell table:formula="of:=1/0+[.A1]"/>
+<table:table-cell table:formula="of:=[.A1]+1/0"/>
+</table:table-row>
+</table:table></office:spreadsheet></office:body></office:document>
