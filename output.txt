@@ -1,0 +1,26 @@
+test_deep_nesting_is_a_parse_error (tests.parser.test_parser.Malformed.test_deep_nesting_is_a_parse_error) ... ok
+test_parse_errors (tests.parser.test_parser.Malformed.test_parse_errors) ... ok
+test_call_missing_and_semicolon (tests.parser.test_parser.Nodes.test_call_missing_and_semicolon) ... ok
+test_column_letters (tests.parser.test_parser.Nodes.test_column_letters) ... ok
+test_literals (tests.parser.test_parser.Nodes.test_literals) ... ok
+test_names_and_function_like_refs (tests.parser.test_parser.Nodes.test_names_and_function_like_refs) ... ok
+test_quoted_sheet_escape (tests.parser.test_parser.Nodes.test_quoted_sheet_escape) ... ok
+test_range_keeps_one_sheet (tests.parser.test_parser.Nodes.test_range_keeps_one_sheet) ... ok
+test_ref_fields (tests.parser.test_parser.Nodes.test_ref_fields) ... ok
+test_calc_order (tests.parser.test_parser.Precedence.test_calc_order) ... ok
+test_whitespace (tests.parser.test_parser.Precedence.test_whitespace) ... ok
+test_cell (tests.test_cli.CliTest.test_cell) ... ok
+test_cell_absolute_ref (tests.test_cli.CliTest.test_cell_absolute_ref) ... ok
+test_cell_blank_is_null (tests.test_cli.CliTest.test_cell_blank_is_null) ... ok
+test_file_round_trip (tests.test_cli.CliTest.test_file_round_trip) ... ok
+test_stdin_round_trip (tests.test_cli.CliTest.test_stdin_round_trip) ... ok
+test_types_preserved (tests.test_cli.CliTest.test_types_preserved) ... ok
+test_compute_does_not_alias_input (tests.test_cli.ComputeTest.test_compute_does_not_alias_input) ... ok
+test_group_packages_exist (tests.test_registry.RegistryTest.test_group_packages_exist) ... ok
+test_register_decorator_returns_fn (tests.test_registry.RegistryTest.test_register_decorator_returns_fn) ... ok
+test_registry_is_a_copy (tests.test_registry.RegistryTest.test_registry_is_a_copy) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 0.179s
+
+OK
