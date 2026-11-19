@@ -1,0 +1,4 @@
+compute chain of 10000: 0.151 s, A10000 = 10000
+edit chain head, 9999 recomputed: 0.061 s, A10000 = 10003
+edit read by 10000, 10000 recomputed: 0.047 s, B10000 = 12
+ok b4
