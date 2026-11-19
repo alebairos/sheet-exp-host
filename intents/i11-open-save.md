@@ -4,7 +4,7 @@
 
 > In the browser I open and save a workbook as CSV and as SPEC.md's JSON
 
-Kind: Feature · State: in work · 1 work item · 2 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -32,7 +32,7 @@ Three pieces in web/io, no build and no libraries. (1) io.js, pure text function
 
 Add web/io so JSON and CSV open and save keep cells and values, with a page wired to the grid and ./engine, proven by the three plan checks.
 
-Status: landing (`7ea5444140e7`)
+Status: landed (`7ea5444140e7`)
 
 **Flagged:** outside the scope: exp-b:web/grid/.gitkeep, exp-b:web/grid/grid.js
 
@@ -72,8 +72,8 @@ Status: landing (`7ea5444140e7`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | opening then saving a JSON workbook keeps every cell | no landed check |
-| not yet | b2 | CSV opens and saves values | no landed check |
+| not yet | b1 | opening then saving a JSON workbook keeps every cell | `tests/web/io/checks/b1_json.sh` —, `tests/web/io/checks/b3_page.sh` — |
+| not yet | b2 | CSV opens and saves values | `tests/web/io/checks/b2_csv.sh` —, `tests/web/io/checks/b3_page.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -95,6 +95,17 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-i11-open-save-1`:
+
+- `web/io/io.js` +204 −0
+- `tests/web/io/checks/b3_page.sh` +82 −0 (plan check)
+- `web/io/serve.py` +69 −0
+- `web/io/index.html` +54 −0
+- `tests/web/io/checks/b1_json.sh` +41 −0 (plan check)
+- `tests/web/io/checks/b2_csv.sh` +40 −0 (plan check)
+- `tests/web/io/__init__.py` +1 −0 (plan check)
+- `web/io/.gitkeep` +0 −1
+
 Landing pull request: [exp-b #7](https://github.com/alebairos/sheet-exp-b/pull/7)
 
 ## 7. The decision
@@ -103,7 +114,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 36 min so far
+- Lead time: 10 h 56 min so far
 - Loops: 0
 - Waste: 0 min
-- Size: nothing landed yet
+- Size: 328 lines (+327 −1, 4 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +164 −0, 4 files

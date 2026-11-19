@@ -4,7 +4,7 @@
 
 > In the browser a formula bar shows the selected cell's formula, and a cell in error shows the error
 
-Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
+Kind: Feature · State: Met · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -75,6 +75,7 @@ Status: landed (`4ebacdf52b8c`)
 | Certified | `gate-1@alebairos` |
 | Implemented `wi-i10-formula-bar-1` | `impl-2@alebairos` |
 | Reviewed `wi-i10-formula-bar-1` | `rev-1@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
@@ -101,15 +102,11 @@ Landing pull request: [exp-b #6](https://github.com/alebairos/sheet-exp-b/pull/6
 
 ## 7. The decision
 
-**Verdict:i10-formula-bar**: A decision: show your human its options
-
-- Met: `cooknship decide --answer Verdict:i10-formula-bar --option met`
-- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:i10-formula-bar --option partially`
-- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:i10-formula-bar --option not_met`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 36 min so far
+- Lead time: 10 h 37 min
 - Loops: 0
 - Waste: 0 min
 - Size: 125 lines (+124 −1, 3 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +80 −0, 3 files
