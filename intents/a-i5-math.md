@@ -4,19 +4,59 @@
 
 > The 20 math and statistics functions of SPEC.md compute as in Calc, including ranges, blanks, text in ranges, and ROUND's half-away-from-zero
 
-Kind: Feature · State: parked · 0 work items · 3 bullets
+Kind: Feature · State: in work · 3 work items · 3 bullets
 
 ## 2. What you will see
 
-No design in the plan.
+The 20 math and statistics functions work in formulas exactly as Calc computes them: =SUM(A1:A8), =AVERAGEIF(E1:E8,"apple",F1:F8), =ROUND(2.5,0) and so on give Calc's numbers and Calc's errors. That includes Calc's habits: text and blanks in a range are skipped but a TRUE cell counts as 1; ROUND rounds half away from zero on the decimal value you see (ROUND(1.005,2) is 1.01, ROUNDUP(0.1+0.2,1) is 0.3); criteria understand >, <=, <>, wildcards (a*, b?nana) and match text case-insensitively; an error in a range comes through. The media is Calc's answer sheet: the 230 formulas the checks run, each with what LibreOffice itself returned.
+
+- [a-i5-math/README.md](https://github.com/alebairos/sheet-exp-host/blob/bfaba19b527798570488615f2396daa5560abc1a/a-i5-math/README.md)
+- [a-i5-math/calc-answers.md](https://github.com/alebairos/sheet-exp-host/blob/bfaba19b527798570488615f2396daa5560abc1a/a-i5-math/calc-answers.md)
+- [a-i5-math/math.out.json](https://github.com/alebairos/sheet-exp-host/blob/bfaba19b527798570488615f2396daa5560abc1a/a-i5-math/math.out.json)
+- [a-i5-math/math.py](https://github.com/alebairos/sheet-exp-host/blob/bfaba19b527798570488615f2396daa5560abc1a/a-i5-math/math.py)
+- [a-i5-math/probe.py](https://github.com/alebairos/sheet-exp-host/blob/bfaba19b527798570488615f2396daa5560abc1a/a-i5-math/probe.py)
+- [a-i5-math/xlsx_probe.py](https://github.com/alebairos/sheet-exp-host/blob/bfaba19b527798570488615f2396daa5560abc1a/a-i5-math/xlsx_probe.py)
+- [a-i5-math/errs.csv](https://github.com/alebairos/sheet-exp-host/blob/bfaba19b527798570488615f2396daa5560abc1a/a-i5-math/errs.csv)
 
 ## 3. Approach
 
-No design in the plan.
+Three modules under src/functions/math, one per work item, each registering its functions with @register (a-i0's registry finds them; no shared file edited), all following a-i3's calling convention (a reference arrives as a src.eval.Range, any other argument as a Value). Aggregates first, the most used: one local helper walks the arguments the way Calc does: from a Range, numbers and booleans (as 1/0) are taken, text and blanks skipped, the first error returned; a typed argument is coerced (a boolean is 1/0; for COUNT numeric text counts; for SUM/AVERAGE/PRODUCT text is #VALUE!, for MIN/MAX/MEDIAN/STDEV it is Err:504, as Calc does). SUM, PRODUCT, COUNT, COUNTA, AVERAGE (#DIV/0! when empty), MIN/MAX (0 when empty), MEDIAN (#VALUE! when empty), STDEV (sample, #DIV/0! under two values). Rounding second: ROUND/ROUNDUP/ROUNDDOWN round the number first to 15 significant digits (what Calc shows) and then by decimal digits away from or toward zero (count truncated, negative counts allowed); INT floors; MOD is a - b*floor(a/b) with the divisor's sign, #DIV/0! for 0; ABS; POWER as the evaluator's ^ (#NUM! for 0^-1, odd roots of negatives, overflow); SQRT of a negative is Err:502 as Calc says. Criteria third: one parser turns a criterion into a test (= <> < > <= >= prefixes; a number or numeric text compares numerically against numbers and as text against text; text matches case-insensitively with * ? and ~ escapes, anchored to the whole cell; "" and "=" match blanks, "<>" non-blanks), then SUMIF/COUNTIF/AVERAGEIF; a sum range is resized from its top-left cell to the criteria range's shape, as Calc does. Each work item adds unit tests next to its check in tests/functions/math.
+
+- **Reuses:** src.functions.register and registry() (a-i0); src.eval's Range and calling convention (a-i3), whose values() already gives blanks and errors; src.values Values, to_number/to_text coercions and compare (a-i2).
+- **Removes:** none
+- **Rejected:** Python's round() and math.ceil on the binary value: ROUND(1.005,2) would be 1.0 and ROUNDUP(0.1+0.2,1) 0.4, unlike Calc. The decimal module for everything: slower and still needs Calc's 15-digit step. Excel's rules (booleans in ranges ignored, SQRT(-1) is #NUM!): the suite is computed by LibreOffice, and Calc stores TRUE as 1. Mapping Calc's Err:502/Err:504 to #VALUE! (what LibreOffice's xlsx export writes): kept as Calc displays them, consistent with a-i4-recalc's Err:522; if the human prefers the xlsx names, it is a one-line change in each module and the checks' expected values. Regular-expression criteria: a document option, off by default.
 
 ## 4. Work items
 
-No plan yet.
+### `wi-a-i5-math-1`: Aggregates: SUM to STDEV
+
+Add src/functions/math/aggregate.py with SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN and STDEV, walking ranges and arguments as Calc does (text and blanks skipped, TRUE as 1, errors through), so the commonest formulas compute.
+
+Status: attempt 1 built, awaiting review
+
+| AC | Covers | Check | Red on base | On product |
+| --- | --- | --- | --- | --- |
+| `ac-a5-b1` | b1 | `tests/functions/math/checks/a5_b1_aggregates.sh` | red | — |
+
+### `wi-a-i5-math-2`: Rounding and arithmetic functions
+
+Add src/functions/math/rounding.py with ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER and SQRT, rounding on the decimal value Calc shows and returning Calc's errors, so numeric formulas match Calc to the last digit.
+
+Status: attempt 1 built, awaiting review
+
+| AC | Covers | Check | Red on base | On product |
+| --- | --- | --- | --- | --- |
+| `ac-a5-b2` | b2 | `tests/functions/math/checks/a5_b2_rounding.sh` | red | — |
+
+### `wi-a-i5-math-3`: Criteria: SUMIF, COUNTIF, AVERAGEIF
+
+Add src/functions/math/criteria.py with Calc's criteria matching (comparison prefixes, wildcards, case-insensitive text, blanks) and SUMIF, COUNTIF, AVERAGEIF on top of it, so conditional totals match Calc.
+
+Status: attempt 1 built, awaiting review
+
+| AC | Covers | Check | Red on base | On product |
+| --- | --- | --- | --- | --- |
+| `ac-a5-b3` | b3 | `tests/functions/math/checks/a5_b3_criteria.sh` | red | — |
 
 **Acceptance**, against the landed checks:
 
@@ -36,8 +76,14 @@ No plan yet.
 
 | Role | Who |
 | --- | --- |
-| Planned | — |
-| Certified | — |
+| Planned | `plan-a@alebairos` |
+| Certified | `gate-a@alebairos` |
+| Implemented `wi-a-i5-math-1` | `impl-a1@alebairos` |
+| Reviewed `wi-a-i5-math-1` | — |
+| Implemented `wi-a-i5-math-2` | `impl-a2@alebairos` |
+| Reviewed `wi-a-i5-math-2` | — |
+| Implemented `wi-a-i5-math-3` | `impl-a1@alebairos` |
+| Reviewed `wi-a-i5-math-3` | — |
 
 Product checks: not recorded yet.
 
@@ -49,4 +95,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-Not started: the metrics start with the first plan.
+- Lead time: 21 h 08 min so far
+- Loops: 0
+- Waste: 0 min
+- Size: nothing landed yet

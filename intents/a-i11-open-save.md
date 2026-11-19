@@ -4,7 +4,7 @@
 
 > In the browser I open and save a workbook as CSV and as SPEC.md's JSON
 
-Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
+Kind: Feature · State: Met · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -80,6 +80,7 @@ Status: landed (`6ce5b2aadde5`)
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-i11-open-save-1` | `impl-a1@alebairos`, `impl-a2@alebairos` |
 | Reviewed `wi-a-i11-open-save-1` | `rev-a@alebairos` (passed attempt 2) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
@@ -114,15 +115,11 @@ Landing pull request: [exp-a #7](https://github.com/alebairos/sheet-exp-a/pull/7
 
 ## 7. The decision
 
-**Verdict:a-i11-open-save**: A decision: show your human its options
-
-- Met: `cooknship decide --answer Verdict:a-i11-open-save --option met`
-- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-i11-open-save --option partially`
-- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-i11-open-save --option not_met`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 20 h 42 min so far
+- Lead time: 20 h 43 min
 - Loops: 4 (D1 spec 1, D2 plan 2, D5 review 1)
 - Waste: 3 h 48 min
 - Size: 335 lines (+334 −1, 7 files, ≤400; tests 132 lines); plan check files laid over by land, not in the size: +192 −0, 3 files

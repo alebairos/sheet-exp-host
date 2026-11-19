@@ -4,7 +4,7 @@
 
 > A parsed formula evaluates with Calc's operators and error propagation (#DIV/0!, #VALUE!, #REF!, #NAME?)
 
-Kind: Feature · State: awaiting the verdict · 1 work item · 3 bullets
+Kind: Feature · State: Met · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -74,6 +74,7 @@ Status: landed (`99c5a4e22d9a`)
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-i3-evaluator-1` | `impl-a1@alebairos` |
 | Reviewed `wi-a-i3-evaluator-1` | `rev-a@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
@@ -100,15 +101,11 @@ Landing pull request: [exp-a #8](https://github.com/alebairos/sheet-exp-a/pull/8
 
 ## 7. The decision
 
-**Verdict:a-i3-evaluator**: A decision: show your human its options
-
-- Met: `cooknship decide --answer Verdict:a-i3-evaluator --option met`
-- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-i3-evaluator --option partially`
-- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-i3-evaluator --option not_met`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 20 h 42 min so far
+- Lead time: 20 h 43 min
 - Loops: 4 (D1 spec 1, D2 plan 3)
 - Waste: 3 h 42 min
 - Size: 247 lines (+246 −1, 3 files, ≤400; tests 123 lines); plan check files laid over by land, not in the size: +199 −0, 3 files
