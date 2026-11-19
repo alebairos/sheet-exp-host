@@ -44,17 +44,17 @@ Status: landed (`fa58829a5cba`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b1` | b1 | `scripts/checks/b1_constants_roundtrip.sh` | red | — |
-| `ac-b2` | b2 | `scripts/checks/b2_cell_flag.sh` | red | — |
-| `ac-b3` | b3 | `scripts/checks/b3_test_sh.sh` | red | — |
+| `ac-b1` | b1 | `scripts/checks/b1_constants_roundtrip.sh` | red | pass |
+| `ac-b2` | b2 | `scripts/checks/b2_cell_flag.sh` | red | pass |
+| `ac-b3` | b3 | `scripts/checks/b3_test_sh.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | `engine -` prints a workbook of constants unchanged, in SPEC.md's output shape | `scripts/checks/b1_constants_roundtrip.sh` — |
-| not yet | b2 | `engine - --cell Sheet1!A1` prints one value | `scripts/checks/b2_cell_flag.sh` — |
-| not yet | b3 | ./test.sh builds and runs every test from a clean clone | `scripts/checks/b3_test_sh.sh` — |
+| PASS | b1 | `engine -` prints a workbook of constants unchanged, in SPEC.md's output shape | `scripts/checks/b1_constants_roundtrip.sh` pass |
+| PASS | b2 | `engine - --cell Sheet1!A1` prints one value | `scripts/checks/b2_cell_flag.sh` pass |
+| PASS | b3 | ./test.sh builds and runs every test from a clean clone | `scripts/checks/b3_test_sh.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -71,9 +71,17 @@ Status: landed (`fa58829a5cba`)
 | Implemented `wi-i0-skeleton-1` | `impl-2@alebairos` |
 | Reviewed `wi-i0-skeleton-1` | `rev-1@alebairos` (passed attempt 2) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `scripts/checks/b1_constants_roundtrip.sh`: pass
+- `scripts/checks/b2_cell_flag.sh`: pass
+- `scripts/checks/b3_test_sh.sh`: pass
+
+Outcome report:
+
+- **Built:** exp-b now has a Python ./engine that reads SPEC.md workbook JSON from stdin and prints constants unchanged, or one value with --cell Sheet1!A1. Landed commit fa58829 adds the planned part directories (src/parser, values, eval, recalc, functions/{math,logic_text,lookup}, web/{grid,formula_bar,io}, tests/e2e), a discovery registry under src/functions/registry.py that finds packages without a hand-edited table, and scripts/test so ./test.sh runs a real suite. Stayed on plan: no formula evaluation, no UI. One small follow-up already in the land: __pycache__ ignored and dropped from the tree.
+- **Advice:** Adopt. The skeleton is the base for later formula and function intents. Watch that new function packages keep landing as subpackages under src/functions so discovery stays zero-touch. Follow up only if a later intent needs shared helpers outside those packages.
+- No media: CLI and directory skeleton only; no UI surface in this intent.
 
 Files landed by `wi-i0-skeleton-1`:
 
@@ -103,11 +111,15 @@ Landing pull request: [exp-b #2](https://github.com/alebairos/sheet-exp-b/pull/2
 
 ## 7. The decision
 
-Nothing waits on you.
+**Verdict:i0-skeleton**: A decision: show your human its options
+
+- Met: `cooknship decide --answer Verdict:i0-skeleton --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:i0-skeleton --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:i0-skeleton --option not_met`
 
 ## 8. Metrics
 
-- Lead time: 3 h 14 min so far
+- Lead time: 3 h 17 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: 168 lines (+168 −0, 18 files, ≤400; tests 1 lines); plan check files laid over by land, not in the size: +37 −0, 3 files

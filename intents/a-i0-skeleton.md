@@ -38,17 +38,17 @@ Status: landed (`c772837d2a38`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a0-b1` | b1 | `scripts/checks/a0_b1_constants.sh` | red | — |
-| `ac-a0-b2` | b2 | `scripts/checks/a0_b2_cell.sh` | red | — |
-| `ac-a0-b3` | b3 | `scripts/checks/a0_b3_test_sh.sh` | red | — |
+| `ac-a0-b1` | b1 | `scripts/checks/a0_b1_constants.sh` | red | pass |
+| `ac-a0-b2` | b2 | `scripts/checks/a0_b2_cell.sh` | red | pass |
+| `ac-a0-b3` | b3 | `scripts/checks/a0_b3_test_sh.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | `engine -` prints a workbook of constants unchanged, in SPEC.md's output shape | `scripts/checks/a0_b1_constants.sh` — |
-| not yet | b2 | `engine - --cell Sheet1!A1` prints one value | `scripts/checks/a0_b2_cell.sh` — |
-| not yet | b3 | ./test.sh builds and runs every test from a clean clone | `scripts/checks/a0_b3_test_sh.sh` — |
+| PASS | b1 | `engine -` prints a workbook of constants unchanged, in SPEC.md's output shape | `scripts/checks/a0_b1_constants.sh` pass |
+| PASS | b2 | `engine - --cell Sheet1!A1` prints one value | `scripts/checks/a0_b2_cell.sh` pass |
+| PASS | b3 | ./test.sh builds and runs every test from a clean clone | `scripts/checks/a0_b3_test_sh.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -65,7 +65,11 @@ Status: landed (`c772837d2a38`)
 | Implemented `wi-a-i0-skeleton-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-i0-skeleton-1` | `rev-a@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
+
+- `scripts/checks/a0_b1_constants.sh`: pass
+- `scripts/checks/a0_b2_cell.sh`: pass
+- `scripts/checks/a0_b3_test_sh.sh`: pass
 
 Outcome report: none yet.
 
@@ -104,7 +108,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 1 h 36 min so far
+- Lead time: 1 h 39 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: 155 lines (+154 −1, 21 files, ≤400; tests 96 lines); plan check files laid over by land, not in the size: +105 −0, 3 files
