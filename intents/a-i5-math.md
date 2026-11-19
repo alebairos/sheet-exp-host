@@ -32,7 +32,7 @@ Three modules under src/functions/math, one per work item, each registering its 
 
 Add src/functions/math/aggregate.py with SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN and STDEV, walking ranges and arguments as Calc does (text and blanks skipped, TRUE as 1, errors through), so the commonest formulas compute.
 
-Status: landing (`23ac95711c5e`)
+Status: landed (`23ac95711c5e`)
 
 **The passing review noted:** > PASS. Reran verify on the WI commit 288aa37 (worktree): tests/functions/math/checks/a5_b1_aggregates.sh gives "ok b1: 84 cases match Calc"; on the plan commit bac39e3 it fails with 84 of 84 differing (functions unregistered, #NAME?). ./test.sh OK.
 > - ac-a5-b1 (b1): src/functions/math/aggregates.py _groups (line 34) takes numbers and booleans from a Range, skips text and blanks, returns the first error, and makes typed text #VALUE! for SUM/AVERAGE/PRODUCT and Err:504 for MIN/MAX/MEDIAN/STDEV, which is what the 84 Calc-pinned cases (ranges with blanks, text, booleans and errors) exercise. _calc_sum reproduces Calc's Neumaier+approxAdd so SUM(0.1,0.2) and near-cancelling sums match. COUNT/COUNTA are separate walks (Range.values) so errors are skipped by COUNT and counted by COUNTA.
@@ -84,7 +84,7 @@ Status: queued to land
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN, STDEV match Calc on ranges with blanks and text | no landed check |
+| not yet | b1 | SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN, STDEV match Calc on ranges with blanks and text | `tests/functions/math/checks/a5_b1_aggregates.sh` — |
 | not yet | b2 | ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER, SQRT match Calc, errors included | no landed check |
 | not yet | b3 | SUMIF, COUNTIF, AVERAGEIF match Calc's criteria | no landed check |
 
@@ -111,6 +111,15 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-i5-math-1`:
+
+- `src/functions/math/aggregates.py` +205 −0
+- `tests/functions/math/checks/a5_b2_rounding.sh` +134 −0 (plan check)
+- `tests/functions/math/checks/a5_b1_aggregates.sh` +131 −0 (plan check)
+- `tests/functions/math/checks/a5_b3_criteria.sh` +107 −0 (plan check)
+- `tests/functions/math/test_aggregates.py` +72 −0 (test)
+- `tests/functions/math/__init__.py` +0 −0 (test)
+
 Landing pull request: [exp-a #12](https://github.com/alebairos/sheet-exp-a/pull/12)
 
 ## 7. The decision
@@ -119,7 +128,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 21 h 21 min so far
+- Lead time: 21 h 33 min so far
 - Loops: 2 (D5 review 2)
 - Waste: 11 min
-- Size: nothing landed yet
+- Size: 205 lines (+205 −0, 3 files, ≤400; tests 72 lines); plan check files laid over by land, not in the size: +372 −0, 3 files

@@ -4,7 +4,7 @@
 
 > A workbook recalculates in dependency order, recomputes only what an edit affects, and reports a circular reference as an error instead of hanging
 
-Kind: Feature · State: awaiting the verdict · 1 work item · 4 bullets
+Kind: Feature · State: Met · 1 work item · 4 bullets
 
 ## 2. What you will see
 
@@ -70,6 +70,7 @@ Status: landed (`f91e897d51b2`)
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-i4-recalc-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-i4-recalc-1` | `rev-a@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
@@ -103,15 +104,11 @@ Landing pull request: [exp-a #9](https://github.com/alebairos/sheet-exp-a/pull/9
 
 ## 7. The decision
 
-**Verdict:a-i4-recalc**: A decision: show your human its options
-
-- Met: `cooknship decide --answer Verdict:a-i4-recalc --option met`
-- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-i4-recalc --option partially`
-- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-i4-recalc --option not_met`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 21 h 21 min so far
+- Lead time: 21 h 21 min
 - Loops: 0
 - Waste: 0 min
 - Size: 298 lines (+294 −4, 4 files, ≤400; tests 91 lines); plan check files laid over by land, not in the size: +343 −0, 4 files

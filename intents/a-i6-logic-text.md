@@ -31,7 +31,7 @@ Two modules under src/functions/logic_text, one per work item, registering with 
 
 Add src/functions/logic_text/logic.py with IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT and ISERROR as Calc computes them (booleans, references and errors included), so formulas can branch and test cells.
 
-Status: landing (`e68ed241fd38`)
+Status: landed (`e68ed241fd38`)
 
 **The passing review noted:** > PASS. Reran verify on f45e7d0 (worktree): a6_b1_if.sh "38 cases match Calc", a6_b1_and_or_not.sh "38 cases match Calc", a6_b1_is.sh "37 cases match Calc"; on the plan commit 90fa643 all three fail (38/38, 38/38, 37/37 differ). ./test.sh OK.
 > - ac-a6-b1-if (b1): src/functions/logic_text/logic.py:47 _condition (bool/number non-zero, blank FALSE, numeric text and TRUE/FALSE text in any case, other text #VALUE!, errors through); IF (logic.py:68) returns the chosen argument untouched (a Range stays a reference), missing else FALSE; IFERROR (logic.py:81) with Err:518 for an omitted value.
@@ -70,7 +70,7 @@ Status: queued to land
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT, ISERROR match Calc | no landed check |
+| not yet | b1 | IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT, ISERROR match Calc | `tests/functions/logic_text/checks/a6_b1_if.sh` —, `tests/functions/logic_text/checks/a6_b1_and_or_not.sh` —, `tests/functions/logic_text/checks/a6_b1_is.sh` — |
 | not yet | b2 | CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER, TRIM match Calc, coercion and errors included | no landed check |
 
 ## 5. Out of scope and risks
@@ -94,6 +94,18 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-i6-logic-text-1`:
+
+- `src/functions/logic_text/logic.py` +172 −0
+- `tests/functions/logic_text/checks/a6_b1_and_or_not.sh` +77 −0 (plan check)
+- `tests/functions/logic_text/checks/a6_b1_if.sh` +77 −0 (plan check)
+- `tests/functions/logic_text/checks/a6_b1_is.sh` +76 −0 (plan check)
+- `tests/functions/logic_text/checks/a6_b2_left_right_mid.sh` +76 −0 (plan check)
+- `tests/functions/logic_text/checks/a6_b2_concat_len.sh` +71 −0 (plan check)
+- `tests/functions/logic_text/test_logic.py` +69 −0 (test)
+- `tests/functions/logic_text/checks/a6_b2_case_trim.sh` +62 −0 (plan check)
+- `tests/functions/logic_text/__init__.py` +0 −0 (test)
+
 Landing pull request: [exp-a #13](https://github.com/alebairos/sheet-exp-a/pull/13)
 
 ## 7. The decision
@@ -102,7 +114,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 21 h 21 min so far
+- Lead time: 21 h 33 min so far
 - Loops: 4 (D1 spec 1, D2 plan 3)
 - Waste: 13 min
-- Size: nothing landed yet
+- Size: 172 lines (+172 −0, 3 files, ≤400; tests 69 lines); plan check files laid over by land, not in the size: +439 −0, 6 files

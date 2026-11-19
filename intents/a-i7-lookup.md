@@ -31,16 +31,13 @@ One module, src/functions/lookup/lookup.py, registering VLOOKUP, INDEX and MATCH
 
 Add src/functions/lookup/lookup.py with VLOOKUP, INDEX and MATCH on one shared matcher (exact with wildcards, approximate on sorted keys) returning Calc's results and errors, so workbooks can look values up in tables.
 
-Status: accepted
+Status: landing (`dcee02bc1209`)
 
-**The passing review noted:** > PASS. Reran verify on the WI commit ac2d2b8 (worktree): a7_b1_vlookup.sh "ok b1: 42 cases match Calc", a7_b2_index_match.sh "ok b2: 62 cases match Calc"; on the plan commit c21e65b both fail (42/42 and 62/62 differ). ./test.sh OK.
-> - ac-a7-b1 (b1): src/functions/lookup/lookup.py:164 VLOOKUP reads the first column through the Range, exact mode via _exact (lookup.py:69: numbers/booleans by value, text case-insensitive with * ? ~, numeric text also finds the number), sorted mode via _find (lookup.py:93, last key <= value, same type only, end of an equal run); column truncated, outside 1..width Err:502 (lookup.py:185).
-> - ac-a7-b2 (b2): MATCH (lookup.py:145) types 0/1, 2-D range Err:504; INDEX (lookup.py:194) returns a Range so the result is a reference, one-row range takes the single index as the column, 0 on a 2-D range #VALUE!, negative Err:502, past the edge #REF!.
-> - Cross-checked 26 extra formulas against LibreOffice 26.8.1.1 headless on my own fixture: all agree (INDEX(A1:B4,0,0) #VALUE!, INDEX(A1:B4,-1,1) Err:502, INDEX(A1:A4,5) #REF!, VLOOKUP(1,..,1.9,0) truncates, VLOOKUP(TRUE,..) finds 1, MATCH("X",..,0) case-insensitive, missing lookup value #N/A, VLOOKUP(..)&"|" gives "|") except the two below.
-> Notes, not blocking:
-> (1) VLOOKUP landing on a blank cell: Calc shows the cell as EMPTY (csv ''), while ISBLANK of it is TRUE and +1 gives 1; =B2 and =INDEX(B1:B4,2) on the same blank show 0. The engine returns 0 for all three. lookup.py:191 returns the Blank Value correctly; the top-level Blank->0 conversion lives in src/values / src/eval, outside this intent's scope, and Calc's "empty result" needs a value kind the model does not have. Worth a separate Defect for the Gm (the hidden suite may well have a VLOOKUP onto an empty cell).
-> (2) MATCH type -1 is implemented (lookup.py:107) though the design says types other than 0 and 1 give Err:504 and b2 covers only 0 and 1. It disagrees with Calc on non-descending data: A1:A4 = 1,2,3,"x", =MATCH(2,A1:A4,-1) gives 2, Calc #N/A. Harmless to b2; either pin -1 against Calc or follow the design.
-> Scope: src/functions/lookup/lookup.py, tests/functions/lookup/__init__.py, tests/functions/lookup/test_lookup.py, all inside the scope; no check edited.
+**The passing review noted:** > PASS (attempt 2). Attempt 1 passed review and its landing aborted on a rejected push, not on tests. Attempt 2 (fd05d6c) changes only tests/functions/lookup/test_lookup.py (+50 lines): 31 MATCH type -1 cases on descending data, ties and text included. src/functions/lookup/lookup.py is unchanged from ac2d2b8, so the attempt-1 evidence per AC still holds (VLOOKUP lookup.py:164, MATCH :145, INDEX :194, _exact :69, _find :93).
+> Reran verify on fd05d6c (worktree): a7_b1_vlookup.sh "ok b1: 42 cases match Calc", a7_b2_index_match.sh "ok b2: 62 cases match Calc"; base c21e65b red as before; ./test.sh OK (new tests included).
+> Independently re-derived 8 of the new pinned values with LibreOffice 26.8.1.1 headless on the same fixture: MATCH(2.5,F1:F5,-1)=4, MATCH(3,F1:F5,-1)=4, MATCH(5,F1:F5,-1)=2, MATCH("bb",D1:D5,-1)=3, MATCH("0",D1:D5,-1)=5, MATCH(3,D1:D5,-1)=#N/A, MATCH(0,B1:B5,-1)=5, MATCH(6,B1:B5,-1)=#N/A: all equal to the test and to the engine. My attempt-1 note (2) is answered: -1 matches Calc on descending data; on non-descending data it still differs and that is documented in the test, which is fine since b2 covers types 0 and 1. Note (1) (VLOOKUP onto an empty cell shows 0, Calc shows empty) stands for the Gm, outside this scope.
+> Process note: the attempt-2 commit is authored under the human's name, not an implementer id (attempt 1 was impl-a2@alebairos); the review is of the code, and nothing in the diff is affected.
+> Scope: one test file inside tests/functions/lookup; no check edited.
 > -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
@@ -67,12 +64,14 @@ Status: accepted
 | --- | --- |
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
-| Implemented `wi-a-i7-lookup-1` | `impl-a1@alebairos` |
-| Reviewed `wi-a-i7-lookup-1` | `rev-a@alebairos` (passed attempt 1) |
+| Implemented `wi-a-i7-lookup-1` | `impl-a1@alebairos`, `impl-a2@alebairos` |
+| Reviewed `wi-a-i7-lookup-1` | `rev-a@alebairos` (passed attempt 2) |
 
 Product checks: not recorded yet.
 
 Outcome report: none yet.
+
+Landing pull request: [exp-a #14](https://github.com/alebairos/sheet-exp-a/pull/14)
 
 ## 7. The decision
 
@@ -80,7 +79,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 21 h 21 min so far
+- Lead time: 21 h 33 min so far
 - Loops: 1 (D6 landing 1)
-- Waste: 15 min
+- Waste: 17 min
 - Size: nothing landed yet
