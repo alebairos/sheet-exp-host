@@ -1,0 +1,18 @@
+<!doctype html>
+<!-- The grid on a sample workbook. Serve the repo (python3 -m http.server) and open /web/grid/:
+     it loads an ES module, which browsers refuse over file://. -->
+<html lang="en"><head><meta charset="utf-8"><title>Grid</title>
+<link rel="stylesheet" href="grid.css">
+</head><body>
+<p>Sheet1 (sample values). Click to select; double-click, Enter, F2 or type to edit; Enter commits, Escape cancels; arrows move.</p>
+<div id="grid" class="grid-host"></div>
+<pre id="cells"></pre>
+<script type="module">
+import { createState, mount } from "./grid.js";
+const book = {sheets: {Sheet1: {A1: "Item", B1: "Qty", C1: "Price", A2: "Pens", B2: 3, C2: 1.5, A3: "Paper", B3: 10,
+  C3: 0.25, D1: "Sum", D2: 4.5, D3: 2.5, E2: {error: "#DIV/0!"}, F2: true, A5: 0.30000000000000004}}};
+const show = (s) => { document.getElementById("cells").textContent = JSON.stringify(s.book.sheets[s.sheet]); };
+const g = mount(document.getElementById("grid"), createState(book, "Sheet1"), {rows: 15, cols: 8, onChange: show});
+show(g.state);
+document.getElementById("grid").focus();
+</script></body></html>

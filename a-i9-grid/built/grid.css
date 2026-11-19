@@ -1,0 +1,9 @@
+/* The grid's look (a-i9-grid). */
+.grid-host { outline: none; }
+table.grid { border-collapse: collapse; font: 14px system-ui, sans-serif; }
+.grid th { background: #f1f3f4; color: #555; font-weight: normal; border: 1px solid #ccc; padding: 2px 6px; min-width: 28px; user-select: none; }
+.grid td { border: 1px solid #ddd; min-width: 80px; height: 20px; padding: 0 4px; white-space: nowrap; cursor: cell; }
+.grid td.num { text-align: right; }
+.grid td.err { color: #b00020; text-align: center; }
+.grid td.selected { outline: 2px solid #1a73e8; outline-offset: -2px; }
+.grid td input { width: 100%; box-sizing: border-box; border: 0; padding: 0; font: inherit; outline: none; background: transparent; }
