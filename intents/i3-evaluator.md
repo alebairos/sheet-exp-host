@@ -4,7 +4,7 @@
 
 > A parsed formula evaluates with Calc's operators and error propagation (#DIV/0!, #VALUE!, #REF!, #NAME?)
 
-Kind: Feature · State: certified · 1 work item · 3 bullets
+Kind: Feature · State: in work · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -26,7 +26,7 @@ The operator core first, as one module src/eval built on the parser's tree (i1) 
 
 Add src.eval.evaluate with Calc operators, error propagation including #REF!, #NAME? for unknown calls, and register/registry in src/eval, proven by the three plan checks.
 
-Status: planned
+Status: accepted
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -63,15 +63,11 @@ Outcome report: none yet.
 
 ## 7. The decision
 
-**SpecAccept:i3-evaluator**: A decision: show your human its options
-
-- Accept the spec: claims freeze, it can be admitted: `cooknship decide --answer SpecAccept:i3-evaluator --option accept`
-- Send the plan back with a reason: `cooknship decide --answer SpecAccept:i3-evaluator --option reject --text "<reason>"`
-- Shelve it; when another intent takes its place, the reason is replaced:<that intent's id>, and what waits on this one waits for it instead: `cooknship decide --answer SpecAccept:i3-evaluator --option shelve --text "<reason>"`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 14 h 05 min so far
+- Lead time: 22 h 07 min so far
 - Loops: 4 (D1 spec 1, D2 plan 3)
 - Waste: 3 h 33 min
 - Size: nothing landed yet

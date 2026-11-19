@@ -4,7 +4,7 @@
 
 > A parsed formula evaluates with Calc's operators and error propagation (#DIV/0!, #VALUE!, #REF!, #NAME?)
 
-Kind: Feature · State: certified · 1 work item · 3 bullets
+Kind: Feature · State: in work · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -26,7 +26,25 @@ The operator core first, as one module src/eval built on the two parts it depend
 
 Add src/eval: walk the parser's tree over a workbook and compute it with Calc's operators, coercion and error propagation (#DIV/0!, #VALUE!, #REF!, #N/A), return #NAME? for an unknown function or name, and call registered functions with one agreed argument shape, so formulas produce values and the function intents have something to plug into.
 
-Status: planned
+Status: landing (`99c5a4e22d9a`)
+
+**The passing review noted:** > PASS.
+> 
+> Verify rerun on 6442703 (host wi/wi-a-i3-evaluator-1): a3_b1_operators "ok b1", a3_b2_errors "ok b2", a3_b3_names "ok b3 / ok b3 calling convention". All three are red on the plan commit 3a16c9c (ImportError: no evaluate in src.eval). ./test.sh: 53 tests OK, including tests/eval/test_eval.py. The WI does not touch any check file. Every path is inside exp-a:src/eval/** and exp-a:tests/eval/**.
+> 
+> Per AC:
+> - ac-a3-b1 (b1, operators match Calc): met. Arithmetic goes through to_number with leftmost-error-wins (src/eval/__init__.py:166-173). Division by 0 gives #DIV/0! (:148). Powers follow LibreOffice: 0^0=1, 0^-1=#NUM!, an odd root of a negative base (:121-137). & turns booleans into 1/0 before to_text (:152-156, :174-180). Comparisons go through a-i2's compare (:181-183); unary minus and % through to_number (:221-226). Lone blank shows 0 (:237).
+> - ac-a3-b2 (b2, errors propagate): met. Error operands pass through each operator (:169-172, :176-179, compare). An unknown sheet gives #REF! (:103-109), a cell holding #REF! passes it on, and a multi-cell range in operator context gives #VALUE! (:79-83).
+> - ac-a3-b3 (b3, unknown function is #NAME?): met. A bare name gives #NAME? (:215-216). An unknown call returns #NAME? before evaluating its arguments (:187-190). The calling convention matches the plan: a Range for references, a Value with errors kept otherwise, BLANK for an omitted argument (:191-200).
+> 
+> Spot checks I ran beyond the checks: =TRUE=1 TRUE, =Z99="" TRUE, =Z99=0 TRUE, =A4<1 with A4 #N/A gives #N/A, =1/0<2 #DIV/0!, =foo(1/0) #NAME?, =2^1024 and =1E308*10 #NUM!, ='Other Sheet'!A1*2 10, =-(-8)^(1/3) 2. All agree with Calc.
+> 
+> Notes (non-blocking):
+> 1. _call calls registry() on every function call node (:188). Today registry() re-runs invalidate_caches() and pkgutil discovery each time (src/functions/__init__.py, a-i0's). On large workbooks that is a filesystem walk per call; a-i4's speed measurement may want registry() cached after the first discovery.
+> 2. A registered function that raises a Python exception propagates out of evaluate(). Only parse failures are turned into error values (:242-245). Worth catching once functions land, so one bad function cannot crash ./engine.
+> 3. A literal that overflows (=1E400) and a range across two sheets (=Sheet1!A1:Other!A2) both give #VALUE! as parse failures. Calc reports these differently (Err:504/#REF!). These are edge cases owned by the parser.
+> 
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -54,24 +72,22 @@ Status: planned
 | --- | --- |
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
-| Implemented `wi-a-i3-evaluator-1` | — |
-| Reviewed `wi-a-i3-evaluator-1` | — |
+| Implemented `wi-a-i3-evaluator-1` | `impl-a1@alebairos` |
+| Reviewed `wi-a-i3-evaluator-1` | `rev-a@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Landing pull request: [exp-a #8](https://github.com/alebairos/sheet-exp-a/pull/8)
+
 ## 7. The decision
 
-**SpecAccept:a-i3-evaluator**: A decision: show your human its options
-
-- Accept the spec: claims freeze, it can be admitted: `cooknship decide --answer SpecAccept:a-i3-evaluator --option accept`
-- Send the plan back with a reason: `cooknship decide --answer SpecAccept:a-i3-evaluator --option reject --text "<reason>"`
-- Shelve it; when another intent takes its place, the reason is replaced:<that intent's id>, and what waits on this one waits for it instead: `cooknship decide --answer SpecAccept:a-i3-evaluator --option shelve --text "<reason>"`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 12 h 27 min so far
+- Lead time: 20 h 29 min so far
 - Loops: 4 (D1 spec 1, D2 plan 3)
 - Waste: 3 h 42 min
 - Size: nothing landed yet

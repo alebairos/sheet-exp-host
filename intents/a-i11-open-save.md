@@ -4,7 +4,7 @@
 
 > In the browser I open and save a workbook as CSV and as SPEC.md's JSON
 
-Kind: Feature · State: certified · 1 work item · 2 bullets
+Kind: Feature · State: in work · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -32,7 +32,26 @@ Three pieces in web/io, no build and no libraries. (1) io.js, pure text function
 
 Add web/io: a page with Open, Save JSON and Save CSV over the grid, a small controller that opens a file into the workbook (or a message for a bad file), takes each grid edit as one typed cell so formulas stay formulas, and saves it as SPEC.md's JSON or as CSV values, plus a standard-library server that serves the page and computes workbooks with the engine.
 
-Status: planned
+Status: landing (`6ce5b2aadde5`)
+
+**The passing review noted:** > PASS (attempt 2). The defect from attempt 1 is fixed.
+> 
+> Verify rerun on 54b8e85 (host wi/wi-a-i11-open-save-1): a11_b1_json "ok b1", a11_b2_csv "ok b2", a11_b3_page "ok page and controller / ok serve.py". All were red on the plan commit 08ce178 at attempt 1. ./test.sh: 36 tests OK. node --test tests/web/io/io.test.mjs: 9 pass, 0 fail. No check file is touched, and every path is inside exp-a:web/io/** and exp-a:tests/web/io/**.
+> 
+> The fix (web/io/index.html:44-66): the grid is mounted once (`grid = mount(...)` on the first show) and later redraws go through grid.setState. onChange reads `shown` from a variable that show() updates. A new test in tests/web/io/io.test.mjs pins it: over a stand-in DOM, one Delete is one compute and only one keydown listener exists.
+> 
+> Independent re-check in jsdom with the page's own module script:
+> - Six Deletes, A1..A6: each keypress made exactly 1 engine call (attempt 1: 1, 5, 17, 53, 161, 485).
+> - The HITL case through the real grid: open {A1: 2, B1: "=A1*2"}, click A1, type 7, Enter. The book became {A1: 7, B1: "=A1*2"}, the grid shows B1 = 14, and there were 2 computes (open plus edit).
+> 
+> Per AC:
+> - ac-a11-b1 (b1, JSON keeps every cell): met. parseJSON/toJSON at web/io/io.js:11-28; check a11_b1_json.
+> - ac-a11-b2 (b2, CSV opens and saves values): met. web/io/io.js:31-98; check a11_b2_csv.
+> - ac-a11-b3 (b1, b2 in the page): met. The controller is at io.js:114-167, and the page wiring at index.html:44-66 sends one cell per edit through controller.edit and never uses setBook. serve.py answers POST /compute with src.cli.compute. Check a11_b3_page.
+> 
+> Note (non-blocking, the grid's design and outside this scope): double-clicking a formula cell opens the editor with its computed value, so retyping replaces the formula. a-i10's formula bar is the place for that.
+> 
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -59,24 +78,22 @@ Status: planned
 | --- | --- |
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
-| Implemented `wi-a-i11-open-save-1` | — |
-| Reviewed `wi-a-i11-open-save-1` | — |
+| Implemented `wi-a-i11-open-save-1` | `impl-a1@alebairos`, `impl-a2@alebairos` |
+| Reviewed `wi-a-i11-open-save-1` | `rev-a@alebairos` (passed attempt 2) |
 
 Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Landing pull request: [exp-a #7](https://github.com/alebairos/sheet-exp-a/pull/7)
+
 ## 7. The decision
 
-**SpecAccept:a-i11-open-save**: A decision: show your human its options
-
-- Accept the spec: claims freeze, it can be admitted: `cooknship decide --answer SpecAccept:a-i11-open-save --option accept`
-- Send the plan back with a reason: `cooknship decide --answer SpecAccept:a-i11-open-save --option reject --text "<reason>"`
-- Shelve it; when another intent takes its place, the reason is replaced:<that intent's id>, and what waits on this one waits for it instead: `cooknship decide --answer SpecAccept:a-i11-open-save --option shelve --text "<reason>"`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 12 h 27 min so far
-- Loops: 3 (D1 spec 1, D2 plan 2)
-- Waste: 3 h 40 min
+- Lead time: 20 h 29 min so far
+- Loops: 4 (D1 spec 1, D2 plan 2, D5 review 1)
+- Waste: 3 h 48 min
 - Size: nothing landed yet
