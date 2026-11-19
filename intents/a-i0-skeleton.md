@@ -71,7 +71,11 @@ Product checks:
 - `scripts/checks/a0_b2_cell.sh`: pass
 - `scripts/checks/a0_b3_test_sh.sh`: pass
 
-Outcome report: none yet.
+Outcome report:
+
+- **Built:** The skeleton of the spreadsheet engine is on exp-a main (PR #2, merged as 872d19d). ./engine reads a workbook JSON from stdin or a file and prints it back in SPEC.md's shape with every value unchanged; `./engine - --cell Sheet1!A1` prints that one cell. Formulas are not computed yet: a formula string is echoed as text, which is what this intent's scope allowed. The repo now has one folder per part (parser, values, eval, recalc, functions/{math,logic_text,lookup}, web/{grid,formula_bar,io}, tests/e2e), and new functions are picked up just by adding a file under src/functions/<group>/, so the function intents will not collide on a shared list. ./test.sh runs a 10-test Python suite from a clean clone (Python 3 standard library only, nothing to install). It followed the plan with no departures: one work item, landed on the first attempt, 155 changed lines. I re-ran ./test.sh and the CLI on main myself: 10 tests OK, constants echoed, --cell prints 5.
+- **Advice:** Adopt: it is the base every other exp-a intent builds on, and all three bullets pass on landed work. Follow up (from the reviewer's notes, none blocking): --cell matches cell keys only in upper case, and with no sheet it uses the first one; the evaluator/recalc intents (a-i3, a-i4) replace the echo with real computation. Watch: the hidden suite calls ./engine, so its input and output shape here is the contract later intents must keep.
+- No media: a command-line skeleton with no screen; the plan showed no files, and its sample input and output are the checks in scripts/checks/a0_*.sh
 
 Files landed by `wi-a-i0-skeleton-1`:
 
@@ -104,7 +108,11 @@ Landing pull request: [exp-a #2](https://github.com/alebairos/sheet-exp-a/pull/2
 
 ## 7. The decision
 
-Nothing waits on you.
+**Verdict:a-i0-skeleton**: A decision: show your human its options
+
+- Met: `cooknship decide --answer Verdict:a-i0-skeleton --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-i0-skeleton --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-i0-skeleton --option not_met`
 
 ## 8. Metrics
 
