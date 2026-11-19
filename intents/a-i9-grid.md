@@ -36,15 +36,15 @@ Status: landed (`381bc461484c`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a9-b1` | b1 | `tests/web/grid/checks/a9_b1_render.sh` | red | — |
-| `ac-a9-b2` | b2 | `tests/web/grid/checks/a9_b2_edit.sh` | red | — |
+| `ac-a9-b1` | b1 | `tests/web/grid/checks/a9_b1_render.sh` | red | pass |
+| `ac-a9-b2` | b2 | `tests/web/grid/checks/a9_b2_edit.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | the grid renders a workbook's computed values | `tests/web/grid/checks/a9_b1_render.sh` — |
-| not yet | b2 | selecting and editing a cell updates it | `tests/web/grid/checks/a9_b2_edit.sh` — |
+| PASS | b1 | the grid renders a workbook's computed values | `tests/web/grid/checks/a9_b1_render.sh` pass |
+| PASS | b2 | selecting and editing a cell updates it | `tests/web/grid/checks/a9_b2_edit.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -61,7 +61,10 @@ Status: landed (`381bc461484c`)
 | Implemented `wi-a-i9-grid-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-i9-grid-1` | `rev-a@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
+
+- `tests/web/grid/checks/a9_b1_render.sh`: pass
+- `tests/web/grid/checks/a9_b2_edit.sh`: pass
 
 Outcome report: none yet.
 
@@ -83,7 +86,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 8 h 24 min so far
+- Lead time: 8 h 25 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: 269 lines (+268 −1, 5 files, ≤400; tests 61 lines); plan check files laid over by land, not in the size: +74 −0, 2 files

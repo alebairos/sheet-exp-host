@@ -36,17 +36,17 @@ Status: landed (`8f35744725a9`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a1-b1` | b1 | `tests/parser/checks/a1_b1_refs.sh` | red | — |
-| `ac-a1-b2` | b2 | `tests/parser/checks/a1_b2_precedence.sh` | red | — |
-| `ac-a1-b3` | b3 | `tests/parser/checks/a1_b3_malformed.sh` | red | — |
+| `ac-a1-b1` | b1 | `tests/parser/checks/a1_b1_refs.sh` | red | pass |
+| `ac-a1-b2` | b2 | `tests/parser/checks/a1_b2_precedence.sh` | red | pass |
+| `ac-a1-b3` | b3 | `tests/parser/checks/a1_b3_malformed.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | references, ranges and sheet references parse | `tests/parser/checks/a1_b1_refs.sh` — |
-| not yet | b2 | operator precedence and associativity match Calc | `tests/parser/checks/a1_b2_precedence.sh` — |
-| not yet | b3 | a malformed formula is a parse error, not a crash | `tests/parser/checks/a1_b3_malformed.sh` — |
+| PASS | b1 | references, ranges and sheet references parse | `tests/parser/checks/a1_b1_refs.sh` pass |
+| PASS | b2 | operator precedence and associativity match Calc | `tests/parser/checks/a1_b2_precedence.sh` pass |
+| PASS | b3 | a malformed formula is a parse error, not a crash | `tests/parser/checks/a1_b3_malformed.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -63,7 +63,11 @@ Status: landed (`8f35744725a9`)
 | Implemented `wi-a-i1-parser-1` | `impl-a1@alebairos` |
 | Reviewed `wi-a-i1-parser-1` | `rev-a@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
+
+- `tests/parser/checks/a1_b1_refs.sh`: pass
+- `tests/parser/checks/a1_b2_precedence.sh`: pass
+- `tests/parser/checks/a1_b3_malformed.sh`: pass
 
 Outcome report: none yet.
 
@@ -86,7 +90,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 8 h 24 min so far
+- Lead time: 8 h 26 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: 465 lines (+464 −1, 5 files, 401–1,000; tests 81 lines); plan check files laid over by land, not in the size: +156 −0, 3 files

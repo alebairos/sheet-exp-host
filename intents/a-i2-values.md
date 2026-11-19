@@ -35,15 +35,15 @@ Status: landed (`50e142fa3f8f`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a2-b1` | b1 | `tests/values/checks/a2_b1_roundtrip.sh` | red | — |
-| `ac-a2-b2` | b2 | `tests/values/checks/a2_b2_coercion.sh` | red | — |
+| `ac-a2-b1` | b1 | `tests/values/checks/a2_b1_roundtrip.sh` | red | pass |
+| `ac-a2-b2` | b2 | `tests/values/checks/a2_b2_coercion.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | each value kind round-trips through the CLI | `tests/values/checks/a2_b1_roundtrip.sh` — |
-| not yet | b2 | coercion between kinds matches Calc for arithmetic and comparison | `tests/values/checks/a2_b2_coercion.sh` — |
+| PASS | b1 | each value kind round-trips through the CLI | `tests/values/checks/a2_b1_roundtrip.sh` pass |
+| PASS | b2 | coercion between kinds matches Calc for arithmetic and comparison | `tests/values/checks/a2_b2_coercion.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -60,7 +60,10 @@ Status: landed (`50e142fa3f8f`)
 | Implemented `wi-a-i2-values-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-i2-values-1` | `rev-a@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
+
+- `tests/values/checks/a2_b1_roundtrip.sh`: pass
+- `tests/values/checks/a2_b2_coercion.sh`: pass
 
 Outcome report: none yet.
 
@@ -80,7 +83,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 8 h 24 min so far
+- Lead time: 8 h 26 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: 268 lines (+267 −1, 3 files, ≤400; tests 107 lines); plan check files laid over by land, not in the size: +95 −0, 2 files

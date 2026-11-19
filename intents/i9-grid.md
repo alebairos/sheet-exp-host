@@ -27,7 +27,26 @@ The grid first, as one plain ES module, web/grid/grid.js, with no build step and
 
 Add web/grid/grid.js so a workbook renders as a selectable, editable table in the browser, proven by the two plan checks under Node.
 
-Status: in review by `rev-1@alebairos`
+Status: landing (`caf47ed9691a`)
+
+**The passing review noted:** > pass wi-i9-grid-1 (commit 633842e15cbd822047b24b93ccfa033775f158c4 on ancestry plan/i9-grid f0800a23)
+> 
+> ac-b1 (b1: the grid renders a workbook's computed values): PASS
+> - reran tests/web/grid/checks/b1_render.sh on WI tree → exit 0 (ok b1)
+> - display/formatNumber: web/grid/grid.js:29-50 (Calc general format, TRUE/FALSE, errors, blank)
+> - createState/renderHTML: web/grid/grid.js:58-62,105-126 (headers, data-ref cells, HTML escape, selected/num/err classes)
+> - index.html sample mount: web/grid/index.html:18-25
+> 
+> ac-b2 (b2: selecting and editing a cell updates it): PASS
+> - reran tests/web/grid/checks/b2_edit.sh on WI tree → exit 0 (ok b2)
+> - select: web/grid/grid.js:64-66; edit/parseInput: web/grid/grid.js:77-102 (number/TRUE/FALSE/text/blank delete)
+> - mount wires click/dblclick/keydown: web/grid/grid.js:135-225 (exported; check asserts typeof mount === function)
+> 
+> suite: ./test.sh → all tests passed (exit 0)
+> 
+> scope: paths under exp-b:web/grid/** and exp-b:tests/web/grid/** only
+> - note: WI ancestry includes plan commit f0800a23 adding tests/web/grid/checks/*.sh (contract). Belongs under tests/web/grid; law 9 drops check-file edits at land.
+> - no path outside scope
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -54,11 +73,13 @@ Status: in review by `rev-1@alebairos`
 | Planned | `plan-1@alebairos` |
 | Certified | `gate-1@alebairos` |
 | Implemented `wi-i9-grid-1` | `impl-2@alebairos` |
-| Reviewed `wi-i9-grid-1` | `rev-1@alebairos` |
+| Reviewed `wi-i9-grid-1` | `rev-1@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
 Outcome report: none yet.
+
+Landing pull request: [exp-b #3](https://github.com/alebairos/sheet-exp-b/pull/3)
 
 ## 7. The decision
 
@@ -66,7 +87,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 02 min so far
+- Lead time: 10 h 03 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet
