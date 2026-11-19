@@ -50,15 +50,15 @@ Status: landed (`caf47ed9691a`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b1` | b1 | `tests/web/grid/checks/b1_render.sh` | red | — |
-| `ac-b2` | b2 | `tests/web/grid/checks/b2_edit.sh` | red | — |
+| `ac-b1` | b1 | `tests/web/grid/checks/b1_render.sh` | red | pass |
+| `ac-b2` | b2 | `tests/web/grid/checks/b2_edit.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | the grid renders a workbook's computed values | `tests/web/grid/checks/b1_render.sh` — |
-| not yet | b2 | selecting and editing a cell updates it | `tests/web/grid/checks/b2_edit.sh` — |
+| PASS | b1 | the grid renders a workbook's computed values | `tests/web/grid/checks/b1_render.sh` pass |
+| PASS | b2 | selecting and editing a cell updates it | `tests/web/grid/checks/b2_edit.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -75,9 +75,17 @@ Status: landed (`caf47ed9691a`)
 | Implemented `wi-i9-grid-1` | `impl-2@alebairos` |
 | Reviewed `wi-i9-grid-1` | `rev-1@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/web/grid/checks/b1_render.sh`: pass
+- `tests/web/grid/checks/b2_edit.sh`: pass
+
+Outcome report:
+
+- **Built:** In the browser, a spreadsheet grid: column letters and row numbers, cells showing computed values as Calc shows them (1 not 1.0, TRUE/FALSE, errors in red). Click selects; double-click/Enter/typing edits; Enter commits, Escape cancels. Typed 42 becomes a number, TRUE a boolean, emptied cell blank. Prototype media is the clickable screen.
+- **Advice:** adopt
+- [i9-grid/prototype.html](https://github.com/alebairos/sheet-exp-host/blob/4741ef5810b847a273f5d9bc58e3e7e16ad05491/i9-grid/prototype.html)
+- [i9-grid/grid.js](https://github.com/alebairos/sheet-exp-host/blob/4741ef5810b847a273f5d9bc58e3e7e16ad05491/i9-grid/grid.js)
 
 Files landed by `wi-i9-grid-1`:
 
@@ -92,11 +100,15 @@ Landing pull request: [exp-b #3](https://github.com/alebairos/sheet-exp-b/pull/3
 
 ## 7. The decision
 
-Nothing waits on you.
+**Verdict:i9-grid**: A decision: show your human its options
+
+- Met: `cooknship decide --answer Verdict:i9-grid --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:i9-grid --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:i9-grid --option not_met`
 
 ## 8. Metrics
 
-- Lead time: 10 h 08 min so far
+- Lead time: 10 h 11 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: 253 lines (+252 −1, 3 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +75 −0, 3 files

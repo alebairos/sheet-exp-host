@@ -4,7 +4,7 @@
 
 > Formulas parse as Calc reads them: A1, $A$1, ranges, Sheet2!A1, every SPEC.md operator with Calc's precedence (including -A1^2 and 2^3^2), numbers, strings, booleans and function calls
 
-Kind: Feature · State: in work · 1 work item · 3 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -26,7 +26,7 @@ The tree first, because every later part (eval, recalc, functions) walks it. A r
 
 Add parse/show/ParseError in src/parser so formulas become a Calc-faithful tree and malformed input raises ParseError, proven by the three plan checks.
 
-Status: landing (`37788f56e8dd`)
+Status: landed (`37788f56e8dd`)
 
 **The passing review noted:** > pass wi-i1-parser-1 (commit 67bb4c17651827e403e2eba494dd1d404f552369)
 > 
@@ -61,9 +61,9 @@ Status: landing (`37788f56e8dd`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | references, ranges and sheet references parse | no landed check |
-| not yet | b2 | operator precedence and associativity match Calc | no landed check |
-| not yet | b3 | a malformed formula is a parse error, not a crash | no landed check |
+| not yet | b1 | references, ranges and sheet references parse | `tests/parser/checks/b1_refs.sh` — |
+| not yet | b2 | operator precedence and associativity match Calc | `tests/parser/checks/b2_precedence.sh` — |
+| not yet | b3 | a malformed formula is a parse error, not a crash | `tests/parser/checks/b3_malformed.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -84,6 +84,14 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-i1-parser-1`:
+
+- `src/parser/__init__.py` +434 −0
+- `tests/parser/checks/b2_precedence.sh` +53 −0 (plan check)
+- `tests/parser/checks/b3_malformed.sh` +52 −0 (plan check)
+- `tests/parser/checks/b1_refs.sh` +51 −0 (plan check)
+- `tests/parser/__init__.py` +1 −0 (plan check)
+
 Landing pull request: [exp-b #4](https://github.com/alebairos/sheet-exp-b/pull/4)
 
 ## 7. The decision
@@ -92,7 +100,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 08 min so far
+- Lead time: 10 h 12 min so far
 - Loops: 0
 - Waste: 0 min
-- Size: nothing landed yet
+- Size: 434 lines (+434 −0, 1 file, 401–1,000; tests 0 lines); plan check files laid over by land, not in the size: +157 −0, 4 files

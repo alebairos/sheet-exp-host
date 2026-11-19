@@ -26,28 +26,16 @@ Value kinds first, because the evaluator (i3) and every function intent build on
 
 Add from_json/to_json/to_number/to_text/compare in src/values so kinds and Calc coercion are one shared module, proven by the two plan checks.
 
-Status: in review by `rev-1@alebairos`
+Status: landing (`ff20d95fb5f8`)
 
-**The passing review noted:** > pass wi-i2-values-1 (commit 5f0d7817d3246c2f5ce29e40c1aaf8a28966446e on ancestry plan/i2-values b4792f47)
+**The passing review noted:** > pass wi-i2-values-1 attempt 2 (same commit 5f0d7817d3246c2f5ce29e40c1aaf8a28966446e)
 > 
-> ac-b1 (b1: each value kind round-trips through the CLI): PASS
-> - reran tests/values/checks/b1_roundtrip.sh on WI tree → exit 0 (ok b1)
-> - from_json/to_json: src/values/__init__.py:128-162 (kinds Number/Text/Bool/BLANK/Error; integral JSON int; non-finite → #NUM!)
-> - CLI path exercised by the check via ./engine -; blank cell --cell → null
+> land: attempt 1 aborted after tests green: host rejected push of land/wi-i2-values-1 (f1804b7b…); LandAborted head mismatch. Not a verify failure. Re-ran checks.
 > 
-> ac-b2 (b2: coercion matches Calc for arithmetic and comparison): PASS
-> - reran tests/values/checks/b2_coercion.sh on WI tree → exit 0 (ok b2)
-> - to_number: src/values/__init__.py:169-184 (bool 1/0, blank 0, unambiguous text, empty string #VALUE!, errors pass)
-> - to_text/format_number: src/values/__init__.py:187-218 (general 15 sig digits, TRUE/FALSE, blank empty)
-> - compare: src/values/__init__.py:243-262 (numbers before text, casefold text, blank equals 0 or empty, errors)
-> 
-> suite: ./test.sh → all tests passed (exit 0); tests/values/test_values.py covers kinds/coercion
-> 
-> scope: paths under exp-b:src/values/** and exp-b:tests/values/** only
-> - note: WI ancestry includes plan commit b4792f47 adding tests/values/checks/*.sh (byte-identical to plan OID). Belongs under tests/values per design; law 9 drops check-file edits at land.
-> - no path outside scope
-> 
-> findings kept for the intent page: to_bool (src/values/__init__.py:221-231) is extra API beyond the two AC contracts; harmless and unused by the plan checks.
+> ac-b1: tests/values/checks/b1_roundtrip.sh exit 0; from_json/to_json src/values/__init__.py:128-162
+> ac-b2: tests/values/checks/b2_coercion.sh exit 0; to_number:169-184 to_text:187-218 compare:243-262
+> ./test.sh exit 0
+> scope: exp-b:src/values/** and exp-b:tests/values/** only; plan checks under tests/values belong; law 9 drops them at land.
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -74,11 +62,13 @@ Status: in review by `rev-1@alebairos`
 | Planned | `plan-1@alebairos` |
 | Certified | `gate-1@alebairos` |
 | Implemented `wi-i2-values-1` | `impl-1@alebairos`, `impl-2@alebairos` |
-| Reviewed `wi-i2-values-1` | `rev-1@alebairos` (passed attempt 1) |
+| Reviewed `wi-i2-values-1` | `rev-1@alebairos` (passed attempt 2) |
 
 Product checks: not recorded yet.
 
 Outcome report: none yet.
+
+Landing pull request: [exp-b #5](https://github.com/alebairos/sheet-exp-b/pull/5)
 
 ## 7. The decision
 
@@ -86,7 +76,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 08 min so far
+- Lead time: 10 h 12 min so far
 - Loops: 1 (D6 landing 1)
 - Waste: 11 min
 - Size: nothing landed yet
