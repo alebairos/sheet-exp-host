@@ -4,7 +4,7 @@
 
 > The engine CLI exists and builds and tests from a clean clone with ./test.sh: it reads a workbook JSON (SPEC.md) and prints it back with constants unchanged, and the repo has one directory per part (src/parser, src/values, src/eval, src/recalc, src/functions/{math,logic_text,lookup}, web/{grid,formula_bar,io}, tests/e2e) with a way to register functions that needs no shared file edits
 
-Kind: Feature · State: in work · 1 work item · 3 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -26,7 +26,7 @@ Python 3 standard library only, so a clean clone (and the land runner's ubuntu i
 
 Add the part directories, a function registry that discovers files under src/functions, an ./engine CLI that echoes a constants workbook (or one cell with --cell), and a real unittest suite behind ./test.sh, so every later intent has a place to land and a suite to grow.
 
-Status: landing (`c772837d2a38`)
+Status: landed (`c772837d2a38`)
 
 **The passing review noted:** > PASS. Verify rerun on e5888e5 (clean worktree): all three checks green, and all three red on base 4a38d02. ./test.sh: 10 tests OK.
 > - ac-a0-b1 (b1) scripts/checks/a0_b1_constants.sh: ok. src/cli.py:14-17 compute() copies every sheet's cells unchanged (stdin via load() src/cli.py:7-9, or a file path src/cli.py:10-11) and json.dump writes the {"sheets":...} shape (src/cli.py:51). Types are preserved, which tests/test_cli.py:34-38 also covers.
@@ -46,9 +46,9 @@ Status: landing (`c772837d2a38`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | `engine -` prints a workbook of constants unchanged, in SPEC.md's output shape | no landed check |
-| not yet | b2 | `engine - --cell Sheet1!A1` prints one value | no landed check |
-| not yet | b3 | ./test.sh builds and runs every test from a clean clone | no landed check |
+| not yet | b1 | `engine -` prints a workbook of constants unchanged, in SPEC.md's output shape | `scripts/checks/a0_b1_constants.sh` — |
+| not yet | b2 | `engine - --cell Sheet1!A1` prints one value | `scripts/checks/a0_b2_cell.sh` — |
+| not yet | b3 | ./test.sh builds and runs every test from a clean clone | `scripts/checks/a0_b3_test_sh.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -69,17 +69,42 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
-- Held: `wi-a-i0-skeleton-1`: wi-a-i0-skeleton-1: turn on auto-merge (merge commit) on https://github.com/alebairos/sheet-exp-a/pull/2, or merge it yourself; GitHub refused it: GraphQL: Pull request Pull request is in clean status (enablePullRequestAutoMerge) (auto-merge needs a public repo or a paid plan; a merge queue or a linear-history rule is not supported: land this product in direct mode)
+Files landed by `wi-a-i0-skeleton-1`:
+
+- `tests/test_cli.py` +62 −0 (test)
+- `src/cli.py` +57 −0
+- `scripts/checks/a0_b1_constants.sh` +45 −0 (plan check)
+- `src/functions/__init__.py` +45 −0
+- `scripts/checks/a0_b3_test_sh.sh` +38 −0 (plan check)
+- `tests/test_registry.py` +31 −0 (test)
+- `scripts/checks/a0_b2_cell.sh` +22 −0 (plan check)
+- `README.md` +17 −1
+- `engine` +11 −0
+- `scripts/test` +6 −0
+- `tests/e2e/README.md` +3 −0 (test)
+- `web/formula_bar/README.md` +3 −0
+- `web/grid/README.md` +3 −0
+- `web/io/README.md` +3 −0
+- `.gitignore` +2 −0
+- `src/eval/__init__.py` +1 −0
+- `src/functions/logic_text/__init__.py` +1 −0
+- `src/functions/lookup/__init__.py` +1 −0
+- `src/functions/math/__init__.py` +1 −0
+- `src/parser/__init__.py` +1 −0
+- `src/recalc/__init__.py` +1 −0
+- `src/values/__init__.py` +1 −0
+- `src/__init__.py` +0 −0
+- `tests/__init__.py` +0 −0 (test)
 
 Landing pull request: [exp-a #2](https://github.com/alebairos/sheet-exp-a/pull/2)
 
 ## 7. The decision
 
-**Held landing `wi-a-i0-skeleton-1`**: wi-a-i0-skeleton-1: turn on auto-merge (merge commit) on https://github.com/alebairos/sheet-exp-a/pull/2, or merge it yourself; GitHub refused it: GraphQL: Pull request Pull request is in clean status (enablePullRequestAutoMerge) (auto-merge needs a public repo or a paid plan; a merge queue or a linear-history rule is not supported: land this product in direct mode)
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 1 h 09 min so far
+- Lead time: 1 h 36 min so far
 - Loops: 0
 - Waste: 0 min
-- Size: nothing landed yet
+- Size: 155 lines (+154 −1, 21 files, ≤400; tests 96 lines); plan check files laid over by land, not in the size: +105 −0, 3 files

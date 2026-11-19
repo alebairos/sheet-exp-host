@@ -4,7 +4,7 @@
 
 > The engine CLI exists and builds and tests from a clean clone with ./test.sh: it reads a workbook JSON (SPEC.md) and prints it back with constants unchanged, and the repo has one directory per part (src/parser, src/values, src/eval, src/recalc, src/functions/{math,logic_text,lookup}, web/{grid,formula_bar,io}, tests/e2e) with a way to register functions that needs no shared file edits
 
-Kind: Feature · State: in work · 1 work item · 3 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -26,7 +26,7 @@ Python 3 so a clean clone needs no compiler. One work item: add the directory tr
 
 Add the part directories, discovery-based function registry, and a Python ./engine that echoes constants so ./test.sh runs a real suite from a clean clone.
 
-Status: landing (`fa58829a5cba`)
+Status: landed (`fa58829a5cba`)
 
 **The passing review noted:** > pass wi-i0-skeleton-1 against ACs b1-b3 at commit 06cd09f (diff origin/main...06cd09f).
 > 
@@ -52,9 +52,9 @@ Status: landing (`fa58829a5cba`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | `engine -` prints a workbook of constants unchanged, in SPEC.md's output shape | no landed check |
-| not yet | b2 | `engine - --cell Sheet1!A1` prints one value | no landed check |
-| not yet | b3 | ./test.sh builds and runs every test from a clean clone | no landed check |
+| not yet | b1 | `engine -` prints a workbook of constants unchanged, in SPEC.md's output shape | `scripts/checks/b1_constants_roundtrip.sh` — |
+| not yet | b2 | `engine - --cell Sheet1!A1` prints one value | `scripts/checks/b2_cell_flag.sh` — |
+| not yet | b3 | ./test.sh builds and runs every test from a clean clone | `scripts/checks/b3_test_sh.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -75,6 +75,30 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-i0-skeleton-1`:
+
+- `src/cli.py` +70 −0
+- `scripts/test` +66 −0
+- `src/functions/registry.py` +20 −0
+- `scripts/checks/b1_constants_roundtrip.sh` +16 −0 (plan check)
+- `scripts/checks/b2_cell_flag.sh` +14 −0 (plan check)
+- `scripts/checks/b3_test_sh.sh` +7 −0 (plan check)
+- `engine` +6 −0
+- `.gitignore` +3 −0
+- `tests/e2e/.gitkeep` +1 −0 (test)
+- `web/formula_bar/.gitkeep` +1 −0
+- `web/grid/.gitkeep` +1 −0
+- `web/io/.gitkeep` +1 −0
+- `src/__init__.py` +0 −0
+- `src/eval/__init__.py` +0 −0
+- `src/functions/__init__.py` +0 −0
+- `src/functions/logic_text/__init__.py` +0 −0
+- `src/functions/lookup/__init__.py` +0 −0
+- `src/functions/math/__init__.py` +0 −0
+- `src/parser/__init__.py` +0 −0
+- `src/recalc/__init__.py` +0 −0
+- `src/values/__init__.py` +0 −0
+
 Landing pull request: [exp-b #2](https://github.com/alebairos/sheet-exp-b/pull/2)
 
 ## 7. The decision
@@ -83,7 +107,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 2 h 47 min so far
+- Lead time: 3 h 14 min so far
 - Loops: 0
 - Waste: 0 min
-- Size: nothing landed yet
+- Size: 168 lines (+168 −0, 18 files, ≤400; tests 1 lines); plan check files laid over by land, not in the size: +37 −0, 3 files
