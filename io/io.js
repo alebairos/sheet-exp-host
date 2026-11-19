@@ -64,7 +64,16 @@ export function createController({ compute = async (b) => b } = {}) {
       await refresh(); return { ok: true };
     },
     async openFile(file) { return this.openText(file.name, await file.text()); },
-    async setBook(book) { state.book = book; await refresh(); },
+    // One grid edit: only the typed cell goes into the stored workbook (typed like the grid types input;
+    // "" clears it), so formulas elsewhere stay formulas; then the engine recomputes.
+    async edit(ref, text) {
+      const key = String(ref).toUpperCase();
+      const cells = { ...(state.book.sheets[state.sheet] || {}) };
+      const v = typed(String(text));
+      if (v === undefined || text === "") delete cells[key]; else cells[key] = v;
+      state.book = { ...state.book, sheets: { ...state.book.sheets, [state.sheet]: cells } };
+      await refresh();
+    },
     saveJSON() { return { name: state.name + ".json", text: toJSON(state.book), type: "application/json" }; },
     saveCSV() { return { name: state.name + ".csv", text: toCSV(state.computed, state.sheet), type: "text/csv" }; },
   };

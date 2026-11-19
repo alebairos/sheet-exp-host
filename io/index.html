@@ -4,10 +4,20 @@
 <p id="message"></p><div id="grid"></div>
 <script type="module">
 import { createController, download } from "./io.js";
-import { createState, mount } from "../grid/grid.js";
+import { createState, mount, inputText } from "../grid/grid.js";
 const compute = async (book) => (await fetch("/compute", {method: "POST", body: JSON.stringify(book)})).json();
 const c = createController({compute});
-const show = () => mount(document.getElementById("grid"), createState(c.state.computed, c.state.sheet), {onChange: async (s) => { await c.setBook(s.book); show(); }});
+// The grid edits a copy of the computed sheet; send the controller only the cells that changed, as typed.
+const changed = (a, b) => [...new Set([...Object.keys(a), ...Object.keys(b)])].filter((k) => a[k] !== b[k]);
+const show = () => {
+  const shown = c.state.computed.sheets[c.state.sheet] || {};
+  mount(document.getElementById("grid"), createState(c.state.computed, c.state.sheet), {onChange: async (s) => {
+    const refs = changed(shown, s.book.sheets[s.sheet] || {});
+    if (!refs.length) return;
+    for (const ref of refs) await c.edit(ref, inputText((s.book.sheets[s.sheet] || {})[ref]));
+    show();
+  }});
+};
 document.getElementById("open").onchange = async (e) => { await c.openFile(e.target.files[0]); document.getElementById("message").textContent = c.state.message; show(); };
 for (const [id, f] of [["save-json", () => c.saveJSON()], ["save-csv", () => c.saveCSV()]]) document.getElementById(id).onclick = () => { const s = f(); download(s.name, s.text, s.type); };
 show();
