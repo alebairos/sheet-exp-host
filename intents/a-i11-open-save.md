@@ -76,7 +76,7 @@ Outcome report: none yet.
 
 ## 8. Metrics
 
-- Lead time: 9 h 18 min so far
+- Lead time: 9 h 19 min so far
 - Loops: 1 (D2 plan 1)
 - Waste: 4 min
 - Size: nothing landed yet

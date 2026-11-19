@@ -64,16 +64,16 @@ Status: landed (`7ea5444140e7`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b1` | b1 | `tests/web/io/checks/b1_json.sh` | red | — |
-| `ac-b2` | b2 | `tests/web/io/checks/b2_csv.sh` | red | — |
-| `ac-b3` | b1, b2 | `tests/web/io/checks/b3_page.sh` | red | — |
+| `ac-b1` | b1 | `tests/web/io/checks/b1_json.sh` | red | pass |
+| `ac-b2` | b2 | `tests/web/io/checks/b2_csv.sh` | red | pass |
+| `ac-b3` | b1, b2 | `tests/web/io/checks/b3_page.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | opening then saving a JSON workbook keeps every cell | `tests/web/io/checks/b1_json.sh` —, `tests/web/io/checks/b3_page.sh` — |
-| not yet | b2 | CSV opens and saves values | `tests/web/io/checks/b2_csv.sh` —, `tests/web/io/checks/b3_page.sh` — |
+| PASS | b1 | opening then saving a JSON workbook keeps every cell | `tests/web/io/checks/b1_json.sh` pass, `tests/web/io/checks/b3_page.sh` pass |
+| PASS | b2 | CSV opens and saves values | `tests/web/io/checks/b2_csv.sh` pass, `tests/web/io/checks/b3_page.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -91,7 +91,11 @@ Status: landed (`7ea5444140e7`)
 | Implemented `wi-i11-open-save-1` | `impl-2@alebairos` |
 | Reviewed `wi-i11-open-save-1` | `rev-1@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
+
+- `tests/web/io/checks/b1_json.sh`: pass
+- `tests/web/io/checks/b2_csv.sh`: pass
+- `tests/web/io/checks/b3_page.sh`: pass
 
 Outcome report: none yet.
 
@@ -114,7 +118,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 56 min so far
+- Lead time: 10 h 57 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: 328 lines (+327 −1, 4 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +164 −0, 4 files
