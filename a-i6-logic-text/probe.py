@@ -10,7 +10,8 @@ def semi(f):
     for ch in f:
         if ch == '"': q = not q
         out.append(';' if ch == ',' and not q else ch)
-    return "".join(out)
+    import re
+    return re.sub(r"(?<![A-Za-z0-9_$])([A-Za-z_][A-Za-z0-9_]*)!", r"$\1.", "".join(out))
 
 def connect():
     local = uno.getComponentContext()

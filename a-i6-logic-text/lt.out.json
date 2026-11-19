@@ -577,7 +577,7 @@ true,
 [
 "=ISERROR(Nope!A1)",
 true,
-"=ISERROR(nope!A1)"
+"=ISERROR($nope.a1)"
 ],
 [
 "=IF(ISBLANK(A5),\"empty\",A5)",
@@ -642,9 +642,9 @@ true,
 "=CONCATENATE(1/3)"
 ],
 [
-"=CONCATENATE(TRUE())",
+"=CONCATENATE(TRUE)",
 "1",
-"=CONCATENATE(TRUE())"
+"=CONCATENATE(1)"
 ],
 [
 "=CONCATENATE(\"x\",1/0)",

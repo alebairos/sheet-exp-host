@@ -120,7 +120,7 @@
 | `=CONCATENATE(A5,"x")` | `"x"` |
 | `=CONCATENATE(A7,"x")` | `{"error": "#N/A"}` |
 | `=CONCATENATE(1/3)` | `"0.333333333333333"` |
-| `=CONCATENATE(TRUE())` | `"1"` |
+| `=CONCATENATE(TRUE)` | `"1"` |
 | `=CONCATENATE("x",1/0)` | `{"error": "#DIV/0!"}` |
 | `=CONCATENATE(A15,A10)` | `"-30"` |
 | `=CONCATENATE(0.1+0.2)` | `"0.3"` |
