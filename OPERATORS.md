@@ -37,8 +37,9 @@ export COOKNSHIP_PRODUCT=exp-b
 
 ## The human (the HITL)
 
-- Every decision goes through `cooknship decide`; `cooknship decide --list` shows what waits. Nothing is done by hand outside the machine; anything that is gets logged as a finding.
-- Put a one-line log in each decision's `--text`: `min=<minutes> page-only=<y|n> ease=<1-5> <reason>`.
+- The HITL answers in plain words in a chat with their own Claude Code session (not one of the six). That session shows each waiting decision from `cooknship decide --list` with its options and the page link. It sends the HITL's answer as they gave it, with `cooknship decide --as alebairos --answer <Name:id> --option <key> --text '<their words>'`, and adds nothing of its own. This deliberately departs from rule 4 of the generated AGENTS.md: the HITL chose it, and it is logged as a finding of the run.
+- Its `--text` ends with the log line `min=<minutes> page-only=<y|n> ease=<1-5>`, which the HITL gives with the answer or the session asks for.
+- Nothing is done by hand outside the machine; anything that is gets logged as a finding.
 - Day 1: ask `gm-1` to park "make it feel fast" exactly as worded.
 - Day 2: ask `gm-1` to file the defect "ROUND(2.5) shows 2".
 - Auto-merge is on for exp-b (`cooknship automerge off --product exp-b` turns it off). WIP is 8.
