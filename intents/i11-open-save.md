@@ -32,7 +32,7 @@ Three pieces in web/io, no build and no libraries. (1) io.js, pure text function
 
 Add web/io so JSON and CSV open and save keep cells and values, with a page wired to the grid and ./engine, proven by the three plan checks.
 
-Status: queued to land
+Status: landing (`7ea5444140e7`)
 
 **Flagged:** outside the scope: exp-b:web/grid/.gitkeep, exp-b:web/grid/grid.js
 
@@ -95,13 +95,15 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Landing pull request: [exp-b #7](https://github.com/alebairos/sheet-exp-b/pull/7)
+
 ## 7. The decision
 
 Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 29 min so far
+- Lead time: 10 h 36 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet

@@ -4,17 +4,17 @@
 
 > A parsed formula evaluates with Calc's operators and error propagation (#DIV/0!, #VALUE!, #REF!, #NAME?)
 
-Kind: Feature · State: parked · 1 work item · 3 bullets
+Kind: Feature · State: certified · 1 work item · 3 bullets
 
 ## 2. What you will see
 
-A formula now has a value, computed as Calc computes it: =10/4 is 2.5, =2^3^2 is 64, =-2^2 is 4, =50% is 0.5, ="3"*2 is 6, =TRUE+1 is 2, a blank cell is 0 (=Z99+1 is 1) or "" (=Z99&"x" is "x"), ="a"="A" is TRUE, =10<"9" is TRUE (numbers sort before text), =0.1+0.2&"" is "0.3". Errors flow through as Calc's: =1/0 is #DIV/0!, ="abc"+1 is #VALUE!, a cell holding #N/A makes =A1+1 #N/A, and an unknown function or name (=FOO(1), =foo) is #NAME?. The function intents plug in by registering a function: the evaluator calls it with the values of its arguments. ./engine output does not change yet: putting values in the CLI's cells is recalculation's job (i4).
+A formula now has a value, computed as Calc computes it: =10/4 is 2.5, =2^3^2 is 64, =-2^2 is 4, =50% is 0.5, ="3"*2 is 6, =TRUE+1 is 2, a blank cell is 0 (=Z99+1 is 1) or "" (=Z99&"x" is "x"), ="a"="A" is TRUE, =10<"9" is TRUE (numbers sort before text), =0.1+0.2&"" is "0.3". Errors flow through as Calc's: =1/0 is #DIV/0!, ="abc"+1 is #VALUE!, =NoSuchSheet!A1 is #REF!, a cell holding #N/A or #REF! makes =A1+1 that error, and an unknown function or name (=FOO(1), =foo) is #NAME?. The function intents plug in by registering a function: the evaluator calls it with the values of its arguments. ./engine output does not change yet: putting values in the CLI's cells is recalculation's job (i4).
 
 - No media: A library module with no screen; its sample formulas and values are the cases in tests/eval/checks/b*.sh
 
 ## 3. Approach
 
-The operator core first, as one module src/eval built on the two parts it depends on: the parser's tree (i1) and the values with their coercions (i2). evaluate(formula, book, sheet) parses the cell text, walks the tree and returns a src.values Value; book is SPEC.md's workbook JSON and sheet the formula's own. Literals become values; a reference or range becomes a Range (sheet plus corners over the book, values() row by row with blanks, an unknown sheet gives #REF!); in operator context a Range collapses to its single cell's value (more than one cell is #VALUE!, since Calc's implicit intersection needs a cell position the evaluator does not have). Arithmetic + - * / ^ goes through to_number, & through to_text, comparisons through compare, unary minus and % through to_number; any error operand gives that error, x/0 is #DIV/0!. A name that is not a function call is #NAME?; a call looks its name up in src.functions.registry() at evaluation time (so functions registered later are found) and an unknown one is #NAME? without evaluating its arguments' effects. Calling convention, pinned by the b3 check: positional arguments; a reference or range argument arrives as a Range (so ISBLANK, COUNTA and SUMIF see blanks and text), every other argument as a Value with errors left in (IFERROR and ISERROR need them), an omitted argument as the blank value; the function returns a Value (or a Range, collapsed like a reference). The final result of a lone blank reference is 0, as Calc shows =A1 on an empty cell; a formula that does not parse evaluates to an error value, never an exception. Referenced formula cells are read as they stand in the book: computing them first is i4's dependency order. Unit tests in tests/eval (with __init__.py so ./test.sh finds them); the plan checks in tests/eval/checks are the contract.
+The operator core first, as one module src/eval built on the two parts it depends on: the parser's tree (i1) and the values with their coercions (i2). evaluate(formula, book, sheet) parses the cell text, walks the tree and returns a src.values Value; book is SPEC.md's workbook JSON and sheet the formula's own. Literals become values; a reference or range becomes a Range (sheet plus corners over the book, values() row by row with blanks, an unknown sheet gives #REF!); in operator context a Range collapses to its single cell's value (more than one cell is #VALUE!, since Calc's implicit intersection needs a cell position the evaluator does not have). Arithmetic + - * / ^ goes through to_number, & through to_text, comparisons through compare, unary minus and % through to_number; any error operand gives that error, x/0 is #DIV/0!. A name that is not a function call is #NAME?; a call looks its name up in src.functions.registry() at evaluation time (so functions registered later are found) and an unknown one is #NAME? without evaluating its arguments' effects. Calling convention, pinned by the b3 check: positional arguments; a reference or range argument arrives as a Range (so ISBLANK, COUNTA and SUMIF see blanks and text), every other argument as a Value with errors left in (IFERROR and ISERROR need them), an omitted argument as the blank value; the function returns a Value (or a Range, collapsed like a reference). The final result of a lone blank reference is 0, as Calc shows =A1 on an empty cell; a formula that does not parse evaluates to an error value, never an exception. Referenced formula cells are read as they stand in the book: computing them first is i4's dependency order. Unit tests in tests/eval (with __init__.py so ./test.sh finds them); the plan checks in tests/eval/checks are the contract. b2 now covers #REF! for a missing sheet (=NoSuchSheet!A1 and through operators) and a stored #REF! cell (B3) flowing through + * & =.
 
 - **Reuses:** src/parser's parse and tree (i1-parser) and src/values' Value kinds, to_number, to_text and compare (i2-values), so the coercion rules live in one place; src.functions.register and registry() from i0-skeleton for calls.
 - **Removes:** none
@@ -24,7 +24,7 @@ The operator core first, as one module src/eval built on the two parts it depend
 
 ### `wi-i3-evaluator-1`: Calc formula evaluator
 
-Add src.eval.evaluate so formulas compute with Calc operators, error propagation and #NAME? for unknown calls, proven by the three plan checks.
+Add src.eval.evaluate so formulas compute with Calc operators, error propagation including #REF!, and #NAME? for unknown calls, proven by the three plan checks.
 
 Status: planned
 
@@ -63,11 +63,15 @@ Outcome report: none yet.
 
 ## 7. The decision
 
-Nothing waits on you.
+**SpecAccept:i3-evaluator**: A decision: show your human its options
+
+- Accept the spec: claims freeze, it can be admitted: `cooknship decide --answer SpecAccept:i3-evaluator --option accept`
+- Send the plan back with a reason: `cooknship decide --answer SpecAccept:i3-evaluator --option reject --text "<reason>"`
+- Shelve it; when another intent takes its place, the reason is replaced:<that intent's id>, and what waits on this one waits for it instead: `cooknship decide --answer SpecAccept:i3-evaluator --option shelve --text "<reason>"`
 
 ## 8. Metrics
 
-- Lead time: 10 h 29 min so far
+- Lead time: 10 h 36 min so far
 - Loops: 1 (D2 plan 1)
-- Waste: 3 min
+- Waste: 4 min
 - Size: nothing landed yet

@@ -51,15 +51,15 @@ Status: landed (`4ebacdf52b8c`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b1` | b1 | `tests/web/formula_bar/checks/b1_formula.sh` | red | — |
-| `ac-b2` | b2 | `tests/web/formula_bar/checks/b2_errors.sh` | red | — |
+| `ac-b1` | b1 | `tests/web/formula_bar/checks/b1_formula.sh` | red | pass |
+| `ac-b2` | b2 | `tests/web/formula_bar/checks/b2_errors.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | the formula bar shows and edits the selected cell's formula | `tests/web/formula_bar/checks/b1_formula.sh` — |
-| not yet | b2 | errors display as Calc names them | `tests/web/formula_bar/checks/b2_errors.sh` — |
+| PASS | b1 | the formula bar shows and edits the selected cell's formula | `tests/web/formula_bar/checks/b1_formula.sh` pass |
+| PASS | b2 | errors display as Calc names them | `tests/web/formula_bar/checks/b2_errors.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -76,9 +76,17 @@ Status: landed (`4ebacdf52b8c`)
 | Implemented `wi-i10-formula-bar-1` | `impl-2@alebairos` |
 | Reviewed `wi-i10-formula-bar-1` | `rev-1@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/web/formula_bar/checks/b1_formula.sh`: pass
+- `tests/web/formula_bar/checks/b2_errors.sh`: pass
+
+Outcome report:
+
+- **Built:** Above the grid, a bar like Calc's: the selected cell's name (B1), then its content as typed: the formula =A1/A2 rather than its value, or the constant (1, 2.5, TRUE, text). Edit it and press Enter to change the cell (a text starting with = stays a formula; 42 becomes a number, TRUE a boolean, empty text a blank cell); Escape cancels. When the cell's computed value is an error, its name shows in red next to the formula, exactly as Calc names it: #DIV/0!, #VALUE!, #REF!, #NAME?, #N/A or #NUM!. Text that merely looks like an error (a constant "#DIV/0!") is not flagged. The clickable prototype in the media is that screen with sample cells.
+- **Advice:** adopt
+- [i10-formula-bar/prototype.html](https://github.com/alebairos/sheet-exp-host/blob/920f66114e6844ec076654e5516da4397a499a6e/i10-formula-bar/prototype.html)
+- [i10-formula-bar/formula_bar.js](https://github.com/alebairos/sheet-exp-host/blob/920f66114e6844ec076654e5516da4397a499a6e/i10-formula-bar/formula_bar.js)
 
 Files landed by `wi-i10-formula-bar-1`:
 
@@ -93,11 +101,15 @@ Landing pull request: [exp-b #6](https://github.com/alebairos/sheet-exp-b/pull/6
 
 ## 7. The decision
 
-Nothing waits on you.
+**Verdict:i10-formula-bar**: A decision: show your human its options
+
+- Met: `cooknship decide --answer Verdict:i10-formula-bar --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:i10-formula-bar --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:i10-formula-bar --option not_met`
 
 ## 8. Metrics
 
-- Lead time: 10 h 29 min so far
+- Lead time: 10 h 36 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: 125 lines (+124 −1, 3 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +80 −0, 3 files
