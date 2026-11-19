@@ -4,7 +4,7 @@
 
 > The engine CLI exists and builds and tests from a clean clone with ./test.sh: it reads a workbook JSON (SPEC.md) and prints it back with constants unchanged, and the repo has one directory per part (src/parser, src/values, src/eval, src/recalc, src/functions/{math,logic_text,lookup}, web/{grid,formula_bar,io}, tests/e2e) with a way to register functions that needs no shared file edits
 
-Kind: Feature · State: in work · 1 work item · 3 bullets
+Kind: Feature · State: parked · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -26,7 +26,7 @@ Python 3 so a clean clone needs no compiler. One work item: add the directory tr
 
 Add the part directories, discovery-based function registry, ./engine that echoes constants from workbook JSON (and --cell), and wire ./test.sh to a real suite.
 
-Status: queued to land
+Status: shelved
 
 **The passing review noted:** > pass wi-i0-skeleton-1 against ACs b1-b3 at commit 06cd09f (diff origin/main...06cd09f).
 > 
@@ -44,9 +44,9 @@ Status: queued to land
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b1` | b1 | `scripts/checks/b1_constants_roundtrip.sh` | red | — |
-| `ac-b2` | b2 | `scripts/checks/b2_cell_flag.sh` | red | — |
-| `ac-b3` | b3 | `scripts/checks/b3_test_sh.sh` | red | — |
+| `ac-b1` | b1 | `scripts/checks/b1_constants_roundtrip.sh` | — | — |
+| `ac-b2` | b2 | `scripts/checks/b2_cell_flag.sh` | — | — |
+| `ac-b3` | b3 | `scripts/checks/b3_test_sh.sh` | — | — |
 
 **Acceptance**, against the landed checks:
 
@@ -66,8 +66,8 @@ Status: queued to land
 
 | Role | Who |
 | --- | --- |
-| Planned | `plan-1@alebairos` |
-| Certified | `gate-1@alebairos` |
+| Planned | — |
+| Certified | — |
 | Implemented `wi-i0-skeleton-1` | `impl-1@alebairos` |
 | Reviewed `wi-i0-skeleton-1` | `rev-1@alebairos` (passed attempt 1) |
 
@@ -75,15 +75,10 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
-- Held: `wi-i0-skeleton-1`: wi-i0-skeleton-1 at 06cd09fb76b1: intent i0-skeleton was certified without its plan commit (no plan_oid), so land cannot lay the certified checks over and an edited check would decide; certify the new plan with its plan_oid. Held for the HITL, no attempt counted. The way out: Replan i0-skeleton, so the plan is cut again on the current product; or, once a WI of it has landed, shelve it with a replacement
-
 ## 7. The decision
 
-**Held landing `wi-i0-skeleton-1`**: wi-i0-skeleton-1 at 06cd09fb76b1: intent i0-skeleton was certified without its plan commit (no plan_oid), so land cannot lay the certified checks over and an edited check would decide; certify the new plan with its plan_oid. Held for the HITL, no attempt counted. The way out: Replan i0-skeleton, so the plan is cut again on the current product; or, once a WI of it has landed, shelve it with a replacement
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 1 h 48 min so far
-- Loops: 0
-- Waste: 0 min
-- Size: nothing landed yet
+Not started: the metrics start with the first plan.
