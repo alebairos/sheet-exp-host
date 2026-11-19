@@ -38,15 +38,15 @@ Status: landed (`fd1b4ba07198`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a10-b1` | b1 | `tests/web/formula_bar/checks/a10_b1_formula.sh` | red | — |
-| `ac-a10-b2` | b2 | `tests/web/formula_bar/checks/a10_b2_errors.sh` | red | — |
+| `ac-a10-b1` | b1 | `tests/web/formula_bar/checks/a10_b1_formula.sh` | red | pass |
+| `ac-a10-b2` | b2 | `tests/web/formula_bar/checks/a10_b2_errors.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | the formula bar shows and edits the selected cell's formula | `tests/web/formula_bar/checks/a10_b1_formula.sh` — |
-| not yet | b2 | errors display as Calc names them | `tests/web/formula_bar/checks/a10_b2_errors.sh` — |
+| PASS | b1 | the formula bar shows and edits the selected cell's formula | `tests/web/formula_bar/checks/a10_b1_formula.sh` pass |
+| PASS | b2 | errors display as Calc names them | `tests/web/formula_bar/checks/a10_b2_errors.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -63,9 +63,18 @@ Status: landed (`fd1b4ba07198`)
 | Implemented `wi-a-i10-formula-bar-1` | `impl-a1@alebairos` |
 | Reviewed `wi-a-i10-formula-bar-1` | `rev-a@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/web/formula_bar/checks/a10_b1_formula.sh`: pass
+- `tests/web/formula_bar/checks/a10_b2_errors.sh`: pass
+
+Outcome report:
+
+- **Built:** The formula bar in exp-a web/formula_bar (landed via exp-a PR #6, one work item, first attempt, review passed). It shows the selected cell's name and its content as typed: =A1/A2, not its value; constants appear as Calc shows them (2.5, TRUE). Enter commits an edit: a leading = keeps it a formula, 42 becomes a number, TRUE a boolean, and empty text clears the cell. Escape cancels. When the computed value is an error, its Calc name (#DIV/0!, #VALUE!, #REF!, #NAME?, #N/A, #NUM!) appears beside the formula. A constant that only looks like an error (the text "#DIV/0!") is not flagged. Both plan checks pass on main 9f021e6, as does ./test.sh. It matches the plan, with one gap: no stylesheet landed, so the error name is plain text, not red as in the prototype. It is a standalone module: no page in the product shows it with the grid yet, because the plan leaves that page to the open/save intent (a-i11). built/bar.png is the landed module mounted, unstyled, on sample cells by a small evidence-only page (built/index.html).
+- **Advice:** Adopt, with follow-ups. (1) In a-i11-open-save, where grid, bar and engine are joined on one page, add the red error style and check that the bar follows the grid's selection. (2) As with the grid, the bar's Node unit tests are not run by ./test.sh, because unittest discovery skips tests/web. Park one small intent that registers the Node tests for both web parts in the shared test script. (3) Cosmetic, per the review: the bar shows 1E-7 where Calc's input line shows 0.0000001, and 50% shows as 0.5. Watch these only if the hidden suite looks at the input line, which it likely does not.
+- [a-i10-formula-bar/built/bar.png](https://github.com/alebairos/sheet-exp-host/blob/db4e7b7521e24218464911bc72fc78cab7243a80/a-i10-formula-bar/built/bar.png)
+- [a-i10-formula-bar/built/index.html](https://github.com/alebairos/sheet-exp-host/blob/db4e7b7521e24218464911bc72fc78cab7243a80/a-i10-formula-bar/built/index.html)
+- [a-i10-formula-bar/built/formula_bar.js](https://github.com/alebairos/sheet-exp-host/blob/db4e7b7521e24218464911bc72fc78cab7243a80/a-i10-formula-bar/built/formula_bar.js)
 
 Files landed by `wi-a-i10-formula-bar-1`:
 
@@ -81,11 +90,15 @@ Landing pull request: [exp-a #6](https://github.com/alebairos/sheet-exp-a/pull/6
 
 ## 7. The decision
 
-Nothing waits on you.
+**Verdict:a-i10-formula-bar**: A decision: show your human its options
+
+- Met: `cooknship decide --answer Verdict:a-i10-formula-bar --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-i10-formula-bar --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-i10-formula-bar --option not_met`
 
 ## 8. Metrics
 
-- Lead time: 8 h 47 min so far
+- Lead time: 8 h 51 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: 133 lines (+132 −1, 5 files, ≤400; tests 102 lines); plan check files laid over by land, not in the size: +79 −0, 2 files

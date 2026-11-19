@@ -32,9 +32,35 @@ Three pieces in web/io, no build and no libraries. (1) io.js, pure text function
 
 Add web/io so JSON and CSV open and save keep cells and values, with a page wired to the grid and ./engine, proven by the three plan checks.
 
-Status: attempt 1 built, awaiting review
+Status: queued to land
 
 **Flagged:** outside the scope: exp-b:web/grid/.gitkeep, exp-b:web/grid/grid.js
+
+**The passing review noted:** > pass wi-i11-open-save-1 (commit bf9c281cc311480f9fcb7517168707179e93c0ea)
+> 
+> ac-b1 (b1: opening then saving a JSON workbook keeps every cell): PASS
+> - reran tests/web/io/checks/b1_json.sh → exit 0 (ok b1)
+> - parseJSON/toJSON: web/io/io.js:5-40
+> 
+> ac-b2 (b2: CSV opens and saves values): PASS
+> - reran tests/web/io/checks/b2_csv.sh → exit 0 (ok b2)
+> - parseCSV/toCSV: web/io/io.js:53-146
+> 
+> ac-b3 (page covers b1+b2): PASS
+> - reran tests/web/io/checks/b3_page.sh → exit 0 (ok page and controller / ok serve.py)
+> - createController/openFile/download: web/io/io.js:148-204
+> - serve.py compute proxy: web/io/serve.py:15+
+> - index.html wires Open/Save + grid: web/io/index.html:9-40
+> 
+> suite: ./test.sh → all tests passed (exit 0)
+> 
+> outside scope (flagged by next hint; not refused):
+> - exp-b:web/grid/.gitkeep deleted and exp-b:web/grid/grid.js added
+> - reason: WI ancestry is plan/i11-open-save on pre-i9-grid skeleton; the page imports ../grid/grid.js
+> - belongs as dependency snapshot only: web/grid/grid.js is byte-identical to current origin/main (already landed by i9-grid). No new grid behavior in this WI.
+> - does not expand i11 ownership; land against main should no-op the duplicate grid content
+> 
+> in-scope paths: web/io/** and tests/web/io/** only otherwise
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -63,7 +89,7 @@ Status: attempt 1 built, awaiting review
 | Planned | `plan-1@alebairos` |
 | Certified | `gate-1@alebairos` |
 | Implemented `wi-i11-open-save-1` | `impl-2@alebairos` |
-| Reviewed `wi-i11-open-save-1` | — |
+| Reviewed `wi-i11-open-save-1` | `rev-1@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
@@ -75,7 +101,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 25 min so far
+- Lead time: 10 h 29 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet

@@ -4,7 +4,7 @@
 
 > In the browser a formula bar shows the selected cell's formula, and a cell in error shows the error
 
-Kind: Feature · State: in work · 1 work item · 2 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -27,7 +27,7 @@ One plain ES module, web/formula_bar/formula_bar.js, no build and no libraries, 
 
 Add web/formula_bar/formula_bar.js so the selected cell's formula shows and edits in a bar and Calc error names appear in red, proven by the two plan checks.
 
-Status: landing (`4ebacdf52b8c`)
+Status: landed (`4ebacdf52b8c`)
 
 **The passing review noted:** > pass wi-i10-formula-bar-1 (commit 374d839c0bda76a6467db3a0b0bbec4161796cfa)
 > 
@@ -58,8 +58,8 @@ Status: landing (`4ebacdf52b8c`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | the formula bar shows and edits the selected cell's formula | no landed check |
-| not yet | b2 | errors display as Calc names them | no landed check |
+| not yet | b1 | the formula bar shows and edits the selected cell's formula | `tests/web/formula_bar/checks/b1_formula.sh` — |
+| not yet | b2 | errors display as Calc names them | `tests/web/formula_bar/checks/b2_errors.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -80,6 +80,15 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-i10-formula-bar-1`:
+
+- `web/formula_bar/formula_bar.js` +113 −0
+- `tests/web/formula_bar/checks/b1_formula.sh` +46 −0 (plan check)
+- `tests/web/formula_bar/checks/b2_errors.sh` +33 −0 (plan check)
+- `web/formula_bar/README.md` +11 −0
+- `tests/web/formula_bar/__init__.py` +1 −0 (plan check)
+- `web/formula_bar/.gitkeep` +0 −1
+
 Landing pull request: [exp-b #6](https://github.com/alebairos/sheet-exp-b/pull/6)
 
 ## 7. The decision
@@ -88,7 +97,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 25 min so far
+- Lead time: 10 h 29 min so far
 - Loops: 0
 - Waste: 0 min
-- Size: nothing landed yet
+- Size: 125 lines (+124 −1, 3 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +80 −0, 3 files
