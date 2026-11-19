@@ -2,6 +2,7 @@
 # b3: an unknown function is #NAME?.
 # Contract (plan i3-evaluator): src.eval.evaluate(formula, book, sheet) -> a src.values Value;
 # src.values.to_json gives the CLI's JSON. Results compare type-strict: True never passes as 1.
+# Clarification 2026-11-19: register/registry live in src.eval (not src.functions).
 # Also pins how the evaluator calls a function registered with src.eval.register (the function
 # intents build on it): positional args; a reference or range argument arrives as a src.eval.Range whose
 # values() lists every cell row by row (blanks included); any other argument as a src.values Value,
