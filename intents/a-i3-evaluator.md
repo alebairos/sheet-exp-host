@@ -4,7 +4,7 @@
 
 > A parsed formula evaluates with Calc's operators and error propagation (#DIV/0!, #VALUE!, #REF!, #NAME?)
 
-Kind: Feature · State: in work · 1 work item · 3 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -26,7 +26,7 @@ The operator core first, as one module src/eval built on the two parts it depend
 
 Add src/eval: walk the parser's tree over a workbook and compute it with Calc's operators, coercion and error propagation (#DIV/0!, #VALUE!, #REF!, #N/A), return #NAME? for an unknown function or name, and call registered functions with one agreed argument shape, so formulas produce values and the function intents have something to plug into.
 
-Status: landing (`99c5a4e22d9a`)
+Status: landed (`99c5a4e22d9a`)
 
 **The passing review noted:** > PASS.
 > 
@@ -56,9 +56,9 @@ Status: landing (`99c5a4e22d9a`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | arithmetic, comparison, & and % match Calc | no landed check |
-| not yet | b2 | errors propagate through operators as in Calc | no landed check |
-| not yet | b3 | an unknown function is #NAME? | no landed check |
+| not yet | b1 | arithmetic, comparison, & and % match Calc | `tests/eval/checks/a3_b1_operators.sh` — |
+| not yet | b2 | errors propagate through operators as in Calc | `tests/eval/checks/a3_b2_errors.sh` — |
+| not yet | b3 | an unknown function is #NAME? | `tests/eval/checks/a3_b3_names.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -79,6 +79,15 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-i3-evaluator-1`:
+
+- `src/eval/__init__.py` +246 −1
+- `tests/eval/test_eval.py` +123 −0 (test)
+- `tests/eval/checks/a3_b3_names.sh` +84 −0 (plan check)
+- `tests/eval/checks/a3_b2_errors.sh` +59 −0 (plan check)
+- `tests/eval/checks/a3_b1_operators.sh` +56 −0 (plan check)
+- `tests/eval/__init__.py` +0 −0 (test)
+
 Landing pull request: [exp-a #8](https://github.com/alebairos/sheet-exp-a/pull/8)
 
 ## 7. The decision
@@ -87,7 +96,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 20 h 29 min so far
+- Lead time: 20 h 36 min so far
 - Loops: 4 (D1 spec 1, D2 plan 3)
 - Waste: 3 h 42 min
-- Size: nothing landed yet
+- Size: 247 lines (+246 −1, 3 files, ≤400; tests 123 lines); plan check files laid over by land, not in the size: +199 −0, 3 files

@@ -4,7 +4,7 @@
 
 > In the browser I open and save a workbook as CSV and as SPEC.md's JSON
 
-Kind: Feature · State: in work · 1 work item · 2 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -32,7 +32,7 @@ Three pieces in web/io, no build and no libraries. (1) io.js, pure text function
 
 Add web/io: a page with Open, Save JSON and Save CSV over the grid, a small controller that opens a file into the workbook (or a message for a bad file), takes each grid edit as one typed cell so formulas stay formulas, and saves it as SPEC.md's JSON or as CSV values, plus a standard-library server that serves the page and computes workbooks with the engine.
 
-Status: landing (`6ce5b2aadde5`)
+Status: landed (`6ce5b2aadde5`)
 
 **The passing review noted:** > PASS (attempt 2). The defect from attempt 1 is fixed.
 > 
@@ -63,8 +63,8 @@ Status: landing (`6ce5b2aadde5`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | opening then saving a JSON workbook keeps every cell | no landed check |
-| not yet | b2 | CSV opens and saves values | no landed check |
+| not yet | b1 | opening then saving a JSON workbook keeps every cell | `tests/web/io/checks/a11_b1_json.sh` —, `tests/web/io/checks/a11_b3_page.sh` — |
+| not yet | b2 | CSV opens and saves values | `tests/web/io/checks/a11_b2_csv.sh` —, `tests/web/io/checks/a11_b3_page.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -85,6 +85,19 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-i11-open-save-1`:
+
+- `web/io/io.js` +169 −0
+- `tests/web/io/checks/a11_b3_page.sh` +111 −0 (plan check)
+- `tests/web/io/io.test.mjs` +111 −0 (test)
+- `web/io/index.html` +85 −0
+- `web/io/serve.py` +64 −0
+- `tests/web/io/checks/a11_b1_json.sh` +41 −0 (plan check)
+- `tests/web/io/checks/a11_b2_csv.sh` +40 −0 (plan check)
+- `tests/web/io/test_io.py` +21 −0 (test)
+- `web/io/README.md` +16 −1
+- `tests/web/io/__init__.py` +0 −0 (test)
+
 Landing pull request: [exp-a #7](https://github.com/alebairos/sheet-exp-a/pull/7)
 
 ## 7. The decision
@@ -93,7 +106,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 20 h 29 min so far
+- Lead time: 20 h 36 min so far
 - Loops: 4 (D1 spec 1, D2 plan 2, D5 review 1)
 - Waste: 3 h 48 min
-- Size: nothing landed yet
+- Size: 335 lines (+334 −1, 7 files, ≤400; tests 132 lines); plan check files laid over by land, not in the size: +192 −0, 3 files
