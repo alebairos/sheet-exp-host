@@ -4,7 +4,7 @@
 
 > Cell values and coercion behave as in Calc: numbers, text, booleans, blanks and the six errors, with text-to-number, boolean-as-1/0 and blank-as-0-or-empty
 
-Kind: Feature · State: certified · 1 work item · 2 bullets
+Kind: Feature · State: in work · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -26,7 +26,28 @@ Value kinds first, because the evaluator (i3) and every function intent build on
 
 Add from_json/to_json/to_number/to_text/compare in src/values so kinds and Calc coercion are one shared module, proven by the two plan checks.
 
-Status: planned
+Status: accepted
+
+**The passing review noted:** > pass wi-i2-values-1 (commit 5f0d7817d3246c2f5ce29e40c1aaf8a28966446e on ancestry plan/i2-values b4792f47)
+> 
+> ac-b1 (b1: each value kind round-trips through the CLI): PASS
+> - reran tests/values/checks/b1_roundtrip.sh on WI tree → exit 0 (ok b1)
+> - from_json/to_json: src/values/__init__.py:128-162 (kinds Number/Text/Bool/BLANK/Error; integral JSON int; non-finite → #NUM!)
+> - CLI path exercised by the check via ./engine -; blank cell --cell → null
+> 
+> ac-b2 (b2: coercion matches Calc for arithmetic and comparison): PASS
+> - reran tests/values/checks/b2_coercion.sh on WI tree → exit 0 (ok b2)
+> - to_number: src/values/__init__.py:169-184 (bool 1/0, blank 0, unambiguous text, empty string #VALUE!, errors pass)
+> - to_text/format_number: src/values/__init__.py:187-218 (general 15 sig digits, TRUE/FALSE, blank empty)
+> - compare: src/values/__init__.py:243-262 (numbers before text, casefold text, blank equals 0 or empty, errors)
+> 
+> suite: ./test.sh → all tests passed (exit 0); tests/values/test_values.py covers kinds/coercion
+> 
+> scope: paths under exp-b:src/values/** and exp-b:tests/values/** only
+> - note: WI ancestry includes plan commit b4792f47 adding tests/values/checks/*.sh (byte-identical to plan OID). Belongs under tests/values per design; law 9 drops check-file edits at land.
+> - no path outside scope
+> 
+> findings kept for the intent page: to_bool (src/values/__init__.py:221-231) is extra API beyond the two AC contracts; harmless and unused by the plan checks.
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -52,8 +73,8 @@ Status: planned
 | --- | --- |
 | Planned | `plan-1@alebairos` |
 | Certified | `gate-1@alebairos` |
-| Implemented `wi-i2-values-1` | — |
-| Reviewed `wi-i2-values-1` | — |
+| Implemented `wi-i2-values-1` | `impl-2@alebairos` |
+| Reviewed `wi-i2-values-1` | `rev-1@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
@@ -61,15 +82,11 @@ Outcome report: none yet.
 
 ## 7. The decision
 
-**SpecAccept:i2-values**: A decision: show your human its options
-
-- Accept the spec: claims freeze, it can be admitted: `cooknship decide --answer SpecAccept:i2-values --option accept`
-- Send the plan back with a reason: `cooknship decide --answer SpecAccept:i2-values --option reject --text "<reason>"`
-- Shelve it; when another intent takes its place, the reason is replaced:<that intent's id>, and what waits on this one waits for it instead: `cooknship decide --answer SpecAccept:i2-values --option shelve --text "<reason>"`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 9 h 52 min so far
-- Loops: 0
-- Waste: 0 min
+- Lead time: 10 h 02 min so far
+- Loops: 1 (D6 landing 1)
+- Waste: 9 min
 - Size: nothing landed yet

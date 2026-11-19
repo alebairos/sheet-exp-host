@@ -4,7 +4,7 @@
 
 > Cell values and coercion behave as in Calc: numbers, text, booleans, blanks and the six errors, with text-to-number, boolean-as-1/0 and blank-as-0-or-empty
 
-Kind: Feature · State: in work · 1 work item · 2 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -26,7 +26,7 @@ Value kinds first, because the evaluator (a-i3) and every function intent build 
 
 Add src/values: the five kinds of cell value (number, text, boolean, blank, error) with conversion to and from the workbook JSON, and Calc's coercions for arithmetic, concatenation and comparison, so the evaluator and functions share one set of rules.
 
-Status: landing (`50e142fa3f8f`)
+Status: landed (`50e142fa3f8f`)
 
 **The passing review noted:** > PASS. Verify rerun in a worktree of 23423c5: both checks green (ok b1, ok b2), ./test.sh 25 tests OK; on plan base 6a8a8fa both red (ImportError: from_json). No check file edited; the 3 paths are inside src/values and tests/values.
 > ac-a2-b1 (tests/values/checks/a2_b1_roundtrip.sh): from_json src/values/__init__.py:130-144 (null->BLANK, bool before int, {"error":..}->Error), to_json :147-164 (integral finite floats below 2^53 as int, non-finite as #NUM!); value classes immutable and hashable :21-121. The CLI part of the check passes on ./engine unchanged, as the design says.
@@ -42,8 +42,8 @@ Status: landing (`50e142fa3f8f`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | each value kind round-trips through the CLI | no landed check |
-| not yet | b2 | coercion between kinds matches Calc for arithmetic and comparison | no landed check |
+| not yet | b1 | each value kind round-trips through the CLI | `tests/values/checks/a2_b1_roundtrip.sh` — |
+| not yet | b2 | coercion between kinds matches Calc for arithmetic and comparison | `tests/values/checks/a2_b2_coercion.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -64,6 +64,14 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-i2-values-1`:
+
+- `src/values/__init__.py` +267 −1
+- `tests/values/test_values.py` +107 −0 (test)
+- `tests/values/checks/a2_b1_roundtrip.sh` +49 −0 (plan check)
+- `tests/values/checks/a2_b2_coercion.sh` +46 −0 (plan check)
+- `tests/values/__init__.py` +0 −0 (test)
+
 Landing pull request: [exp-a #4](https://github.com/alebairos/sheet-exp-a/pull/4)
 
 ## 7. The decision
@@ -72,7 +80,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 8 h 14 min so far
+- Lead time: 8 h 24 min so far
 - Loops: 0
 - Waste: 0 min
-- Size: nothing landed yet
+- Size: 268 lines (+267 −1, 3 files, ≤400; tests 107 lines); plan check files laid over by land, not in the size: +95 −0, 2 files

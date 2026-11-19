@@ -4,7 +4,7 @@
 
 > Formulas parse as Calc reads them: A1, $A$1, ranges, Sheet2!A1, every SPEC.md operator with Calc's precedence (including -A1^2 and 2^3^2), numbers, strings, booleans and function calls
 
-Kind: Feature · State: in work · 1 work item · 3 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -26,7 +26,7 @@ The tree first, because every later part (eval, recalc, functions) walks it. A r
 
 Add src/parser: a tokenizer and recursive-descent parser that turns a formula string into a tree with Calc's precedence and associativity, plus a canonical printer and a ParseError for malformed input, so the evaluator (a later intent) has one agreed shape to walk.
 
-Status: landing (`8f35744725a9`)
+Status: landed (`8f35744725a9`)
 
 **The passing review noted:** > PASS. Verify rerun in a worktree of ca80587: all three checks green (ok b1/b2/b3), ./test.sh 21 tests OK; on plan base d190371 all three red (ImportError: no parse). No check file edited; all 5 paths inside src/parser and tests/parser.
 > ac-a1-b1 (tests/parser/checks/a1_b1_refs.sh): ref token src/parser/parse.py:39-42 (optional quoted/plain sheet, $ flags, optional :cell end), _ref_token parse.py:76-98 (out-of-grid A1 like XFE1 becomes a Name, with a sheet it is a ParseError), show in src/parser/nodes.py:110-114,127-130 (upper-case, $ kept, sheet quoted when not plain, range end without sheet). Literals parse.py:36-38,119-122; Missing args parse.py:248-263.
@@ -44,9 +44,9 @@ Status: landing (`8f35744725a9`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | references, ranges and sheet references parse | no landed check |
-| not yet | b2 | operator precedence and associativity match Calc | no landed check |
-| not yet | b3 | a malformed formula is a parse error, not a crash | no landed check |
+| not yet | b1 | references, ranges and sheet references parse | `tests/parser/checks/a1_b1_refs.sh` — |
+| not yet | b2 | operator precedence and associativity match Calc | `tests/parser/checks/a1_b2_precedence.sh` — |
+| not yet | b3 | a malformed formula is a parse error, not a crash | `tests/parser/checks/a1_b3_malformed.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -67,17 +67,26 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
-- Held: `wi-a-i1-parser-1`: wi-a-i1-parser-1: turn on auto-merge (merge commit) on https://github.com/alebairos/sheet-exp-a/pull/3, or merge it yourself; GitHub refused it: GraphQL: Pull request Pull request is in clean status (enablePullRequestAutoMerge) (auto-merge needs a public repo or a paid plan; a merge queue or a linear-history rule is not supported: land this product in direct mode)
+Files landed by `wi-a-i1-parser-1`:
+
+- `src/parser/parse.py` +283 −0
+- `src/parser/nodes.py` +143 −0
+- `tests/parser/test_parser.py` +81 −0 (test)
+- `tests/parser/checks/a1_b2_precedence.sh` +53 −0 (plan check)
+- `tests/parser/checks/a1_b3_malformed.sh` +52 −0 (plan check)
+- `tests/parser/checks/a1_b1_refs.sh` +51 −0 (plan check)
+- `src/parser/__init__.py` +38 −1
+- `tests/parser/__init__.py` +0 −0 (test)
 
 Landing pull request: [exp-a #3](https://github.com/alebairos/sheet-exp-a/pull/3)
 
 ## 7. The decision
 
-**Held landing `wi-a-i1-parser-1`**: wi-a-i1-parser-1: turn on auto-merge (merge commit) on https://github.com/alebairos/sheet-exp-a/pull/3, or merge it yourself; GitHub refused it: GraphQL: Pull request Pull request is in clean status (enablePullRequestAutoMerge) (auto-merge needs a public repo or a paid plan; a merge queue or a linear-history rule is not supported: land this product in direct mode)
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 8 h 14 min so far
+- Lead time: 8 h 24 min so far
 - Loops: 0
 - Waste: 0 min
-- Size: nothing landed yet
+- Size: 465 lines (+464 −1, 5 files, 401–1,000; tests 81 lines); plan check files laid over by land, not in the size: +156 −0, 3 files

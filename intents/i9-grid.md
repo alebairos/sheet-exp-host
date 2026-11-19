@@ -4,7 +4,7 @@
 
 > In the browser I see a grid of cells, select one and edit its value
 
-Kind: Feature · State: planned · 1 work item · 2 bullets
+Kind: Feature · State: in work · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -27,12 +27,12 @@ The grid first, as one plain ES module, web/grid/grid.js, with no build step and
 
 Add web/grid/grid.js so a workbook renders as a selectable, editable table in the browser, proven by the two plan checks under Node.
 
-Status: planned
+Status: in review by `rev-1@alebairos`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b1` | b1 | `tests/web/grid/checks/b1_render.sh` | — | — |
-| `ac-b2` | b2 | `tests/web/grid/checks/b2_edit.sh` | — | — |
+| `ac-b1` | b1 | `tests/web/grid/checks/b1_render.sh` | red | — |
+| `ac-b2` | b2 | `tests/web/grid/checks/b2_edit.sh` | red | — |
 
 **Acceptance**, against the landed checks:
 
@@ -52,9 +52,9 @@ Status: planned
 | Role | Who |
 | --- | --- |
 | Planned | `plan-1@alebairos` |
-| Certified | — |
-| Implemented `wi-i9-grid-1` | — |
-| Reviewed `wi-i9-grid-1` | — |
+| Certified | `gate-1@alebairos` |
+| Implemented `wi-i9-grid-1` | `impl-2@alebairos` |
+| Reviewed `wi-i9-grid-1` | `rev-1@alebairos` |
 
 Product checks: not recorded yet.
 
@@ -66,7 +66,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 9 h 52 min so far
+- Lead time: 10 h 02 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet

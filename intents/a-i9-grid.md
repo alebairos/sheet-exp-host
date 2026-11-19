@@ -4,7 +4,7 @@
 
 > In the browser I see a grid of cells, select one and edit its value
 
-Kind: Feature · State: in work · 1 work item · 2 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -27,7 +27,7 @@ The grid first, as one plain ES module, web/grid/grid.js, with no build step and
 
 Add web/grid: a dependency-free JavaScript module and page that draws a sheet's computed values as a lettered and numbered grid, highlights the selected cell and lets you type a new value into it, so the UI has its central surface.
 
-Status: landing (`381bc461484c`)
+Status: landed (`381bc461484c`)
 
 **The passing review noted:** > PASS. Verify rerun in a worktree of 7ca9aea (node v26): both checks green (ok b1, ok b2); on plan base 8770f27 both red (grid.js missing). ./test.sh OK. No check file edited; all 5 paths inside web/grid and tests/web/grid.
 > ac-a9-b1 (tests/web/grid/checks/a9_b1_render.sh): renderHTML web/grid/grid.js:105-126 (column letters via colName :8-14, row numbers, data-ref on every td, class selected/num/err, HTML-escaped text :52-53); display/formatNumber :30-50 (15 significant digits, 1E+15 / 1E-05, booleans TRUE/FALSE, error code text), styled in web/grid/grid.css (num right, err red, selected blue outline).
@@ -43,8 +43,8 @@ Status: landing (`381bc461484c`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | the grid renders a workbook's computed values | no landed check |
-| not yet | b2 | selecting and editing a cell updates it | no landed check |
+| not yet | b1 | the grid renders a workbook's computed values | `tests/web/grid/checks/a9_b1_render.sh` — |
+| not yet | b2 | selecting and editing a cell updates it | `tests/web/grid/checks/a9_b2_edit.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -65,6 +65,16 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-i9-grid-1`:
+
+- `web/grid/grid.js` +226 −0
+- `tests/web/grid/grid.test.mjs` +61 −0 (test)
+- `tests/web/grid/checks/a9_b2_edit.sh` +38 −0 (plan check)
+- `tests/web/grid/checks/a9_b1_render.sh` +36 −0 (plan check)
+- `web/grid/index.html` +18 −0
+- `web/grid/README.md` +15 −1
+- `web/grid/grid.css` +9 −0
+
 Landing pull request: [exp-a #5](https://github.com/alebairos/sheet-exp-a/pull/5)
 
 ## 7. The decision
@@ -73,7 +83,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 8 h 13 min so far
+- Lead time: 8 h 24 min so far
 - Loops: 0
 - Waste: 0 min
-- Size: nothing landed yet
+- Size: 269 lines (+268 −1, 5 files, ≤400; tests 61 lines); plan check files laid over by land, not in the size: +74 −0, 2 files

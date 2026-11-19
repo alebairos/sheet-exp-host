@@ -4,7 +4,7 @@
 
 > Formulas parse as Calc reads them: A1, $A$1, ranges, Sheet2!A1, every SPEC.md operator with Calc's precedence (including -A1^2 and 2^3^2), numbers, strings, booleans and function calls
 
-Kind: Feature · State: accepted · 1 work item · 3 bullets
+Kind: Feature · State: in work · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -26,7 +26,7 @@ The tree first, because every later part (eval, recalc, functions) walks it. A r
 
 Add parse/show/ParseError in src/parser so formulas become a Calc-faithful tree and malformed input raises ParseError, proven by the three plan checks.
 
-Status: accepted
+Status: attempt 1 in work by `impl-1@alebairos`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -54,7 +54,7 @@ Status: accepted
 | --- | --- |
 | Planned | `plan-1@alebairos` |
 | Certified | `gate-1@alebairos` |
-| Implemented `wi-i1-parser-1` | — |
+| Implemented `wi-i1-parser-1` | `impl-1@alebairos` |
 | Reviewed `wi-i1-parser-1` | — |
 
 Product checks: not recorded yet.
@@ -67,7 +67,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 9 h 52 min so far
+- Lead time: 10 h 02 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet
