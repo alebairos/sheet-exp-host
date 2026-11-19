@@ -35,7 +35,7 @@ jobs:
           token: ${{ secrets.COOKNSHIP_HOST_TOKEN }}
       - name: install cooknship
         run: |
-          curl -fsSL https://github.com/alebairos/cooknship-machine-releases/releases/download/v0.1.30/install.sh | sh
+          curl -fsSL https://github.com/alebairos/cooknship-machine-releases/releases/download/v0.1.31/install.sh | sh
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       # The tests run in a bubblewrap sandbox; Ubuntu 24.04 restricts it unless allowed.
       - run: |
@@ -69,7 +69,7 @@ jobs:
           token: ${{ secrets.COOKNSHIP_HOST_TOKEN }}
       - name: install cooknship
         run: |
-          curl -fsSL https://github.com/alebairos/cooknship-machine-releases/releases/download/v0.1.30/install.sh | sh
+          curl -fsSL https://github.com/alebairos/cooknship-machine-releases/releases/download/v0.1.31/install.sh | sh
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       # Runs no project code: pushes exactly the commits the ledger recorded.
       - run: cooknship land --push --as ci
