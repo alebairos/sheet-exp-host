@@ -4,7 +4,7 @@
 
 > I can work in the spreadsheet in the browser: open a workbook, edit a formula, see the error, fix it, save
 
-Kind: Feature · State: parked · 0 work items · 1 bullet
+Kind: Feature · State: shelved · 0 work items · 1 bullet
 
 ## 2. What you will see
 

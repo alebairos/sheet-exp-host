@@ -4,7 +4,7 @@
 
 > A spreadsheet that computes like LibreOffice on real workbooks: realistic workbooks (a budget, a grade sheet, a lookup table) compute and display as Calc does
 
-Kind: Feature · State: parked · 0 work items · 2 bullets
+Kind: Feature · State: shelved · 0 work items · 2 bullets
 
 ## 2. What you will see
 

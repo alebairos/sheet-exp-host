@@ -4,7 +4,7 @@
 
 > In the browser I open and save a workbook as CSV and as SPEC.md's JSON
 
-Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
+Kind: Feature · State: PartiallyMet · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -90,6 +90,7 @@ Status: landed (`7ea5444140e7`)
 | Certified | `gate-1@alebairos` |
 | Implemented `wi-i11-open-save-1` | `impl-2@alebairos` |
 | Reviewed `wi-i11-open-save-1` | `rev-1@alebairos` (passed attempt 1) |
+| Verdict (PartiallyMet) | `alebairos` |
 
 Product checks:
 
@@ -97,7 +98,17 @@ Product checks:
 - `tests/web/io/checks/b2_csv.sh`: pass
 - `tests/web/io/checks/b3_page.sh`: pass
 
-Outcome report: none yet.
+Outcome report:
+
+- **Built:** Open/save for exp-b web/io (wi-i11-open-save-1, first attempt, review passed, landed). Run python3 web/io/serve.py and open /io/index.html: Open (.json/.csv), Save JSON, Save CSV, message line, and the i9 grid. Open loads the first sheet with engine-computed values via POST /compute; bad files leave the current workbook and show why. Save JSON downloads the typed workbook (numbers, text, booleans, formulas, errors, empty sheets, order) including grid edits; re-open matches. Save CSV downloads the current sheet's computed values as Calc shows them. CSV open types fields like the grid and handles quotes/commas/newlines. Plain JS + stdlib serve.py; no npm. Outside-scope note: landing also touched web/grid files shared with i9.
+- **Advice:** Adopt. Formulas still need the evaluator (i3/i4) before Save JSON round-trips computed formula results through the engine beyond constants. Watch the outside-scope grid touch if later grid edits conflict. Verdict is yours next.
+- [io/index.html](https://github.com/alebairos/sheet-exp-host/blob/68cd03b3a78cca404bc9721f3924f43f12840795/io/index.html)
+- [io/io.js](https://github.com/alebairos/sheet-exp-host/blob/68cd03b3a78cca404bc9721f3924f43f12840795/io/io.js)
+- [io/serve.py](https://github.com/alebairos/sheet-exp-host/blob/68cd03b3a78cca404bc9721f3924f43f12840795/io/serve.py)
+- [grid/grid.js](https://github.com/alebairos/sheet-exp-host/blob/68cd03b3a78cca404bc9721f3924f43f12840795/grid/grid.js)
+- [README.md](https://github.com/alebairos/sheet-exp-host/blob/68cd03b3a78cca404bc9721f3924f43f12840795/README.md)
+- [i11-open-save/sample.json](https://github.com/alebairos/sheet-exp-host/blob/68cd03b3a78cca404bc9721f3924f43f12840795/i11-open-save/sample.json)
+- [i11-open-save/sample-saved.csv](https://github.com/alebairos/sheet-exp-host/blob/68cd03b3a78cca404bc9721f3924f43f12840795/i11-open-save/sample-saved.csv)
 
 Files landed by `wi-i11-open-save-1`:
 
@@ -118,7 +129,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 57 min so far
+- Lead time: 10 h 58 min
 - Loops: 0
 - Waste: 0 min
 - Size: 328 lines (+327 −1, 4 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +164 −0, 4 files
