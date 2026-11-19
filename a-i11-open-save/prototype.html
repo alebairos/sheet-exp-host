@@ -1,0 +1,25 @@
+<!doctype html>
+<!-- Prototype for plan a-i11-open-save: serve this folder (python3 -m http.server) and open prototype.html. Open a .json or .csv file (try sample.json); Save JSON keeps every cell, formulas included; Save CSV writes the sheet's values (sample-saved.csv is what it writes once the engine has computed sample.json). -->
+<html><head><meta charset="utf-8"><title>Open and save prototype (a-i11-open-save)</title>
+<style>body{font:14px system-ui,sans-serif;margin:16px} button,label{margin-right:8px} pre{background:#f6f6f6;padding:8px;max-width:720px;white-space:pre-wrap}</style>
+</head><body>
+<label>Open <input type="file" id="open" accept=".json,.csv"></label>
+<button id="savejson">Save JSON</button><button id="savecsv">Save CSV</button>
+<p id="msg"></p><pre id="book"></pre>
+<script type="module">
+import { parseJSON, toJSON, parseCSV, toCSV, openFile, download } from "./io.js";
+let book = {sheets: {Sheet1: {A1: "Open a file to start"}}}, name = "workbook";
+const show = () => document.getElementById("book").textContent = toJSON(book);
+document.getElementById("open").onchange = async (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  try {
+    const text = await openFile(f);
+    book = /\.csv$/i.test(f.name) ? parseCSV(text) : parseJSON(text);
+    name = f.name.replace(/\.[^.]*$/, ""); document.getElementById("msg").textContent = "Opened " + f.name;
+  } catch (err) { document.getElementById("msg").textContent = "Could not open " + f.name + ": " + err.message; }
+  show();
+};
+document.getElementById("savejson").onclick = () => download(name + ".json", toJSON(book), "application/json");
+document.getElementById("savecsv").onclick = () => download(name + ".csv", toCSV(book, Object.keys(book.sheets)[0]), "text/csv");
+show();
+</script></body></html>
