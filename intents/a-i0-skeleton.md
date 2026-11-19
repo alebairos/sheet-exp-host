@@ -4,7 +4,7 @@
 
 > The engine CLI exists and builds and tests from a clean clone with ./test.sh: it reads a workbook JSON (SPEC.md) and prints it back with constants unchanged, and the repo has one directory per part (src/parser, src/values, src/eval, src/recalc, src/functions/{math,logic_text,lookup}, web/{grid,formula_bar,io}, tests/e2e) with a way to register functions that needs no shared file edits
 
-Kind: Feature · State: awaiting the verdict · 1 work item · 3 bullets
+Kind: Feature · State: Met · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -64,6 +64,7 @@ Status: landed (`c772837d2a38`)
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-i0-skeleton-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-i0-skeleton-1` | `rev-a@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
@@ -108,15 +109,11 @@ Landing pull request: [exp-a #2](https://github.com/alebairos/sheet-exp-a/pull/2
 
 ## 7. The decision
 
-**Verdict:a-i0-skeleton**: A decision: show your human its options
-
-- Met: `cooknship decide --answer Verdict:a-i0-skeleton --option met`
-- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-i0-skeleton --option partially`
-- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-i0-skeleton --option not_met`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 1 h 39 min so far
+- Lead time: 7 h 41 min
 - Loops: 0
 - Waste: 0 min
 - Size: 155 lines (+154 −1, 21 files, ≤400; tests 96 lines); plan check files laid over by land, not in the size: +105 −0, 3 files
