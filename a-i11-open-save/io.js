@@ -50,3 +50,22 @@ export function openFile(file) { return file.text(); }
 export function download(name, text, type = "text/plain") {
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click(); URL.revokeObjectURL(a.href);
 }
+export function createController({ compute = async (b) => b } = {}) {
+  const state = { book: { sheets: { Sheet1: {} } }, computed: { sheets: { Sheet1: {} } }, sheet: "Sheet1", name: "workbook", message: "" };
+  const refresh = async () => { state.computed = await compute(state.book); };
+  return {
+    state,
+    async openText(fileName, text) {
+      let book;
+      try { book = /\.csv$/i.test(fileName) ? parseCSV(text) : parseJSON(text); }
+      catch (e) { state.message = `Could not open ${fileName}: ${e.message}`; return { ok: false, message: state.message }; }
+      state.book = book; state.sheet = Object.keys(book.sheets)[0] || "Sheet1"; state.name = fileName.replace(/\.[^.]*$/, "") || "workbook";
+      state.message = `Opened ${fileName}`;
+      await refresh(); return { ok: true };
+    },
+    async openFile(file) { return this.openText(file.name, await file.text()); },
+    async setBook(book) { state.book = book; await refresh(); },
+    saveJSON() { return { name: state.name + ".json", text: toJSON(state.book), type: "application/json" }; },
+    saveCSV() { return { name: state.name + ".csv", text: toCSV(state.computed, state.sheet), type: "text/csv" }; },
+  };
+}
