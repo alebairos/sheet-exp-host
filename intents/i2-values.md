@@ -4,7 +4,7 @@
 
 > Cell values and coercion behave as in Calc: numbers, text, booleans, blanks and the six errors, with text-to-number, boolean-as-1/0 and blank-as-0-or-empty
 
-Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
+Kind: Feature · State: Met · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -39,15 +39,15 @@ Status: landed (`ff20d95fb5f8`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b1` | b1 | `tests/values/checks/b1_roundtrip.sh` | red | — |
-| `ac-b2` | b2 | `tests/values/checks/b2_coercion.sh` | red | — |
+| `ac-b1` | b1 | `tests/values/checks/b1_roundtrip.sh` | red | pass |
+| `ac-b2` | b2 | `tests/values/checks/b2_coercion.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | each value kind round-trips through the CLI | `tests/values/checks/b1_roundtrip.sh` — |
-| not yet | b2 | coercion between kinds matches Calc for arithmetic and comparison | `tests/values/checks/b2_coercion.sh` — |
+| PASS | b1 | each value kind round-trips through the CLI | `tests/values/checks/b1_roundtrip.sh` pass |
+| PASS | b2 | coercion between kinds matches Calc for arithmetic and comparison | `tests/values/checks/b2_coercion.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -63,10 +63,18 @@ Status: landed (`ff20d95fb5f8`)
 | Certified | `gate-1@alebairos` |
 | Implemented `wi-i2-values-1` | `impl-1@alebairos`, `impl-2@alebairos` |
 | Reviewed `wi-i2-values-1` | `rev-1@alebairos` (passed attempt 2) |
+| Verdict (Met) | `alebairos` |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/values/checks/b1_roundtrip.sh`: pass
+- `tests/values/checks/b2_coercion.sh`: pass
+
+Outcome report:
+
+- **Built:** Intent i2-values: Cell values and coercion behave as in Calc: numbers, text, booleans, blanks and the six errors, with text-to-number, boolean-as-1/0 and blank-as-0-or-empty. i2-values · Feature /   parked ✓ ─ planned ✓ ─ certified ✓ ─ accepted ✓ ─ admitted ✓ ─ landing ✓ ─ verdict ◐ /   wi-i2-values-1  landed · 1/3 attempts failed · reviewed ✓
+- **Advice:** Adopt. HITL verdict is next.
+- No media: A library module with no screen; its sample inputs and outputs are the cases in tests/values/checks/b*.sh
 
 Files landed by `wi-i2-values-1`:
 
@@ -84,7 +92,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 15 min so far
+- Lead time: 10 h 22 min
 - Loops: 1 (D6 landing 1)
 - Waste: 11 min
 - Size: 262 lines (+262 −0, 2 files, ≤400; tests 93 lines); plan check files laid over by land, not in the size: +96 −0, 3 files

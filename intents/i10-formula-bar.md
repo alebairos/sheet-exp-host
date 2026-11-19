@@ -4,19 +4,35 @@
 
 > In the browser a formula bar shows the selected cell's formula, and a cell in error shows the error
 
-Kind: Feature · State: parked · 0 work items · 2 bullets
+Kind: Feature · State: in work · 1 work item · 2 bullets
 
 ## 2. What you will see
 
-No design in the plan.
+Above the grid, a bar like Calc's: the selected cell's name (B1), then its content as typed: the formula =A1/A2 rather than its value, or the constant (1, 2.5, TRUE, text). Edit it and press Enter to change the cell (a text starting with = stays a formula; 42 becomes a number, TRUE a boolean, empty text a blank cell); Escape cancels. When the cell's computed value is an error, its name shows in red next to the formula, exactly as Calc names it: #DIV/0!, #VALUE!, #REF!, #NAME?, #N/A or #NUM!. Text that merely looks like an error (a constant "#DIV/0!") is not flagged. The clickable prototype in the media is that screen with sample cells.
+
+- [i10-formula-bar/prototype.html](https://github.com/alebairos/sheet-exp-host/blob/920f66114e6844ec076654e5516da4397a499a6e/i10-formula-bar/prototype.html)
+- [i10-formula-bar/formula_bar.js](https://github.com/alebairos/sheet-exp-host/blob/920f66114e6844ec076654e5516da4397a499a6e/i10-formula-bar/formula_bar.js)
 
 ## 3. Approach
 
-No design in the plan.
+One plain ES module, web/formula_bar/formula_bar.js, no build and no libraries, pure functions first so Node tests them without a browser: barText(raw, sheet, ref) reads the workbook as typed (SPEC.md's JSON, formulas kept) and formats constants as Calc shows them (15 significant digits, TRUE/FALSE); errorText(computed, sheet, ref) reads the computed workbook (./engine's output) and returns an error's name or ""; commit(raw, sheet, ref, text) returns a new workbook with the cell set (= keeps a formula, else number/boolean/text, "" removes the cell; the input is not mutated); renderHTML({raw, computed, sheet, ref}) returns the bar with the cell name, an input holding the HTML-escaped text and, only for an error, an element with class error. mount(container, state, {onCommit}) is the only DOM code: it draws the bar, commits on Enter, cancels on Escape, and returns update({ref, raw, computed}) so the page can follow the grid's selection. It is self-contained (no import from web/grid), so it does not wait on the grid's files; the page that joins grid, bar and the engine comes with open/save. The plan checks (tests/web/formula_bar/checks) run under Node.js, on the land runner image.
+
+- **Reuses:** The web/formula_bar directory from i0-skeleton; SPEC.md's workbook JSON as typed and as computed (errors as {"error": "#DIV/0!"}); the grid's typed-input rules from i9-grid (number, TRUE/FALSE, text, empty is blank), so both edit the same way.
+- **Removes:** The placeholder web/formula_bar/.gitkeep, replaced by the formula bar module and a short note on its API.
+- **Rejected:** Importing web/grid/grid.js for formatting and input parsing: it is a dependency on files not yet landed and couples two directories owned by different intents; the few lines are kept local and the checks pin the same behavior. Calc's long error messages (Err:502, "Division by zero" in the status bar): the SPEC names the six codes and the hidden suite compares them. A framework or bundler: needs npm and a build in every clean clone.
 
 ## 4. Work items
 
-No plan yet.
+### `wi-i10-formula-bar-1`: Formula bar UI
+
+Add web/formula_bar/formula_bar.js so the selected cell's formula shows and edits in a bar and Calc error names appear in red, proven by the two plan checks.
+
+Status: attempt 1 built, awaiting review
+
+| AC | Covers | Check | Red on base | On product |
+| --- | --- | --- | --- | --- |
+| `ac-b1` | b1 | `tests/web/formula_bar/checks/b1_formula.sh` | red | — |
+| `ac-b2` | b2 | `tests/web/formula_bar/checks/b2_errors.sh` | red | — |
 
 **Acceptance**, against the landed checks:
 
@@ -35,8 +51,10 @@ No plan yet.
 
 | Role | Who |
 | --- | --- |
-| Planned | — |
-| Certified | — |
+| Planned | `plan-1@alebairos` |
+| Certified | `gate-1@alebairos` |
+| Implemented `wi-i10-formula-bar-1` | `impl-2@alebairos` |
+| Reviewed `wi-i10-formula-bar-1` | — |
 
 Product checks: not recorded yet.
 
@@ -48,4 +66,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-Not started: the metrics start with the first plan.
+- Lead time: 10 h 22 min so far
+- Loops: 0
+- Waste: 0 min
+- Size: nothing landed yet

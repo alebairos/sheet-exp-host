@@ -30,9 +30,9 @@ Status: planned
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a3-b1` | b1 | `tests/eval/checks/a3_b1_operators.sh` | — | — |
-| `ac-a3-b2` | b2 | `tests/eval/checks/a3_b2_errors.sh` | — | — |
-| `ac-a3-b3` | b3 | `tests/eval/checks/a3_b3_names.sh` | — | — |
+| `ac-a3-b1` | b1 | `tests/eval/checks/a3_b1_operators.sh` | red | — |
+| `ac-a3-b2` | b2 | `tests/eval/checks/a3_b2_errors.sh` | red | — |
+| `ac-a3-b3` | b3 | `tests/eval/checks/a3_b3_names.sh` | red | — |
 
 **Acceptance**, against the landed checks:
 
@@ -67,7 +67,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 8 h 37 min so far
-- Loops: 0
-- Waste: 0 min
+- Lead time: 8 h 44 min so far
+- Loops: 1 (D2 plan 1)
+- Waste: 8 min
 - Size: nothing landed yet

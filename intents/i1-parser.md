@@ -4,7 +4,7 @@
 
 > Formulas parse as Calc reads them: A1, $A$1, ranges, Sheet2!A1, every SPEC.md operator with Calc's precedence (including -A1^2 and 2^3^2), numbers, strings, booleans and function calls
 
-Kind: Feature · State: awaiting the verdict · 1 work item · 3 bullets
+Kind: Feature · State: Met · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -79,6 +79,7 @@ Status: landed (`37788f56e8dd`)
 | Certified | `gate-1@alebairos` |
 | Implemented `wi-i1-parser-1` | `impl-1@alebairos` |
 | Reviewed `wi-i1-parser-1` | `rev-1@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
@@ -104,15 +105,11 @@ Landing pull request: [exp-b #4](https://github.com/alebairos/sheet-exp-b/pull/4
 
 ## 7. The decision
 
-**Verdict:i1-parser**: A decision: show your human its options
-
-- Met: `cooknship decide --answer Verdict:i1-parser --option met`
-- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:i1-parser --option partially`
-- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:i1-parser --option not_met`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 15 min so far
+- Lead time: 10 h 16 min
 - Loops: 0
 - Waste: 0 min
 - Size: 434 lines (+434 −0, 1 file, 401–1,000; tests 0 lines); plan check files laid over by land, not in the size: +157 −0, 4 files

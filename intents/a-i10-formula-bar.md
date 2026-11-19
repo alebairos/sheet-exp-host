@@ -27,7 +27,14 @@ One plain ES module, web/formula_bar/formula_bar.js, no build and no libraries, 
 
 Add web/formula_bar: a dependency-free JavaScript module that shows the selected cell's name and its formula as typed, lets you edit and commit it with Enter, and shows the cell's error by Calc's name (#DIV/0!, #VALUE!, #REF!, #NAME?, #N/A, #NUM!), so the UI can see and change formulas, not just values.
 
-Status: attempt 1 in work by `impl-a1@alebairos`
+Status: landing (`fd1b4ba07198`)
+
+**The passing review noted:** > PASS. Verify rerun in a worktree of WI commit fe7051e: tests/web/formula_bar/checks/a10_b1_formula.sh -> "ok b1" (exit 0), a10_b2_errors.sh -> "ok b2" (exit 0); on plan base 052e9af both exit 1 (module missing). ./test.sh green (10 tests); node --test tests/web/formula_bar/ 6/6 pass.
+> ac-a10-b1 (b1, shows and edits the formula): barText returns the raw formula/constant (web/formula_bar/formula_bar.js:45-47 via typedText :30-42: TRUE/FALSE, 15 significant digits, apostrophe for text that reads as a value); commit parses the bar text into a new workbook without mutating input, "" blanks the cell (:71-80, parseInput :57-68); renderHTML shows the cell name and an HTML-escaped input (:83-93); mount commits on Enter, cancels on Escape, update() follows the selection (:97-122).
+> ac-a10-b2 (b2, errors as Calc names them): errorText reads only computed {error: name} objects, so constant text "#DIV/0!" is not flagged (:51-54); renderHTML adds <span class="error"> only for an error (:90).
+> Scope: all 5 paths are under web/formula_bar/** and tests/web/formula_bar/**; no check file edited.
+> Findings (non-blocking): (1) tests/web/formula_bar/test_formula_bar.py is never run by ./test.sh: unittest discover does not descend into tests/web, which has no __init__.py (outside this intent's scope), so the Node unit tests only run by hand; the plan checks still gate b1/b2. (2) formatNumber shows 1e-7 as "1E-7" and 50% (committed as 0.5) as "0.5"; Calc's input line shows 0.0000001 and 50%. This is a cosmetic difference, not covered by the bullets. (3) ERROR_NAMES (:8) is exported but unused, and it includes #NULL!, which SPEC's six codes leave out.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -54,11 +61,13 @@ Status: attempt 1 in work by `impl-a1@alebairos`
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-i10-formula-bar-1` | `impl-a1@alebairos` |
-| Reviewed `wi-a-i10-formula-bar-1` | — |
+| Reviewed `wi-a-i10-formula-bar-1` | `rev-a@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
 Outcome report: none yet.
+
+Landing pull request: [exp-a #6](https://github.com/alebairos/sheet-exp-a/pull/6)
 
 ## 7. The decision
 
@@ -66,7 +75,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 8 h 36 min so far
+- Lead time: 8 h 44 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet
