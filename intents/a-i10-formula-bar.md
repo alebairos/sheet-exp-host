@@ -4,7 +4,7 @@
 
 > In the browser a formula bar shows the selected cell's formula, and a cell in error shows the error
 
-Kind: Feature · State: certified · 1 work item · 2 bullets
+Kind: Feature · State: in work · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -27,7 +27,7 @@ One plain ES module, web/formula_bar/formula_bar.js, no build and no libraries, 
 
 Add web/formula_bar: a dependency-free JavaScript module that shows the selected cell's name and its formula as typed, lets you edit and commit it with Enter, and shows the cell's error by Calc's name (#DIV/0!, #VALUE!, #REF!, #NAME?, #N/A, #NUM!), so the UI can see and change formulas, not just values.
 
-Status: planned
+Status: attempt 1 in work by `impl-a1@alebairos`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -53,7 +53,7 @@ Status: planned
 | --- | --- |
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
-| Implemented `wi-a-i10-formula-bar-1` | — |
+| Implemented `wi-a-i10-formula-bar-1` | `impl-a1@alebairos` |
 | Reviewed `wi-a-i10-formula-bar-1` | — |
 
 Product checks: not recorded yet.
@@ -62,15 +62,11 @@ Outcome report: none yet.
 
 ## 7. The decision
 
-**SpecAccept:a-i10-formula-bar**: A decision: show your human its options
-
-- Accept the spec: claims freeze, it can be admitted: `cooknship decide --answer SpecAccept:a-i10-formula-bar --option accept`
-- Send the plan back with a reason: `cooknship decide --answer SpecAccept:a-i10-formula-bar --option reject --text "<reason>"`
-- Shelve it; when another intent takes its place, the reason is replaced:<that intent's id>, and what waits on this one waits for it instead: `cooknship decide --answer SpecAccept:a-i10-formula-bar --option shelve --text "<reason>"`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 8 h 33 min so far
+- Lead time: 8 h 36 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet

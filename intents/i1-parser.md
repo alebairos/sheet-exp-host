@@ -53,17 +53,17 @@ Status: landed (`37788f56e8dd`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b1` | b1 | `tests/parser/checks/b1_refs.sh` | red | — |
-| `ac-b2` | b2 | `tests/parser/checks/b2_precedence.sh` | red | — |
-| `ac-b3` | b3 | `tests/parser/checks/b3_malformed.sh` | red | — |
+| `ac-b1` | b1 | `tests/parser/checks/b1_refs.sh` | red | pass |
+| `ac-b2` | b2 | `tests/parser/checks/b2_precedence.sh` | red | pass |
+| `ac-b3` | b3 | `tests/parser/checks/b3_malformed.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | references, ranges and sheet references parse | `tests/parser/checks/b1_refs.sh` — |
-| not yet | b2 | operator precedence and associativity match Calc | `tests/parser/checks/b2_precedence.sh` — |
-| not yet | b3 | a malformed formula is a parse error, not a crash | `tests/parser/checks/b3_malformed.sh` — |
+| PASS | b1 | references, ranges and sheet references parse | `tests/parser/checks/b1_refs.sh` pass |
+| PASS | b2 | operator precedence and associativity match Calc | `tests/parser/checks/b2_precedence.sh` pass |
+| PASS | b3 | a malformed formula is a parse error, not a crash | `tests/parser/checks/b3_malformed.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -80,9 +80,17 @@ Status: landed (`37788f56e8dd`)
 | Implemented `wi-i1-parser-1` | `impl-1@alebairos` |
 | Reviewed `wi-i1-parser-1` | `rev-1@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/parser/checks/b1_refs.sh`: pass
+- `tests/parser/checks/b2_precedence.sh`: pass
+- `tests/parser/checks/b3_malformed.sh`: pass
+
+Outcome report:
+
+- **Built:** A Python parser in exp-b src/parser (wi-i1-parser-1, first attempt, review passed, landed). parse(formula) turns a leading-= formula into a tree; show(tree) prints one canonical line the way Calc reads it, e.g. =-A1^2 -> (^ (neg A1) 2.0) and =2^3^2 -> (^ (^ 2.0 3.0) 2.0). Covers A1, $A$1, ranges, Sheet2!A1, SPEC operators with Calc precedence, numbers, strings, booleans, function calls. Malformed input like =1+ or =SUM(1, raises src.parser.ParseError. ./engine output is unchanged until the evaluator intent; checks live under tests/parser/checks.
+- **Advice:** Adopt. Wire this tree into the evaluator (i3) next; nothing in the CLI surface changes until then. Keep an eye on any Calc edge cases the hidden suite may still surprise when evaluation lands.
+- No media: A library API with no screen; its sample input and output are the cases in tests/parser/checks/b*.sh
 
 Files landed by `wi-i1-parser-1`:
 
@@ -96,11 +104,15 @@ Landing pull request: [exp-b #4](https://github.com/alebairos/sheet-exp-b/pull/4
 
 ## 7. The decision
 
-Nothing waits on you.
+**Verdict:i1-parser**: A decision: show your human its options
+
+- Met: `cooknship decide --answer Verdict:i1-parser --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:i1-parser --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:i1-parser --option not_met`
 
 ## 8. Metrics
 
-- Lead time: 10 h 12 min so far
+- Lead time: 10 h 15 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: 434 lines (+434 −0, 1 file, 401–1,000; tests 0 lines); plan check files laid over by land, not in the size: +157 −0, 4 files

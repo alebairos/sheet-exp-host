@@ -4,19 +4,35 @@
 
 > A parsed formula evaluates with Calc's operators and error propagation (#DIV/0!, #VALUE!, #REF!, #NAME?)
 
-Kind: Feature · State: parked · 0 work items · 3 bullets
+Kind: Feature · State: planned · 1 work item · 3 bullets
 
 ## 2. What you will see
 
-No design in the plan.
+A formula now has a value, computed as Calc computes it: =10/4 is 2.5, =2^3^2 is 64, =-2^2 is 4, =50% is 0.5, ="3"*2 is 6, =TRUE+1 is 2, a blank cell is 0 (=Z99+1 is 1) or "" (=Z99&"x" is "x"), ="a"="A" is TRUE, =10<"9" is TRUE (numbers sort before text), =0.1+0.2&"" is "0.3". Errors flow through as Calc's: =1/0 is #DIV/0!, ="abc"+1 is #VALUE!, a cell holding #N/A makes =A1+1 #N/A, and an unknown function or name (=FOO(1), =foo) is #NAME?. The function intents plug in by registering a function: the evaluator calls it with the values of its arguments. ./engine output does not change yet: putting values in the CLI's cells is recalculation's job (a-i4).
+
+- No media: A library module with no screen; its sample formulas and values are the cases in tests/eval/checks/a3_*.sh
 
 ## 3. Approach
 
-No design in the plan.
+The operator core first, as one module src/eval built on the two parts it depends on: the parser's tree (a-i1) and the values with their coercions (a-i2). evaluate(formula, book, sheet) parses the cell text, walks the tree and returns a src.values Value; book is SPEC.md's workbook JSON and sheet the formula's own. Literals become values; a reference or range becomes a Range (sheet plus corners over the book, values() row by row with blanks, an unknown sheet gives #REF!); in operator context a Range collapses to its single cell's value (more than one cell is #VALUE!, since Calc's implicit intersection needs a cell position the evaluator does not have). Arithmetic + - * / ^ goes through to_number, & through to_text, comparisons through compare, unary minus and % through to_number; any error operand gives that error, x/0 is #DIV/0!. A name that is not a function call is #NAME?; a call looks its name up in src.functions.registry() at evaluation time (so functions registered later are found) and an unknown one is #NAME? without evaluating its arguments' effects. Calling convention, pinned by the b3 check: positional arguments; a reference or range argument arrives as a Range (so ISBLANK, COUNTA and SUMIF see blanks and text), every other argument as a Value with errors left in (IFERROR and ISERROR need them), an omitted argument as the blank value; the function returns a Value (or a Range, collapsed like a reference). The final result of a lone blank reference is 0, as Calc shows =A1 on an empty cell; a formula that does not parse evaluates to an error value, never an exception. Referenced formula cells are read as they stand in the book: computing them first is a-i4's dependency order. Unit tests in tests/eval (with __init__.py so ./test.sh finds them); the plan checks in tests/eval/checks are the contract.
+
+- **Reuses:** src/parser's parse and tree (a-i1-parser) and src/values' Value kinds, to_number, to_text and compare (a-i2-values), so the coercion rules live in one place; src.functions.register and registry() from a-i0-skeleton for calls.
+- **Removes:** none
+- **Rejected:** Evaluating by translating formulas to Python and calling eval(): unsafe on untrusted workbooks and no control over Calc's coercions. Raising Python exceptions for spreadsheet errors: errors are ordinary values in Calc (IFERROR, ISERROR take them), so they flow as values and nothing is caught by accident. Expanding ranges into plain lists before the call: functions could no longer tell a blank from an empty text or a range from an array of values, which SUMIF, COUNTA and ISBLANK need. Implicit intersection for multi-cell ranges in operators now: it needs the formula cell's position, which arrives with recalculation.
 
 ## 4. Work items
 
-No plan yet.
+### `wi-a-i3-evaluator-1`: Evaluate formulas: operators, errors, calls
+
+Add src/eval: walk the parser's tree over a workbook and compute it with Calc's operators, coercion and error propagation, return #NAME? for an unknown function or name, and call registered functions with one agreed argument shape, so formulas produce values and the function intents have something to plug into.
+
+Status: planned
+
+| AC | Covers | Check | Red on base | On product |
+| --- | --- | --- | --- | --- |
+| `ac-a3-b1` | b1 | `tests/eval/checks/a3_b1_operators.sh` | — | — |
+| `ac-a3-b2` | b2 | `tests/eval/checks/a3_b2_errors.sh` | — | — |
+| `ac-a3-b3` | b3 | `tests/eval/checks/a3_b3_names.sh` | — | — |
 
 **Acceptance**, against the landed checks:
 
@@ -36,8 +52,10 @@ No plan yet.
 
 | Role | Who |
 | --- | --- |
-| Planned | — |
+| Planned | `plan-a@alebairos` |
 | Certified | — |
+| Implemented `wi-a-i3-evaluator-1` | — |
+| Reviewed `wi-a-i3-evaluator-1` | — |
 
 Product checks: not recorded yet.
 
@@ -49,4 +67,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-Not started: the metrics start with the first plan.
+- Lead time: 8 h 37 min so far
+- Loops: 0
+- Waste: 0 min
+- Size: nothing landed yet

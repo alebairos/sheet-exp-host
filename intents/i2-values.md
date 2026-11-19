@@ -4,7 +4,7 @@
 
 > Cell values and coercion behave as in Calc: numbers, text, booleans, blanks and the six errors, with text-to-number, boolean-as-1/0 and blank-as-0-or-empty
 
-Kind: Feature · State: in work · 1 work item · 2 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -26,7 +26,7 @@ Value kinds first, because the evaluator (i3) and every function intent build on
 
 Add from_json/to_json/to_number/to_text/compare in src/values so kinds and Calc coercion are one shared module, proven by the two plan checks.
 
-Status: landing (`ff20d95fb5f8`)
+Status: landed (`ff20d95fb5f8`)
 
 **The passing review noted:** > pass wi-i2-values-1 attempt 2 (same commit 5f0d7817d3246c2f5ce29e40c1aaf8a28966446e)
 > 
@@ -46,8 +46,8 @@ Status: landing (`ff20d95fb5f8`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | each value kind round-trips through the CLI | no landed check |
-| not yet | b2 | coercion between kinds matches Calc for arithmetic and comparison | no landed check |
+| not yet | b1 | each value kind round-trips through the CLI | `tests/values/checks/b1_roundtrip.sh` — |
+| not yet | b2 | coercion between kinds matches Calc for arithmetic and comparison | `tests/values/checks/b2_coercion.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -68,6 +68,14 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-i2-values-1`:
+
+- `src/values/__init__.py` +262 −0
+- `tests/values/test_values.py` +93 −0 (test)
+- `tests/values/checks/b1_roundtrip.sh` +49 −0 (plan check)
+- `tests/values/checks/b2_coercion.sh` +46 −0 (plan check)
+- `tests/values/__init__.py` +1 −0 (plan check)
+
 Landing pull request: [exp-b #5](https://github.com/alebairos/sheet-exp-b/pull/5)
 
 ## 7. The decision
@@ -76,7 +84,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 12 min so far
+- Lead time: 10 h 15 min so far
 - Loops: 1 (D6 landing 1)
 - Waste: 11 min
-- Size: nothing landed yet
+- Size: 262 lines (+262 −0, 2 files, ≤400; tests 93 lines); plan check files laid over by land, not in the size: +96 −0, 3 files

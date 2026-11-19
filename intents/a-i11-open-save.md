@@ -4,7 +4,7 @@
 
 > In the browser I open and save a workbook as CSV and as SPEC.md's JSON
 
-Kind: Feature · State: planned · 1 work item · 2 bullets
+Kind: Feature · State: parked · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -33,8 +33,8 @@ Status: planned
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a11-b1` | b1 | `tests/web/io/checks/a11_b1_json.sh` | — | — |
-| `ac-a11-b2` | b2 | `tests/web/io/checks/a11_b2_csv.sh` | — | — |
+| `ac-a11-b1` | b1 | `tests/web/io/checks/a11_b1_json.sh` | red | — |
+| `ac-a11-b2` | b2 | `tests/web/io/checks/a11_b2_csv.sh` | red | — |
 
 **Acceptance**, against the landed checks:
 
@@ -54,7 +54,7 @@ Status: planned
 | Role | Who |
 | --- | --- |
 | Planned | `plan-a@alebairos` |
-| Certified | — |
+| Certified | `gate-a@alebairos` |
 | Implemented `wi-a-i11-open-save-1` | — |
 | Reviewed `wi-a-i11-open-save-1` | — |
 
@@ -68,7 +68,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 8 h 33 min so far
-- Loops: 0
-- Waste: 0 min
+- Lead time: 8 h 36 min so far
+- Loops: 1 (D2 plan 1)
+- Waste: 4 min
 - Size: nothing landed yet

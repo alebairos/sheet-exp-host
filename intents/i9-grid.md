@@ -4,7 +4,7 @@
 
 > In the browser I see a grid of cells, select one and edit its value
 
-Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
+Kind: Feature · State: Met · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -74,6 +74,7 @@ Status: landed (`caf47ed9691a`)
 | Certified | `gate-1@alebairos` |
 | Implemented `wi-i9-grid-1` | `impl-2@alebairos` |
 | Reviewed `wi-i9-grid-1` | `rev-1@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
@@ -100,15 +101,11 @@ Landing pull request: [exp-b #3](https://github.com/alebairos/sheet-exp-b/pull/3
 
 ## 7. The decision
 
-**Verdict:i9-grid**: A decision: show your human its options
-
-- Met: `cooknship decide --answer Verdict:i9-grid --option met`
-- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:i9-grid --option partially`
-- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:i9-grid --option not_met`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 11 min so far
+- Lead time: 10 h 13 min
 - Loops: 0
 - Waste: 0 min
 - Size: 253 lines (+252 −1, 3 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +75 −0, 3 files
