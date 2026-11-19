@@ -1,0 +1,27 @@
+<!doctype html>
+<!-- Prototype for plan i10-formula-bar: serve this folder (python3 -m http.server) and open prototype.html. Pick a cell from the list: the bar shows its formula and, for a cell in error, the error's name in red. Edit the text and press Enter to change the cell. -->
+<html><head><meta charset="utf-8"><title>Formula bar prototype (i10-formula-bar)</title>
+<style>
+ body{font:14px system-ui,sans-serif;margin:16px}
+ .formula-bar{display:flex;align-items:center;gap:8px;border:1px solid #ccc;padding:4px 6px;max-width:640px}
+ .formula-bar .ref{min-width:40px;font-weight:600;border-right:1px solid #ccc;padding-right:8px}
+ .formula-bar .fx{color:#888;font-style:italic}
+ .formula-bar input{flex:1;border:0;font:13px ui-monospace,monospace}
+ .formula-bar .error{color:#b00;font-weight:600}
+ button{margin:8px 4px 0 0}
+</style></head><body>
+<div id="bar"></div>
+<div id="picks"></div>
+<pre id="raw"></pre>
+<script type="module">
+import { mount } from "./formula_bar.js";
+const raw = {sheets: {Sheet1: {A1: 10, A2: 0, B1: "=A1/A2", B2: "=SUM(A1:A2)", C1: "=\"Total: \"&B2", C2: "=FOO(1)"}}};
+const computed = {sheets: {Sheet1: {A1: 10, A2: 0, B1: {error: "#DIV/0!"}, B2: 10, C1: "Total: 10", C2: {error: "#NAME?"}}}};
+const show = (r) => document.getElementById("raw").textContent = JSON.stringify(r.sheets.Sheet1);
+const bar = mount(document.getElementById("bar"), {raw, computed, sheet: "Sheet1", ref: "B1"}, {onCommit: show});
+for (const ref of ["A1", "A2", "B1", "B2", "C1", "C2", "D1"]) {
+  const b = document.createElement("button"); b.textContent = ref; b.onclick = () => bar.update({ref});
+  document.getElementById("picks").appendChild(b);
+}
+show(raw);
+</script></body></html>
