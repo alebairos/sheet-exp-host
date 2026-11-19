@@ -51,7 +51,7 @@ Status: landed (`e68ed241fd38`)
 
 Add src/functions/logic_text/text.py with CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER and TRIM, coercing numbers, booleans and blanks to text as Calc does and returning Calc's errors, so text formulas match Calc.
 
-Status: queued to land
+Status: landing (`3fbaf7a6a2d2`)
 
 **The passing review noted:** > PASS. Reran verify on 08debe5 (worktree): a6_b2_concat_len.sh "32 cases match Calc", a6_b2_left_right_mid.sh "37", a6_b2_case_trim.sh "23"; on the plan commit 90fa643 all three fail (32/32, 37/37, 23/23 differ). ./test.sh OK.
 > - ac-a6-b2-concat-len, -left-right-mid, -case-trim (b2): src/functions/logic_text/text.py:31 _text (booleans as 1/0, then src.values.to_text, errors through), :39 _count (truncated, negative or non-finite Err:502), CONCATENATE :52, LEFT/RIGHT :63-82 (count defaults to 1), MID :85 (start < 1 Err:502, too few args Err:511), LEN/UPPER (ß->ẞ)/LOWER/TRIM (spaces only) :114-131.
@@ -106,7 +106,7 @@ Files landed by `wi-a-i6-logic-text-1`:
 - `tests/functions/logic_text/checks/a6_b2_case_trim.sh` +62 −0 (plan check)
 - `tests/functions/logic_text/__init__.py` +0 −0 (test)
 
-Landing pull request: [exp-a #13](https://github.com/alebairos/sheet-exp-a/pull/13)
+Landing pull request: [exp-a #16](https://github.com/alebairos/sheet-exp-a/pull/16)
 
 ## 7. The decision
 
@@ -114,7 +114,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 21 h 33 min so far
+- Lead time: 21 h 45 min so far
 - Loops: 4 (D1 spec 1, D2 plan 3)
 - Waste: 13 min
 - Size: 172 lines (+172 −0, 3 files, ≤400; tests 69 lines); plan check files laid over by land, not in the size: +439 −0, 6 files

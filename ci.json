@@ -1,5 +1,5 @@
 {
-  "as_of": 1795130338,
+  "as_of": 1795131794,
   "by_intent": {
     "a-i0-skeleton": 91,
     "a-i1-parser": 67,
@@ -8,6 +8,9 @@
     "a-i2-values": 49,
     "a-i3-evaluator": 53,
     "a-i4-recalc": 110,
+    "a-i5-math": 21,
+    "a-i6-logic-text": 20,
+    "a-i7-lookup": 20,
     "a-i9-grid": 49,
     "i0-skeleton": 67,
     "i1-parser": 77,
@@ -21,9 +24,9 @@
     "runs": 8,
     "seconds": 253
   },
-  "last_run": 44636322608,
-  "runs": 27,
-  "seconds": 1334,
+  "last_run": 44639863507,
+  "runs": 28,
+  "seconds": 1395,
   "since": 1795048104,
   "source": "GitHub Actions: alebairos/sheet-exp-host, cooknship-land.yml"
 }

@@ -49,7 +49,7 @@ Status: landed (`23ac95711c5e`)
 
 Add src/functions/math/rounding.py with ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER and SQRT, rounding on the decimal value Calc shows and returning Calc's errors, so numeric formulas match Calc to the last digit.
 
-Status: queued to land
+Status: landing (`a8ff6a245f5e`)
 
 **The passing review noted:** > PASS (attempt 2). Reran verify on e250e4b (worktree): a5_b2_rounding.sh "ok b2: 87 cases match Calc"; base red as in attempt 1; ./test.sh OK.
 > - The attempt-1 defect is fixed: src/functions/math/rounding.py mod() now returns #VALUE! when a / b or floor(a/b)*b is not finite, and _approx_floor passes non-finite input through instead of raising; _round keeps x when rounding overflows. No exception escapes any more.
@@ -120,7 +120,7 @@ Files landed by `wi-a-i5-math-1`:
 - `tests/functions/math/test_aggregates.py` +72 −0 (test)
 - `tests/functions/math/__init__.py` +0 −0 (test)
 
-Landing pull request: [exp-a #12](https://github.com/alebairos/sheet-exp-a/pull/12)
+Landing pull request: [exp-a #15](https://github.com/alebairos/sheet-exp-a/pull/15)
 
 ## 7. The decision
 
@@ -128,7 +128,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 21 h 33 min so far
+- Lead time: 21 h 45 min so far
 - Loops: 2 (D5 review 2)
 - Waste: 11 min
 - Size: 205 lines (+205 −0, 3 files, ≤400; tests 72 lines); plan check files laid over by land, not in the size: +372 −0, 3 files

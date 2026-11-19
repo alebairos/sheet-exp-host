@@ -4,7 +4,7 @@
 
 > VLOOKUP, INDEX and MATCH compute as in Calc, exact and approximate, with #N/A and #REF! where Calc gives them
 
-Kind: Feature · State: in work · 1 work item · 2 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -31,7 +31,7 @@ One module, src/functions/lookup/lookup.py, registering VLOOKUP, INDEX and MATCH
 
 Add src/functions/lookup/lookup.py with VLOOKUP, INDEX and MATCH on one shared matcher (exact with wildcards, approximate on sorted keys) returning Calc's results and errors, so workbooks can look values up in tables.
 
-Status: landing (`dcee02bc1209`)
+Status: landed (`dcee02bc1209`)
 
 **The passing review noted:** > PASS (attempt 2). Attempt 1 passed review and its landing aborted on a rejected push, not on tests. Attempt 2 (fd05d6c) changes only tests/functions/lookup/test_lookup.py (+50 lines): 31 MATCH type -1 cases on descending data, ties and text included. src/functions/lookup/lookup.py is unchanged from ac2d2b8, so the attempt-1 evidence per AC still holds (VLOOKUP lookup.py:164, MATCH :145, INDEX :194, _exact :69, _find :93).
 > Reran verify on fd05d6c (worktree): a7_b1_vlookup.sh "ok b1: 42 cases match Calc", a7_b2_index_match.sh "ok b2: 62 cases match Calc"; base c21e65b red as before; ./test.sh OK (new tests included).
@@ -49,8 +49,8 @@ Status: landing (`dcee02bc1209`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | VLOOKUP exact and sorted approximate match Calc | no landed check |
-| not yet | b2 | INDEX and MATCH (types 0 and 1) match Calc, errors included | no landed check |
+| not yet | b1 | VLOOKUP exact and sorted approximate match Calc | `tests/functions/lookup/checks/a7_b1_vlookup.sh` — |
+| not yet | b2 | INDEX and MATCH (types 0 and 1) match Calc, errors included | `tests/functions/lookup/checks/a7_b2_index_match.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -71,6 +71,14 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-i7-lookup-1`:
+
+- `src/functions/lookup/lookup.py` +213 −0
+- `tests/functions/lookup/test_lookup.py` +113 −0 (test)
+- `tests/functions/lookup/checks/a7_b2_index_match.sh` +111 −0 (plan check)
+- `tests/functions/lookup/checks/a7_b1_vlookup.sh` +90 −0 (plan check)
+- `tests/functions/lookup/__init__.py` +0 −0 (test)
+
 Landing pull request: [exp-a #14](https://github.com/alebairos/sheet-exp-a/pull/14)
 
 ## 7. The decision
@@ -79,7 +87,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 21 h 33 min so far
+- Lead time: 21 h 45 min so far
 - Loops: 1 (D6 landing 1)
 - Waste: 17 min
-- Size: nothing landed yet
+- Size: 213 lines (+213 −0, 3 files, ≤400; tests 113 lines); plan check files laid over by land, not in the size: +201 −0, 2 files
