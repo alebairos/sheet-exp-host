@@ -1,0 +1,3 @@
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+ImportError: cannot import name 'parse' from 'src.parser' (/tmp/cooknship-base-i1-parser-2038604/src/parser/__init__.py). Did you mean: 'parser'?
