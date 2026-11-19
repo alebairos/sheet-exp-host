@@ -4,7 +4,7 @@
 
 > The engine CLI exists and builds and tests from a clean clone with ./test.sh: it reads a workbook JSON (SPEC.md) and prints it back with constants unchanged, and the repo has one directory per part (src/parser, src/values, src/eval, src/recalc, src/functions/{math,logic_text,lookup}, web/{grid,formula_bar,io}, tests/e2e) with a way to register functions that needs no shared file edits
 
-Kind: Feature · State: parked · 1 work item · 3 bullets
+Kind: Feature · State: in work · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -22,11 +22,11 @@ Python 3 so a clean clone needs no compiler. One work item: add the directory tr
 
 ## 4. Work items
 
-### `wi-i0-skeleton-1`: Skeleton and constants CLI
+### `wi-i0-skeleton-1`: Constants CLI skeleton
 
-Add the part directories, discovery-based function registry, ./engine that echoes constants from workbook JSON (and --cell), and wire ./test.sh to a real suite.
+Add the part directories, discovery-based function registry, and a Python ./engine that echoes constants so ./test.sh runs a real suite from a clean clone.
 
-Status: shelved
+Status: landing (`fa58829a5cba`)
 
 **The passing review noted:** > pass wi-i0-skeleton-1 against ACs b1-b3 at commit 06cd09f (diff origin/main...06cd09f).
 > 
@@ -44,9 +44,9 @@ Status: shelved
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b1` | b1 | `scripts/checks/b1_constants_roundtrip.sh` | — | — |
-| `ac-b2` | b2 | `scripts/checks/b2_cell_flag.sh` | — | — |
-| `ac-b3` | b3 | `scripts/checks/b3_test_sh.sh` | — | — |
+| `ac-b1` | b1 | `scripts/checks/b1_constants_roundtrip.sh` | red | — |
+| `ac-b2` | b2 | `scripts/checks/b2_cell_flag.sh` | red | — |
+| `ac-b3` | b3 | `scripts/checks/b3_test_sh.sh` | red | — |
 
 **Acceptance**, against the landed checks:
 
@@ -66,14 +66,16 @@ Status: shelved
 
 | Role | Who |
 | --- | --- |
-| Planned | — |
-| Certified | — |
-| Implemented `wi-i0-skeleton-1` | `impl-1@alebairos` |
-| Reviewed `wi-i0-skeleton-1` | `rev-1@alebairos` (passed attempt 1) |
+| Planned | `plan-1@alebairos` |
+| Certified | `gate-1@alebairos` |
+| Implemented `wi-i0-skeleton-1` | `impl-2@alebairos` |
+| Reviewed `wi-i0-skeleton-1` | `rev-1@alebairos` (passed attempt 2) |
 
 Product checks: not recorded yet.
 
 Outcome report: none yet.
+
+Landing pull request: [exp-b #2](https://github.com/alebairos/sheet-exp-b/pull/2)
 
 ## 7. The decision
 
@@ -81,4 +83,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-Not started: the metrics start with the first plan.
+- Lead time: 2 h 47 min so far
+- Loops: 0
+- Waste: 0 min
+- Size: nothing landed yet

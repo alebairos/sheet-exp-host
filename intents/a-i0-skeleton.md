@@ -79,7 +79,7 @@ Landing pull request: [exp-a #2](https://github.com/alebairos/sheet-exp-a/pull/2
 
 ## 8. Metrics
 
-- Lead time: 32 min so far
+- Lead time: 1 h 09 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet
