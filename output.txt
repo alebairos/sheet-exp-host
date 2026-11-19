@@ -1,0 +1,30 @@
+test_cell (tests.test_cli.CliTest.test_cell) ... ok
+test_cell_absolute_ref (tests.test_cli.CliTest.test_cell_absolute_ref) ... ok
+test_cell_blank_is_null (tests.test_cli.CliTest.test_cell_blank_is_null) ... ok
+test_file_round_trip (tests.test_cli.CliTest.test_file_round_trip) ... ok
+test_stdin_round_trip (tests.test_cli.CliTest.test_stdin_round_trip) ... ok
+test_types_preserved (tests.test_cli.CliTest.test_types_preserved) ... ok
+test_compute_does_not_alias_input (tests.test_cli.ComputeTest.test_compute_does_not_alias_input) ... ok
+test_group_packages_exist (tests.test_registry.RegistryTest.test_group_packages_exist) ... ok
+test_register_decorator_returns_fn (tests.test_registry.RegistryTest.test_register_decorator_returns_fn) ... ok
+test_registry_is_a_copy (tests.test_registry.RegistryTest.test_registry_is_a_copy) ... ok
+test_blank (tests.values.test_values.CompareTest.test_blank) ... ok
+test_bools_are_numbers (tests.values.test_values.CompareTest.test_bools_are_numbers) ... ok
+test_errors (tests.values.test_values.CompareTest.test_errors) ... ok
+test_numbers_and_text (tests.values.test_values.CompareTest.test_numbers_and_text) ... ok
+test_immutable (tests.values.test_values.JsonTest.test_immutable) ... ok
+test_integral_float_is_int (tests.values.test_values.JsonTest.test_integral_float_is_int) ... ok
+test_kinds (tests.values.test_values.JsonTest.test_kinds) ... ok
+test_non_finite_is_num_error (tests.values.test_values.JsonTest.test_non_finite_is_num_error) ... ok
+test_roundtrip (tests.values.test_values.JsonTest.test_roundtrip) ... ok
+test_kinds (tests.values.test_values.ToBoolTest.test_kinds) ... ok
+test_error_passes (tests.values.test_values.ToNumberTest.test_error_passes) ... ok
+test_numbers_bools_blank (tests.values.test_values.ToNumberTest.test_numbers_bools_blank) ... ok
+test_text (tests.values.test_values.ToNumberTest.test_text) ... ok
+test_general_format (tests.values.test_values.ToTextTest.test_general_format) ... ok
+test_other_kinds (tests.values.test_values.ToTextTest.test_other_kinds) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 0.153s
+
+OK
