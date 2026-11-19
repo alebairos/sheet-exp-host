@@ -31,7 +31,17 @@ One module, src/functions/lookup/lookup.py, registering VLOOKUP, INDEX and MATCH
 
 Add src/functions/lookup/lookup.py with VLOOKUP, INDEX and MATCH on one shared matcher (exact with wildcards, approximate on sorted keys) returning Calc's results and errors, so workbooks can look values up in tables.
 
-Status: attempt 1 built, awaiting review
+Status: accepted
+
+**The passing review noted:** > PASS. Reran verify on the WI commit ac2d2b8 (worktree): a7_b1_vlookup.sh "ok b1: 42 cases match Calc", a7_b2_index_match.sh "ok b2: 62 cases match Calc"; on the plan commit c21e65b both fail (42/42 and 62/62 differ). ./test.sh OK.
+> - ac-a7-b1 (b1): src/functions/lookup/lookup.py:164 VLOOKUP reads the first column through the Range, exact mode via _exact (lookup.py:69: numbers/booleans by value, text case-insensitive with * ? ~, numeric text also finds the number), sorted mode via _find (lookup.py:93, last key <= value, same type only, end of an equal run); column truncated, outside 1..width Err:502 (lookup.py:185).
+> - ac-a7-b2 (b2): MATCH (lookup.py:145) types 0/1, 2-D range Err:504; INDEX (lookup.py:194) returns a Range so the result is a reference, one-row range takes the single index as the column, 0 on a 2-D range #VALUE!, negative Err:502, past the edge #REF!.
+> - Cross-checked 26 extra formulas against LibreOffice 26.8.1.1 headless on my own fixture: all agree (INDEX(A1:B4,0,0) #VALUE!, INDEX(A1:B4,-1,1) Err:502, INDEX(A1:A4,5) #REF!, VLOOKUP(1,..,1.9,0) truncates, VLOOKUP(TRUE,..) finds 1, MATCH("X",..,0) case-insensitive, missing lookup value #N/A, VLOOKUP(..)&"|" gives "|") except the two below.
+> Notes, not blocking:
+> (1) VLOOKUP landing on a blank cell: Calc shows the cell as EMPTY (csv ''), while ISBLANK of it is TRUE and +1 gives 1; =B2 and =INDEX(B1:B4,2) on the same blank show 0. The engine returns 0 for all three. lookup.py:191 returns the Blank Value correctly; the top-level Blank->0 conversion lives in src/values / src/eval, outside this intent's scope, and Calc's "empty result" needs a value kind the model does not have. Worth a separate Defect for the Gm (the hidden suite may well have a VLOOKUP onto an empty cell).
+> (2) MATCH type -1 is implemented (lookup.py:107) though the design says types other than 0 and 1 give Err:504 and b2 covers only 0 and 1. It disagrees with Calc on non-descending data: A1:A4 = 1,2,3,"x", =MATCH(2,A1:A4,-1) gives 2, Calc #N/A. Harmless to b2; either pin -1 against Calc or follow the design.
+> Scope: src/functions/lookup/lookup.py, tests/functions/lookup/__init__.py, tests/functions/lookup/test_lookup.py, all inside the scope; no check edited.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -58,7 +68,7 @@ Status: attempt 1 built, awaiting review
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-i7-lookup-1` | `impl-a1@alebairos` |
-| Reviewed `wi-a-i7-lookup-1` | — |
+| Reviewed `wi-a-i7-lookup-1` | `rev-a@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
@@ -70,7 +80,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 21 h 09 min so far
-- Loops: 0
-- Waste: 0 min
+- Lead time: 21 h 21 min so far
+- Loops: 1 (D6 landing 1)
+- Waste: 15 min
 - Size: nothing landed yet

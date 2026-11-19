@@ -4,7 +4,7 @@
 
 > The 9 logic and information functions and the 8 text functions of SPEC.md compute as in Calc
 
-Kind: Feature · State: parked · 2 work items · 2 bullets
+Kind: Feature · State: in work · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -31,21 +31,40 @@ Two modules under src/functions/logic_text, one per work item, registering with 
 
 Add src/functions/logic_text/logic.py with IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT and ISERROR as Calc computes them (booleans, references and errors included), so formulas can branch and test cells.
 
-Status: planned
+Status: landing (`e68ed241fd38`)
+
+**The passing review noted:** > PASS. Reran verify on f45e7d0 (worktree): a6_b1_if.sh "38 cases match Calc", a6_b1_and_or_not.sh "38 cases match Calc", a6_b1_is.sh "37 cases match Calc"; on the plan commit 90fa643 all three fail (38/38, 38/38, 37/37 differ). ./test.sh OK.
+> - ac-a6-b1-if (b1): src/functions/logic_text/logic.py:47 _condition (bool/number non-zero, blank FALSE, numeric text and TRUE/FALSE text in any case, other text #VALUE!, errors through); IF (logic.py:68) returns the chosen argument untouched (a Range stays a reference), missing else FALSE; IFERROR (logic.py:81) with Err:518 for an omitted value.
+> - ac-a6-b1-and-or-not (b1): _logicals (logic.py:92) skips text/blank in references, typed text #VALUE!, nothing logical #VALUE!, first error through; NOT (logic.py:130) with Err:508 for too many arguments.
+> - ac-a6-b1-is (b1): ISBLANK only for a reference to an empty cell (logic.py:145); ISNUMBER counts booleans; ISTEXT/ISERROR on the collapsed value.
+> - Cross-checked 21 more formulas on my own fixture against LibreOffice 26.8.1.1 headless, all equal: NOT(""), IF("",1,2), IF(<cell with "">,1,2) #VALUE!; IF(" true ") 1; NOT("1e1") FALSE; ISNUMBER(TRUE) TRUE; ISTEXT/ISBLANK of a "" cell TRUE/FALSE; ISBLANK of a formula reading an empty cell FALSE; AND over blank/""/"x" #VALUE!; OR over "x",0,TRUE TRUE; AND("1") #VALUE!; IF(1,) and IF(0,1,) 0; NOT(1E-320) FALSE; IF(" 1 ") 1; AND(TRUE,1,0) FALSE; OR(#DIV/0!,TRUE) #DIV/0!; ISBLANK("") FALSE.
+> Scope: logic.py, tests/functions/logic_text/__init__.py, test_logic.py, all inside the scope; no check edited.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a6-b1` | b1 | `tests/functions/logic_text/checks/a6_b1_logic.sh` | red | — |
+| `ac-a6-b1-if` | b1 | `tests/functions/logic_text/checks/a6_b1_if.sh` | red | — |
+| `ac-a6-b1-and-or-not` | b1 | `tests/functions/logic_text/checks/a6_b1_and_or_not.sh` | red | — |
+| `ac-a6-b1-is` | b1 | `tests/functions/logic_text/checks/a6_b1_is.sh` | red | — |
 
 ### `wi-a-i6-logic-text-2`: Text functions
 
 Add src/functions/logic_text/text.py with CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER and TRIM, coercing numbers, booleans and blanks to text as Calc does and returning Calc's errors, so text formulas match Calc.
 
-Status: planned
+Status: queued to land
+
+**The passing review noted:** > PASS. Reran verify on 08debe5 (worktree): a6_b2_concat_len.sh "32 cases match Calc", a6_b2_left_right_mid.sh "37", a6_b2_case_trim.sh "23"; on the plan commit 90fa643 all three fail (32/32, 37/37, 23/23 differ). ./test.sh OK.
+> - ac-a6-b2-concat-len, -left-right-mid, -case-trim (b2): src/functions/logic_text/text.py:31 _text (booleans as 1/0, then src.values.to_text, errors through), :39 _count (truncated, negative or non-finite Err:502), CONCATENATE :52, LEFT/RIGHT :63-82 (count defaults to 1), MID :85 (start < 1 Err:502, too few args Err:511), LEN/UPPER (ß->ẞ)/LOWER/TRIM (spaces only) :114-131.
+> - Cross-checked 22 more formulas against LibreOffice 26.8.1.1 headless; equal: LEN/LEFT/MID/RIGHT/UPPER over "a😀b" (Calc counts code points, as Python does), CONCATENATE(TRUE,1) "11", a TRUE cell "1x", LEN(1/3) 17, UPPER("Straße") STRAẞE, LOWER("ΟΔΟΣ") "οδος" (final sigma), UPPER("ﬀ") "FF", TRIM keeps tabs, MID("abc",1,) and LEFT("abc",) "", LEFT(..,2.9) "ab", MID(..,0.5,1) Err:502, MID(..,5,1) "", RIGHT(..,-1) Err:502, LEN("") 0.
+> Not this WI (outside its scope), for the Gm as a Defect on src/values: number-to-text differs from Calc for large/small magnitudes. src/values/__init__.py:192 format_number writes 1E+21 where Calc writes 1E+021 (three-digit exponent), and 1E-07 where Calc writes 0.0000001. Visible through every text conversion: CONCATENATE(1E21) "1E+021" vs "1E+21"; ="x"&1E-7 "x0.0000001" vs "x1E-07"; LEN(123456789012345678) 21 vs 20; LEN(1E-20) 6 vs 5 (all LibreOffice 26.8.1.1 vs engine). -1.5E100 agrees.
+> Scope: text.py, tests/functions/logic_text/__init__.py, test_text.py, all inside the scope; no check edited.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a6-b2` | b2 | `tests/functions/logic_text/checks/a6_b2_text.sh` | red | — |
+| `ac-a6-b2-concat-len` | b2 | `tests/functions/logic_text/checks/a6_b2_concat_len.sh` | red | — |
+| `ac-a6-b2-left-right-mid` | b2 | `tests/functions/logic_text/checks/a6_b2_left_right_mid.sh` | red | — |
+| `ac-a6-b2-case-trim` | b2 | `tests/functions/logic_text/checks/a6_b2_case_trim.sh` | red | — |
 
 **Acceptance**, against the landed checks:
 
@@ -66,14 +85,16 @@ Status: planned
 | --- | --- |
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
-| Implemented `wi-a-i6-logic-text-1` | — |
-| Reviewed `wi-a-i6-logic-text-1` | — |
-| Implemented `wi-a-i6-logic-text-2` | — |
-| Reviewed `wi-a-i6-logic-text-2` | — |
+| Implemented `wi-a-i6-logic-text-1` | `impl-a2@alebairos` |
+| Reviewed `wi-a-i6-logic-text-1` | `rev-a@alebairos` (passed attempt 1) |
+| Implemented `wi-a-i6-logic-text-2` | `impl-a1@alebairos` |
+| Reviewed `wi-a-i6-logic-text-2` | `rev-a@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
 Outcome report: none yet.
+
+Landing pull request: [exp-a #13](https://github.com/alebairos/sheet-exp-a/pull/13)
 
 ## 7. The decision
 
@@ -81,7 +102,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 21 h 09 min so far
+- Lead time: 21 h 21 min so far
 - Loops: 4 (D1 spec 1, D2 plan 3)
-- Waste: 10 min
+- Waste: 13 min
 - Size: nothing landed yet

@@ -32,7 +32,14 @@ Three modules under src/functions/math, one per work item, each registering its 
 
 Add src/functions/math/aggregate.py with SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN and STDEV, walking ranges and arguments as Calc does (text and blanks skipped, TRUE as 1, errors through), so the commonest formulas compute.
 
-Status: in review by `rev-a@alebairos`
+Status: landing (`23ac95711c5e`)
+
+**The passing review noted:** > PASS. Reran verify on the WI commit 288aa37 (worktree): tests/functions/math/checks/a5_b1_aggregates.sh gives "ok b1: 84 cases match Calc"; on the plan commit bac39e3 it fails with 84 of 84 differing (functions unregistered, #NAME?). ./test.sh OK.
+> - ac-a5-b1 (b1): src/functions/math/aggregates.py _groups (line 34) takes numbers and booleans from a Range, skips text and blanks, returns the first error, and makes typed text #VALUE! for SUM/AVERAGE/PRODUCT and Err:504 for MIN/MAX/MEDIAN/STDEV, which is what the 84 Calc-pinned cases (ranges with blanks, text, booleans and errors) exercise. _calc_sum reproduces Calc's Neumaier+approxAdd so SUM(0.1,0.2) and near-cancelling sums match. COUNT/COUNTA are separate walks (Range.values) so errors are skipped by COUNT and counted by COUNTA.
+> - Probed beyond the check: SUM/PRODUCT/AVERAGE of 1e308+1e308 give #NUM!; COUNTA over an error, an empty-string cell and a blank gives 2; COUNT(1,) gives 2 (omitted arg counts, as Calc); MEDIAN of 1..4 is 2.5; STDEV of 1..4 is 1.2909944487358056.
+> Scope: src/functions/math/aggregates.py, tests/functions/math/__init__.py, tests/functions/math/test_aggregates.py, all inside the intent's scope; no check edited.
+> Note, not blocking: all three WIs of this intent add tests/functions/math/__init__.py; it is an empty file in each, so the landings should merge cleanly, but whoever lands second sees it already present.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -42,7 +49,14 @@ Status: in review by `rev-a@alebairos`
 
 Add src/functions/math/rounding.py with ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER and SQRT, rounding on the decimal value Calc shows and returning Calc's errors, so numeric formulas match Calc to the last digit.
 
-Status: attempt 1 built, awaiting review
+Status: queued to land
+
+**The passing review noted:** > PASS (attempt 2). Reran verify on e250e4b (worktree): a5_b2_rounding.sh "ok b2: 87 cases match Calc"; base red as in attempt 1; ./test.sh OK.
+> - The attempt-1 defect is fixed: src/functions/math/rounding.py mod() now returns #VALUE! when a / b or floor(a/b)*b is not finite, and _approx_floor passes non-finite input through instead of raising; _round keeps x when rounding overflows. No exception escapes any more.
+> - Checked against LibreOffice 26.8.1.1 headless: MOD(1E308,1E-10), MOD(-1E308,1E-10), MOD(1E300,1E-10), MOD(5,1E-320) are #VALUE! in both; ROUNDUP(1.7E308,-308) and ROUND(1.7E308,-308) 1.7E+308 in both; INT(1E308) 1E+308; MOD(1E20,3) 0; MOD(-7,2.5) 0.5; MOD(1E-300,1E300) 1E-300: all agree. Unit tests for these added in tests/functions/math/test_rounding.py.
+> - ac-a5-b2 evidence from attempt 1 still holds (rounding on the 15-digit shown value, MOD with the divisor's sign, SQRT of a negative Err:502, POWER via the ^ operator).
+> Scope: rounding.py and test_rounding.py only, inside the scope; no check edited. Nit from attempt 1 (private src.eval._power import) unchanged and still not blocking.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -52,7 +66,15 @@ Status: attempt 1 built, awaiting review
 
 Add src/functions/math/criteria.py with Calc's criteria matching (comparison prefixes, wildcards, case-insensitive text, blanks) and SUMIF, COUNTIF, AVERAGEIF on top of it, so conditional totals match Calc.
 
-Status: attempt 1 built, awaiting review
+Status: queued to land
+
+**The passing review noted:** > PASS (attempt 2). Reran verify on b1f5ec4 (worktree): a5_b3_criteria.sh "ok b3: 59 cases match Calc"; base red as in attempt 1; ./test.sh OK.
+> - The attempt-1 defect is fixed: src/functions/math/criteria.py now adds SUMIF/AVERAGEIF matches with _calc_sum (Calc's KahanSum: Neumaier with the last term held back and cancelled to 0 when approxEqual to minus the rest), in the criteria range's walk order, instead of math.fsum.
+> - Checked against LibreOffice 26.8.1.1 headless, bit for bit (LO side via ORG.LIBREOFFICE.RAWSUBTRACT(x,c)*1E20, since Calc's own minus is approximate): SUMIF over 0.1,0.7,-0.8,"t",0.3 with "<>t" is 0.3-5.551115123125783E-17 in both; AVERAGEIF over 0.1,0.2,-0.3,1E-17,0.7,0.1 with ">0" is 0.22+2.7755575615628914E-17 in both; SUMIF of 0.1,0.2,-0.3,1E-17,0.7,0.1 is exactly 0.8 in both. Also equal: 0.1,0.2,-0.3 -> 0; 0.3,-0.1,-0.2 -> 0; 1.1,2.2,3.3,-6.6 -> 0 (and AVERAGEIF 0); 1E16,1,-1E16,1 -> 2; 1E308,1E308,-1E308 -> #NUM!; a 2-D range A1:B4 -> 2.
+> - ac-a5-b3 evidence from attempt 1 still holds (criterion parsing, wildcards, blanks, sum-range resize).
+> Scope: criteria.py and test_criteria.py only, inside the scope; no check edited.
+> For the Gm, not this WI: wi-a-i5-math-1's SUM (already passed) differs from Calc in the last bits on a plain range: SUM(F1:F5) with 0.1,0.7,-0.8,"t",0.3 is 0.3-5.55E-17 in the engine but 0.3-1.11E-16 in LibreOffice (Calc likely adds number runs of a range with its vectorised array sum, a different order). Invisible at 15 significant digits; matters only if a suite compares raw doubles. Also the intent now has two Calc-sum helpers (aggregates._calc_sum, criteria._calc_sum) that could be one.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -79,15 +101,17 @@ Status: attempt 1 built, awaiting review
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-i5-math-1` | `impl-a1@alebairos` |
-| Reviewed `wi-a-i5-math-1` | `rev-a@alebairos` |
+| Reviewed `wi-a-i5-math-1` | `rev-a@alebairos` (passed attempt 1) |
 | Implemented `wi-a-i5-math-2` | `impl-a2@alebairos` |
-| Reviewed `wi-a-i5-math-2` | — |
-| Implemented `wi-a-i5-math-3` | `impl-a1@alebairos` |
-| Reviewed `wi-a-i5-math-3` | — |
+| Reviewed `wi-a-i5-math-2` | `rev-a@alebairos` (passed attempt 2) |
+| Implemented `wi-a-i5-math-3` | `impl-a1@alebairos`, `impl-a2@alebairos` |
+| Reviewed `wi-a-i5-math-3` | `rev-a@alebairos` (passed attempt 2) |
 
 Product checks: not recorded yet.
 
 Outcome report: none yet.
+
+Landing pull request: [exp-a #12](https://github.com/alebairos/sheet-exp-a/pull/12)
 
 ## 7. The decision
 
@@ -95,7 +119,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 21 h 09 min so far
-- Loops: 0
-- Waste: 0 min
+- Lead time: 21 h 21 min so far
+- Loops: 2 (D5 review 2)
+- Waste: 11 min
 - Size: nothing landed yet

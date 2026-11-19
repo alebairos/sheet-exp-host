@@ -43,19 +43,19 @@ Status: landed (`f91e897d51b2`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a4-b1` | b1 | `tests/recalc/checks/a4_b1_order.sh` | red | — |
-| `ac-a4-b2` | b2 | `tests/recalc/checks/a4_b2_incremental.sh` | red | — |
-| `ac-a4-b3` | b3 | `tests/recalc/checks/a4_b3_cycles.sh` | red | — |
-| `ac-a4-b4` | b4 | `tests/recalc/checks/a4_b4_speed.sh` | red | — |
+| `ac-a4-b1` | b1 | `tests/recalc/checks/a4_b1_order.sh` | red | pass |
+| `ac-a4-b2` | b2 | `tests/recalc/checks/a4_b2_incremental.sh` | red | pass |
+| `ac-a4-b3` | b3 | `tests/recalc/checks/a4_b3_cycles.sh` | red | pass |
+| `ac-a4-b4` | b4 | `tests/recalc/checks/a4_b4_speed.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | chains of formula cells compute in dependency order | `tests/recalc/checks/a4_b1_order.sh` — |
-| not yet | b2 | an edit recomputes only its dependents | `tests/recalc/checks/a4_b2_incremental.sh` — |
-| not yet | b3 | a cycle gives an error | `tests/recalc/checks/a4_b3_cycles.sh` — |
-| not yet | b4 | 10,000 dependent cells recompute in under one second | `tests/recalc/checks/a4_b4_speed.sh` — |
+| PASS | b1 | chains of formula cells compute in dependency order | `tests/recalc/checks/a4_b1_order.sh` pass |
+| PASS | b2 | an edit recomputes only its dependents | `tests/recalc/checks/a4_b2_incremental.sh` pass |
+| PASS | b3 | a cycle gives an error | `tests/recalc/checks/a4_b3_cycles.sh` pass |
+| PASS | b4 | 10,000 dependent cells recompute in under one second | `tests/recalc/checks/a4_b4_speed.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -71,9 +71,22 @@ Status: landed (`f91e897d51b2`)
 | Implemented `wi-a-i4-recalc-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-i4-recalc-1` | `rev-a@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/recalc/checks/a4_b1_order.sh`: pass
+- `tests/recalc/checks/a4_b2_incremental.sh`: pass
+- `tests/recalc/checks/a4_b3_cycles.sh`: pass
+- `tests/recalc/checks/a4_b4_speed.sh`: pass
+
+Outcome report:
+
+- **Built:** Landed on exp-a main (f91e897, PR #9, first attempt): src/recalc, which computes a workbook in dependency order, keeps it live so a set() recomputes only the edited cell's dependents, and marks a cycle as Err:522. src/cli.py now calls it, so ./engine computes formulas instead of echoing them. I re-ran all four checks on landed main and they pass: a4_b1_order, a4_b2_incremental, a4_b3_cycles and a4_b4_speed (an edit read by 10,000 cells recomputed them in 0.057 s, against a limit of 1 s). The full suite passes too (64 tests). A live run of ./engine on {Sheet1: A3 =A2+A1 written before A1=2, A2 =A1*3, B1 =Sheet2!A1*10, C1 =C2+1, C2 =C1+1, C3 =C1&"x"; Sheet2: A1 =4+1} gave A3 8, A2 6, B1 50, Sheet2!A1 5, and C1, C2 and C3 all {"error": "Err:522"}. That is in order, across sheets, and the cycle plus its reader are errors while the rest computes. Because ./engine now evaluates, the open/save page from a-i11 also shows computed formulas (B1 = 14 in its example).
+- **Advice:** Try it in a clone of exp-a: echo '{"sheets":{"Sheet1":{"A1":2,"B1":"=A1*3","C1":"=D1+1","D1":"=C1"}}}' | ./engine -  should give B1 6 and C1, D1 Err:522. Then compare it with the media's sample-in.json/sample-out.json and LibreOffice's own circular sheet (circular-libreoffice.csv). Functions such as SUM are still #NAME? until a-i5/a-i6/a-i7 land; that is outside this scope. Every bullet, including the 10,000-cell speed bullet, holds on landed code, so Met fits.
+- [a-i4-recalc/README.md](https://github.com/alebairos/sheet-exp-host/blob/8b6ef1e6ca4072d58f9f474a0c669723ea49547e/a-i4-recalc/README.md)
+- [a-i4-recalc/circular-libreoffice.csv](https://github.com/alebairos/sheet-exp-host/blob/8b6ef1e6ca4072d58f9f474a0c669723ea49547e/a-i4-recalc/circular-libreoffice.csv)
+- [a-i4-recalc/circular.fods](https://github.com/alebairos/sheet-exp-host/blob/8b6ef1e6ca4072d58f9f474a0c669723ea49547e/a-i4-recalc/circular.fods)
+- [a-i4-recalc/sample-in.json](https://github.com/alebairos/sheet-exp-host/blob/8b6ef1e6ca4072d58f9f474a0c669723ea49547e/a-i4-recalc/sample-in.json)
+- [a-i4-recalc/sample-out.json](https://github.com/alebairos/sheet-exp-host/blob/8b6ef1e6ca4072d58f9f474a0c669723ea49547e/a-i4-recalc/sample-out.json)
 
 Files landed by `wi-a-i4-recalc-1`:
 
@@ -90,11 +103,15 @@ Landing pull request: [exp-a #9](https://github.com/alebairos/sheet-exp-a/pull/9
 
 ## 7. The decision
 
-Nothing waits on you.
+**Verdict:a-i4-recalc**: A decision: show your human its options
+
+- Met: `cooknship decide --answer Verdict:a-i4-recalc --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-i4-recalc --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-i4-recalc --option not_met`
 
 ## 8. Metrics
 
-- Lead time: 21 h 09 min so far
+- Lead time: 21 h 21 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: 298 lines (+294 −4, 4 files, ≤400; tests 91 lines); plan check files laid over by land, not in the size: +343 −0, 4 files
