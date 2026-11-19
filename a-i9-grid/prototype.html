@@ -1,0 +1,22 @@
+<!doctype html>
+<!-- Prototype for plan a-i9-grid: open this file in a browser (serve the folder, e.g. python3 -m http.server, since it loads an ES module). Click a cell to select it; double-click, Enter or just type to edit; Enter commits, Escape cancels. -->
+<html><head><meta charset="utf-8"><title>Grid prototype (a-i9-grid)</title>
+<style>
+ body{font:14px system-ui,sans-serif;margin:16px}
+ #grid{outline:none} table.grid{border-collapse:collapse}
+ .grid th{background:#eee;font-weight:normal;color:#555;min-width:28px;border:1px solid #ccc;padding:2px 6px}
+ .grid td{border:1px solid #ddd;min-width:80px;height:20px;padding:0 4px;white-space:nowrap}
+ .grid td.num{text-align:right} .grid td.err{color:#b00}
+ .grid td.selected{outline:2px solid #1a73e8;outline-offset:-2px}
+ .grid td input{width:100%;box-sizing:border-box;border:0;font:inherit}
+</style></head><body>
+<p>Sheet1, as computed (sample values; formulas come from the engine in later intents)</p>
+<div id="grid"></div>
+<pre id="cells"></pre>
+<script type="module">
+import { createState, mount } from "./grid.js";
+const book = {sheets: {Sheet1: {A1: "Item", B1: "Qty", C1: "Price", A2: "Pens", B2: 3, C2: 1.5, A3: "Paper", B3: 10, C3: 0.25, D2: 4.5, D3: 2.5, D4: 7, E2: {error: "#DIV/0!"}, F2: true}}};
+const show = (s) => document.getElementById("cells").textContent = JSON.stringify(s.book.sheets.Sheet1);
+const g = mount(document.getElementById("grid"), createState(book, "Sheet1"), {rows: 12, cols: 7, onChange: show});
+show(g.state);
+</script></body></html>
