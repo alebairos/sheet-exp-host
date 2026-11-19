@@ -48,17 +48,17 @@ Status: landed (`99c5a4e22d9a`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a3-b1` | b1 | `tests/eval/checks/a3_b1_operators.sh` | red | — |
-| `ac-a3-b2` | b2 | `tests/eval/checks/a3_b2_errors.sh` | red | — |
-| `ac-a3-b3` | b3 | `tests/eval/checks/a3_b3_names.sh` | red | — |
+| `ac-a3-b1` | b1 | `tests/eval/checks/a3_b1_operators.sh` | red | pass |
+| `ac-a3-b2` | b2 | `tests/eval/checks/a3_b2_errors.sh` | red | pass |
+| `ac-a3-b3` | b3 | `tests/eval/checks/a3_b3_names.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | arithmetic, comparison, & and % match Calc | `tests/eval/checks/a3_b1_operators.sh` — |
-| not yet | b2 | errors propagate through operators as in Calc | `tests/eval/checks/a3_b2_errors.sh` — |
-| not yet | b3 | an unknown function is #NAME? | `tests/eval/checks/a3_b3_names.sh` — |
+| PASS | b1 | arithmetic, comparison, & and % match Calc | `tests/eval/checks/a3_b1_operators.sh` pass |
+| PASS | b2 | errors propagate through operators as in Calc | `tests/eval/checks/a3_b2_errors.sh` pass |
+| PASS | b3 | an unknown function is #NAME? | `tests/eval/checks/a3_b3_names.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -75,9 +75,17 @@ Status: landed (`99c5a4e22d9a`)
 | Implemented `wi-a-i3-evaluator-1` | `impl-a1@alebairos` |
 | Reviewed `wi-a-i3-evaluator-1` | `rev-a@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/eval/checks/a3_b1_operators.sh`: pass
+- `tests/eval/checks/a3_b2_errors.sh`: pass
+- `tests/eval/checks/a3_b3_names.sh`: pass
+
+Outcome report:
+
+- **Built:** Landed on exp-a main (99c5a4e, PR #8, first attempt): src/eval, evaluate(formula, book, sheet), which walks a-i1's parse tree using a-i2's values and returns a Calc value, plus tests/eval. I re-ran the three checks on landed main: a3_b1_operators, a3_b2_errors and a3_b3_names all pass. I also evaluated the plan's own examples against the landed code, and each one matches: =10/4 is 2.5, =2^3^2 is 64, =-2^2 is 4, =50% is 0.5, ="3"*2 is 6, =TRUE+1 is 2, =Z99+1 is 1, =1&TRUE is "11", =10<"9" is TRUE, =0.1+0.2&"" is "0.3", =1/0 is #DIV/0!, ="abc"+1 is #VALUE!, =NoSuchSheet!A1+1 is #REF!, a cell holding #REF! gives =B3+1 #REF!, =A1:A2+1 is #VALUE!, and =FOO(1) and =foo are #NAME?. The replan's #REF! cases are in. Functions plug in through src.functions.registry(), which is looked up at evaluation time.
+- **Advice:** There is no screen to open: this is a library. ./engine output does not change yet, and formulas still come back as their text until a-i4-recalc (parked) puts evaluated values into cells. To try it, in a clone of exp-a run python3 -c 'from src.eval import evaluate; print(evaluate("=2^3^2", {"sheets": {"Sheet1": {}}}, "Sheet1"))', or run bash tests/eval/checks/a3_b2_errors.sh. Every bullet holds on landed code, so Met fits unless you want to wait until values show up in ./engine (a-i4).
+- No media: A library module with no screen; its sample formulas and values are the cases in tests/eval/checks/a3_*.sh
 
 Files landed by `wi-a-i3-evaluator-1`:
 
@@ -92,11 +100,15 @@ Landing pull request: [exp-a #8](https://github.com/alebairos/sheet-exp-a/pull/8
 
 ## 7. The decision
 
-Nothing waits on you.
+**Verdict:a-i3-evaluator**: A decision: show your human its options
+
+- Met: `cooknship decide --answer Verdict:a-i3-evaluator --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-i3-evaluator --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-i3-evaluator --option not_met`
 
 ## 8. Metrics
 
-- Lead time: 20 h 36 min so far
+- Lead time: 20 h 42 min so far
 - Loops: 4 (D1 spec 1, D2 plan 3)
 - Waste: 3 h 42 min
 - Size: 247 lines (+246 −1, 3 files, ≤400; tests 123 lines); plan check files laid over by land, not in the size: +199 −0, 3 files

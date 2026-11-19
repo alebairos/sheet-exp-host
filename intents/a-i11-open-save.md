@@ -55,16 +55,16 @@ Status: landed (`6ce5b2aadde5`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a11-b1` | b1 | `tests/web/io/checks/a11_b1_json.sh` | red | — |
-| `ac-a11-b2` | b2 | `tests/web/io/checks/a11_b2_csv.sh` | red | — |
-| `ac-a11-b3` | b1, b2 | `tests/web/io/checks/a11_b3_page.sh` | red | — |
+| `ac-a11-b1` | b1 | `tests/web/io/checks/a11_b1_json.sh` | red | pass |
+| `ac-a11-b2` | b2 | `tests/web/io/checks/a11_b2_csv.sh` | red | pass |
+| `ac-a11-b3` | b1, b2 | `tests/web/io/checks/a11_b3_page.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | opening then saving a JSON workbook keeps every cell | `tests/web/io/checks/a11_b1_json.sh` —, `tests/web/io/checks/a11_b3_page.sh` — |
-| not yet | b2 | CSV opens and saves values | `tests/web/io/checks/a11_b2_csv.sh` —, `tests/web/io/checks/a11_b3_page.sh` — |
+| PASS | b1 | opening then saving a JSON workbook keeps every cell | `tests/web/io/checks/a11_b1_json.sh` pass, `tests/web/io/checks/a11_b3_page.sh` pass |
+| PASS | b2 | CSV opens and saves values | `tests/web/io/checks/a11_b2_csv.sh` pass, `tests/web/io/checks/a11_b3_page.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -81,9 +81,21 @@ Status: landed (`6ce5b2aadde5`)
 | Implemented `wi-a-i11-open-save-1` | `impl-a1@alebairos`, `impl-a2@alebairos` |
 | Reviewed `wi-a-i11-open-save-1` | `rev-a@alebairos` (passed attempt 2) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/web/io/checks/a11_b1_json.sh`: pass
+- `tests/web/io/checks/a11_b2_csv.sh`: pass
+- `tests/web/io/checks/a11_b3_page.sh`: pass
+
+Outcome report:
+
+- **Built:** Landed on exp-a main (6ce5b2a, merged in PR #7): web/io/index.html (Open .json/.csv, Save JSON, Save CSV, a message line and the a-i9 grid), web/io/io.js (parseJSON/toJSON over SPEC.md's workbook, an RFC 4180 parseCSV/toCSV, and createController with openText/openFile/edit(ref, text)/saveJSON/saveCSV), and web/io/serve.py (serves web/ and answers POST /compute with ./engine). The replan's fix is in: each grid edit goes to controller.edit(ref, text), which writes only that cell into the stored workbook, and the page never calls setBook with computed values. I re-ran the three checks on landed main: a11_b1_json, a11_b2_csv and a11_b3_page all pass, including your case: open {A1: 2, B1: "=A1*2"}, edit A1 to 7, and Save JSON keeps B1 = "=A1*2". serve.py serves the page (200, text/html) and io.js (text/javascript). The WI landed on attempt 2 of 3 after one failed attempt. One limit today: ./engine does not evaluate formulas yet, so POST /compute returns {A1: 7, B1: "=A1*2"} unchanged (I checked it live). In the real page B1 shows the formula text, not 14, until a-i4-recalc (still parked) wires evaluation into the engine. The b3 check tests the 14 through the controller with a stand-in compute.
+- **Advice:** Try it: in a clone of exp-a, run python3 web/io/serve.py and open http://127.0.0.1:8000/io/index.html. Open a SPEC.md JSON workbook or a CSV, type into a cell, then Save JSON and reopen the file: every cell and formula should come back the same. Save CSV gives the current sheet's values. Expect formulas to show as text in the grid and in Save CSV until a-i4-recalc lands; that is outside this intent's scope (b1 and b2 hold), not a defect here. Met fits if open/save round-trips for you; choose PartiallyMet if you want the 14 shown in the live page counted before a-i4.
+- [io/index.html](https://github.com/alebairos/sheet-exp-host/blob/60a586cc3762d23f8dc99a87cd9ae44144e484b0/io/index.html)
+- [io/io.js](https://github.com/alebairos/sheet-exp-host/blob/60a586cc3762d23f8dc99a87cd9ae44144e484b0/io/io.js)
+- [io/serve.py](https://github.com/alebairos/sheet-exp-host/blob/60a586cc3762d23f8dc99a87cd9ae44144e484b0/io/serve.py)
+- [a-i11-open-save/sample.json](https://github.com/alebairos/sheet-exp-host/blob/60a586cc3762d23f8dc99a87cd9ae44144e484b0/a-i11-open-save/sample.json)
+- [a-i11-open-save/sample-saved.csv](https://github.com/alebairos/sheet-exp-host/blob/60a586cc3762d23f8dc99a87cd9ae44144e484b0/a-i11-open-save/sample-saved.csv)
 
 Files landed by `wi-a-i11-open-save-1`:
 
@@ -102,11 +114,15 @@ Landing pull request: [exp-a #7](https://github.com/alebairos/sheet-exp-a/pull/7
 
 ## 7. The decision
 
-Nothing waits on you.
+**Verdict:a-i11-open-save**: A decision: show your human its options
+
+- Met: `cooknship decide --answer Verdict:a-i11-open-save --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-i11-open-save --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-i11-open-save --option not_met`
 
 ## 8. Metrics
 
-- Lead time: 20 h 36 min so far
+- Lead time: 20 h 42 min so far
 - Loops: 4 (D1 spec 1, D2 plan 2, D5 review 1)
 - Waste: 3 h 48 min
 - Size: 335 lines (+334 −1, 7 files, ≤400; tests 132 lines); plan check files laid over by land, not in the size: +192 −0, 3 files
