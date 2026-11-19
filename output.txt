@@ -1,0 +1,41 @@
+test_deep_nesting_is_a_parse_error (tests.parser.test_parser.Malformed.test_deep_nesting_is_a_parse_error) ... ok
+test_parse_errors (tests.parser.test_parser.Malformed.test_parse_errors) ... ok
+test_call_missing_and_semicolon (tests.parser.test_parser.Nodes.test_call_missing_and_semicolon) ... ok
+test_column_letters (tests.parser.test_parser.Nodes.test_column_letters) ... ok
+test_literals (tests.parser.test_parser.Nodes.test_literals) ... ok
+test_names_and_function_like_refs (tests.parser.test_parser.Nodes.test_names_and_function_like_refs) ... ok
+test_quoted_sheet_escape (tests.parser.test_parser.Nodes.test_quoted_sheet_escape) ... ok
+test_range_keeps_one_sheet (tests.parser.test_parser.Nodes.test_range_keeps_one_sheet) ... ok
+test_ref_fields (tests.parser.test_parser.Nodes.test_ref_fields) ... ok
+test_calc_order (tests.parser.test_parser.Precedence.test_calc_order) ... ok
+test_whitespace (tests.parser.test_parser.Precedence.test_whitespace) ... ok
+test_cell (tests.test_cli.CliTest.test_cell) ... ok
+test_cell_absolute_ref (tests.test_cli.CliTest.test_cell_absolute_ref) ... ok
+test_cell_blank_is_null (tests.test_cli.CliTest.test_cell_blank_is_null) ... ok
+test_file_round_trip (tests.test_cli.CliTest.test_file_round_trip) ... ok
+test_stdin_round_trip (tests.test_cli.CliTest.test_stdin_round_trip) ... ok
+test_types_preserved (tests.test_cli.CliTest.test_types_preserved) ... ok
+test_compute_does_not_alias_input (tests.test_cli.ComputeTest.test_compute_does_not_alias_input) ... ok
+test_group_packages_exist (tests.test_registry.RegistryTest.test_group_packages_exist) ... ok
+test_register_decorator_returns_fn (tests.test_registry.RegistryTest.test_register_decorator_returns_fn) ... ok
+test_registry_is_a_copy (tests.test_registry.RegistryTest.test_registry_is_a_copy) ... ok
+test_blank (tests.values.test_values.CompareTest.test_blank) ... ok
+test_bools_are_numbers (tests.values.test_values.CompareTest.test_bools_are_numbers) ... ok
+test_errors (tests.values.test_values.CompareTest.test_errors) ... ok
+test_numbers_and_text (tests.values.test_values.CompareTest.test_numbers_and_text) ... ok
+test_immutable (tests.values.test_values.JsonTest.test_immutable) ... ok
+test_integral_float_is_int (tests.values.test_values.JsonTest.test_integral_float_is_int) ... ok
+test_kinds (tests.values.test_values.JsonTest.test_kinds) ... ok
+test_non_finite_is_num_error (tests.values.test_values.JsonTest.test_non_finite_is_num_error) ... ok
+test_roundtrip (tests.values.test_values.JsonTest.test_roundtrip) ... ok
+test_kinds (tests.values.test_values.ToBoolTest.test_kinds) ... ok
+test_error_passes (tests.values.test_values.ToNumberTest.test_error_passes) ... ok
+test_numbers_bools_blank (tests.values.test_values.ToNumberTest.test_numbers_bools_blank) ... ok
+test_text (tests.values.test_values.ToNumberTest.test_text) ... ok
+test_general_format (tests.values.test_values.ToTextTest.test_general_format) ... ok
+test_other_kinds (tests.values.test_values.ToTextTest.test_other_kinds) ... ok
+
+----------------------------------------------------------------------
+Ran 36 tests in 0.206s
+
+OK
