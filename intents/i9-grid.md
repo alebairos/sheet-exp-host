@@ -4,19 +4,35 @@
 
 > In the browser I see a grid of cells, select one and edit its value
 
-Kind: Feature · State: parked · 0 work items · 2 bullets
+Kind: Feature · State: planned · 1 work item · 2 bullets
 
 ## 2. What you will see
 
-No design in the plan.
+In the browser, a spreadsheet grid: column letters A, B, C… across the top, row numbers down the side, each cell showing the computed value as Calc shows it (1 not 1.0, 0.3 not 0.30000000000000004, TRUE/FALSE, errors like #DIV/0! in red, numbers right-aligned). Click a cell to select it (blue outline); double-click, press Enter or just start typing to edit it; Enter commits, Escape cancels. A typed 42 becomes a number, TRUE a boolean, anything else text, and an emptied cell becomes blank. The prototype in the media is clickable: it is the screen you will get, with sample values.
+
+- [i9-grid/prototype.html](https://github.com/alebairos/sheet-exp-host/blob/4741ef5810b847a273f5d9bc58e3e7e16ad05491/i9-grid/prototype.html)
+- [i9-grid/grid.js](https://github.com/alebairos/sheet-exp-host/blob/4741ef5810b847a273f5d9bc58e3e7e16ad05491/i9-grid/grid.js)
 
 ## 3. Approach
 
-No design in the plan.
+The grid first, as one plain ES module, web/grid/grid.js, with no build step and no libraries, split so most of it is testable without a browser: display(value) formats a computed JSON value (15 significant digits, like Calc's general format); createState(book, sheet), select(state, ref) and edit(state, ref, text) are pure functions over the workbook JSON (typed text: a number if it reads as one, TRUE/FALSE in any case, "" removes the cell, anything else, including =formulas, is kept as text for later intents); renderHTML(state, {rows, cols}) returns the table with data-ref on every cell, class selected on the selected one and HTML-escaped text; mount(container, state, {rows, cols, onChange}) is the only DOM code: it draws renderHTML, selects on click, edits with an input on double-click, Enter, F2 or typing, and calls onChange with the new state so the formula bar (i10) and open/save (i11) plug in later. web/grid/index.html shows a sample workbook. The plan checks (tests/web/grid/checks) run the module under Node.js, already on the land runner image; unit tests may go in tests/web/grid.
+
+- **Reuses:** The web/grid directory from i0-skeleton; SPEC.md's workbook JSON, the same shape ./engine reads and writes, as the grid's data.
+- **Removes:** The placeholder web/grid/.gitkeep, replaced by the grid module and a short index page.
+- **Rejected:** A framework (React, Vue) or a bundler: needs npm and a build in every clean clone and in land, for one table. A canvas-drawn grid: harder to test and to select text in, and not needed at this size. Testing through a headless browser: needs a browser install on the runner; the pure-function split lets Node test what matters, and mount stays small.
 
 ## 4. Work items
 
-No plan yet.
+### `wi-i9-grid-1`: Browser cell grid
+
+Add web/grid/grid.js so a workbook renders as a selectable, editable table in the browser, proven by the two plan checks under Node.
+
+Status: planned
+
+| AC | Covers | Check | Red on base | On product |
+| --- | --- | --- | --- | --- |
+| `ac-b1` | b1 | `tests/web/grid/checks/b1_render.sh` | — | — |
+| `ac-b2` | b2 | `tests/web/grid/checks/b2_edit.sh` | — | — |
 
 **Acceptance**, against the landed checks:
 
@@ -35,8 +51,10 @@ No plan yet.
 
 | Role | Who |
 | --- | --- |
-| Planned | — |
+| Planned | `plan-1@alebairos` |
 | Certified | — |
+| Implemented `wi-i9-grid-1` | — |
+| Reviewed `wi-i9-grid-1` | — |
 
 Product checks: not recorded yet.
 
@@ -48,4 +66,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-Not started: the metrics start with the first plan.
+- Lead time: 9 h 52 min so far
+- Loops: 0
+- Waste: 0 min
+- Size: nothing landed yet

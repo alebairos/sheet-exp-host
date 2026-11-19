@@ -4,19 +4,34 @@
 
 > Cell values and coercion behave as in Calc: numbers, text, booleans, blanks and the six errors, with text-to-number, boolean-as-1/0 and blank-as-0-or-empty
 
-Kind: Feature · State: parked · 0 work items · 2 bullets
+Kind: Feature · State: certified · 1 work item · 2 bullets
 
 ## 2. What you will see
 
-No design in the plan.
+A Python module src/values that every later part uses: from_json/to_json turn a workbook cell (1, "text", true, null, {"error": "#DIV/0!"}) into a value and back unchanged, with an integral number written as an integer (2.0 shows 2); to_number, to_text and compare apply Calc's rules: "12"+1 is 13, "abc"+1 and ""+1 are #VALUE!, TRUE counts as 1, a blank cell is 0 in arithmetic and "" in text, 0.1+0.2 joined as text is "0.3", text sorts after every number and compares case-insensitively, TRUE=1 is true (booleans are numbers in Calc). The ./engine output does not change: it already echoes every constant, and the check keeps it that way.
+
+- No media: A library module with no screen; its sample inputs and outputs are the cases in tests/values/checks/b*.sh
 
 ## 3. Approach
 
-No design in the plan.
+Value kinds first, because the evaluator (i3) and every function intent build on them. Immutable value classes: Number(float), Text(str), Bool, the BLANK singleton and Error(code) for #DIV/0! #VALUE! #REF! #NAME? #N/A #NUM!. from_json/to_json map JSON cells both ways (a non-finite number goes out as #NUM!). to_number: Number as is; Bool 1/0; BLANK 0; Text converts only if unambiguous (Calc's default): an optionally signed decimal with optional exponent, else #VALUE!, and the empty string is #VALUE!; an Error passes through. to_text: Calc's general format with 15 significant digits (1 not 1.0, 0.1+0.2 as 0.3, large and small numbers as 1E+20), TRUE/FALSE, BLANK as "". compare(a, b) returns -1/0/1 or the first operand's error: a blank takes the other side's kind (0 or ""); booleans compare as numbers; any number is below any text; text compares case-insensitively. Unit tests in tests/values (with __init__.py so ./test.sh finds them); the two plan checks in tests/values/checks are the contract.
+
+- **Reuses:** The part directory src/values and the ./test.sh suite from i0-skeleton; SPEC.md's output shape for numbers, text, booleans and errors; the ./engine CLI, which already echoes constants.
+- **Removes:** none
+- **Rejected:** Excel's rules (booleans distinct from numbers in comparisons, empty text as 0): Calc is the judge. Converting any text Python's float() accepts (" 12", "inf", "1_000"): Calc's default rejects ambiguous text. Wiring values into src/cli.py now: cli.py is outside this intent's scope, and the CLI already round-trips every kind; the evaluator wires values in when formulas are computed.
 
 ## 4. Work items
 
-No plan yet.
+### `wi-i2-values-1`: Calc value kinds
+
+Add from_json/to_json/to_number/to_text/compare in src/values so kinds and Calc coercion are one shared module, proven by the two plan checks.
+
+Status: planned
+
+| AC | Covers | Check | Red on base | On product |
+| --- | --- | --- | --- | --- |
+| `ac-b1` | b1 | `tests/values/checks/b1_roundtrip.sh` | red | — |
+| `ac-b2` | b2 | `tests/values/checks/b2_coercion.sh` | red | — |
 
 **Acceptance**, against the landed checks:
 
@@ -35,8 +50,10 @@ No plan yet.
 
 | Role | Who |
 | --- | --- |
-| Planned | — |
-| Certified | — |
+| Planned | `plan-1@alebairos` |
+| Certified | `gate-1@alebairos` |
+| Implemented `wi-i2-values-1` | — |
+| Reviewed `wi-i2-values-1` | — |
 
 Product checks: not recorded yet.
 
@@ -44,8 +61,15 @@ Outcome report: none yet.
 
 ## 7. The decision
 
-Nothing waits on you.
+**SpecAccept:i2-values**: A decision: show your human its options
+
+- Accept the spec: claims freeze, it can be admitted: `cooknship decide --answer SpecAccept:i2-values --option accept`
+- Send the plan back with a reason: `cooknship decide --answer SpecAccept:i2-values --option reject --text "<reason>"`
+- Shelve it; when another intent takes its place, the reason is replaced:<that intent's id>, and what waits on this one waits for it instead: `cooknship decide --answer SpecAccept:i2-values --option shelve --text "<reason>"`
 
 ## 8. Metrics
 
-Not started: the metrics start with the first plan.
+- Lead time: 9 h 52 min so far
+- Loops: 0
+- Waste: 0 min
+- Size: nothing landed yet

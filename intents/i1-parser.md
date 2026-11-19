@@ -4,7 +4,7 @@
 
 > Formulas parse as Calc reads them: A1, $A$1, ranges, Sheet2!A1, every SPEC.md operator with Calc's precedence (including -A1^2 and 2^3^2), numbers, strings, booleans and function calls
 
-Kind: Feature · State: planned · 1 work item · 3 bullets
+Kind: Feature · State: accepted · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -26,13 +26,13 @@ The tree first, because every later part (eval, recalc, functions) walks it. A r
 
 Add parse/show/ParseError in src/parser so formulas become a Calc-faithful tree and malformed input raises ParseError, proven by the three plan checks.
 
-Status: planned
+Status: accepted
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b1` | b1 | `tests/parser/checks/b1_refs.sh` | — | — |
-| `ac-b2` | b2 | `tests/parser/checks/b2_precedence.sh` | — | — |
-| `ac-b3` | b3 | `tests/parser/checks/b3_malformed.sh` | — | — |
+| `ac-b1` | b1 | `tests/parser/checks/b1_refs.sh` | red | — |
+| `ac-b2` | b2 | `tests/parser/checks/b2_precedence.sh` | red | — |
+| `ac-b3` | b3 | `tests/parser/checks/b3_malformed.sh` | red | — |
 
 **Acceptance**, against the landed checks:
 
@@ -53,7 +53,7 @@ Status: planned
 | Role | Who |
 | --- | --- |
 | Planned | `plan-1@alebairos` |
-| Certified | — |
+| Certified | `gate-1@alebairos` |
 | Implemented `wi-i1-parser-1` | — |
 | Reviewed `wi-i1-parser-1` | — |
 
@@ -67,7 +67,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 9 h 46 min so far
+- Lead time: 9 h 52 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet
