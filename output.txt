@@ -1,0 +1,24 @@
+FAIL =UPPER("abc"): got {"error": "#NAME?"}, want "ABC"
+FAIL =UPPER(A14): got {"error": "#NAME?"}, want "ÜNÏCODE STRAẞE"
+FAIL =UPPER(A1): got {"error": "#NAME?"}, want "1"
+FAIL =UPPER(A4): got {"error": "#NAME?"}, want "1"
+FAIL =UPPER(A5): got {"error": "#NAME?"}, want ""
+FAIL =UPPER(A7): got {"error": "#NAME?"}, want {"error": "#N/A"}
+FAIL =UPPER("MiXeD 1"): got {"error": "#NAME?"}, want "MIXED 1"
+FAIL =LOWER("ABC Déf"): got {"error": "#NAME?"}, want "abc déf"
+FAIL =LOWER(A5): got {"error": "#NAME?"}, want ""
+FAIL =LOWER(A7): got {"error": "#NAME?"}, want {"error": "#N/A"}
+FAIL =LOWER(A10): got {"error": "#NAME?"}, want "0"
+FAIL =LOWER(A14): got {"error": "#NAME?"}, want "ünïcode straße"
+FAIL =LOWER(2.50): got {"error": "#NAME?"}, want "2.5"
+FAIL =TRIM(A6): got {"error": "#NAME?"}, want "hello world"
+FAIL =TRIM("  a  "): got {"error": "#NAME?"}, want "a"
+FAIL =TRIM(A1): got {"error": "#NAME?"}, want "1"
+FAIL =TRIM(A5): got {"error": "#NAME?"}, want ""
+FAIL =TRIM("a  b   c"): got {"error": "#NAME?"}, want "a b c"
+FAIL =TRIM(A7): got {"error": "#NAME?"}, want {"error": "#N/A"}
+FAIL =TRIM(A4): got {"error": "#NAME?"}, want "1"
+FAIL =TRIM("   "): got {"error": "#NAME?"}, want ""
+FAIL =TRIM(A9): got {"error": "#NAME?"}, want "2.5"
+FAIL =UPPER(LEFT(A3,1))&MID(A3,2,10): got {"error": "#NAME?"}, want "Abc"
+23 of 23 cases differ from Calc
