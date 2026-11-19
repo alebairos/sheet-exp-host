@@ -1,0 +1,15 @@
+test_cell (tests.test_cli.CliTest.test_cell) ... ok
+test_cell_absolute_ref (tests.test_cli.CliTest.test_cell_absolute_ref) ... ok
+test_cell_blank_is_null (tests.test_cli.CliTest.test_cell_blank_is_null) ... ok
+test_file_round_trip (tests.test_cli.CliTest.test_file_round_trip) ... ok
+test_stdin_round_trip (tests.test_cli.CliTest.test_stdin_round_trip) ... ok
+test_types_preserved (tests.test_cli.CliTest.test_types_preserved) ... ok
+test_compute_does_not_alias_input (tests.test_cli.ComputeTest.test_compute_does_not_alias_input) ... ok
+test_group_packages_exist (tests.test_registry.RegistryTest.test_group_packages_exist) ... ok
+test_register_decorator_returns_fn (tests.test_registry.RegistryTest.test_register_decorator_returns_fn) ... ok
+test_registry_is_a_copy (tests.test_registry.RegistryTest.test_registry_is_a_copy) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.164s
+
+OK
