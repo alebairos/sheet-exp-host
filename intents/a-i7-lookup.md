@@ -31,7 +31,7 @@ One module, src/functions/lookup/lookup.py, registering VLOOKUP, INDEX and MATCH
 
 Add src/functions/lookup/lookup.py with VLOOKUP, INDEX and MATCH on one shared matcher (exact with wildcards, approximate on sorted keys) returning Calc's results and errors, so workbooks can look values up in tables.
 
-Status: attempt 1 in work by `impl-a1@alebairos`
+Status: attempt 1 built, awaiting review
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -70,7 +70,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 21 h 08 min so far
+- Lead time: 21 h 09 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet

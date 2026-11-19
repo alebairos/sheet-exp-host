@@ -4,7 +4,7 @@
 
 > A workbook recalculates in dependency order, recomputes only what an edit affects, and reports a circular reference as an error instead of hanging
 
-Kind: Feature · State: in work · 1 work item · 4 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 4 bullets
 
 ## 2. What you will see
 
@@ -30,7 +30,7 @@ One module, src/recalc, on top of the evaluator (a-i3), most-value part first: d
 
 Add src/recalc (a workbook that computes formulas in dependency order, recomputes only an edit's dependents, and gives Err:522 on circular references) and point the CLI's compute at it, so ./engine computes formulas instead of echoing them.
 
-Status: landing (`f91e897d51b2`)
+Status: landed (`f91e897d51b2`)
 
 **The passing review noted:** > PASS. Reran verify on the WI commit 2e3abb2 (worktree): all four checks green, all four red on the plan commit 1040c0a (base); ./test.sh 64 tests OK.
 > - ac-a4-b1 (b1, tests/recalc/checks/a4_b1_order.sh: ok b1): src/recalc/__init__.py:188 _recompute orders formulas with an iterative Tarjan pass over _precedents (points plus formula cells inside ranges), so precedents are evaluated first; src/cli.py:18 now routes ./engine through src.recalc.compute. Probed: cross-sheet with a lower-case sheet name (=sheet2!A1*2 where Sheet2!A1 is a formula) gives 8.
@@ -52,10 +52,10 @@ Status: landing (`f91e897d51b2`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | chains of formula cells compute in dependency order | no landed check |
-| not yet | b2 | an edit recomputes only its dependents | no landed check |
-| not yet | b3 | a cycle gives an error | no landed check |
-| not yet | b4 | 10,000 dependent cells recompute in under one second | no landed check |
+| not yet | b1 | chains of formula cells compute in dependency order | `tests/recalc/checks/a4_b1_order.sh` — |
+| not yet | b2 | an edit recomputes only its dependents | `tests/recalc/checks/a4_b2_incremental.sh` — |
+| not yet | b3 | a cycle gives an error | `tests/recalc/checks/a4_b3_cycles.sh` — |
+| not yet | b4 | 10,000 dependent cells recompute in under one second | `tests/recalc/checks/a4_b4_speed.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -75,6 +75,17 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-i4-recalc-1`:
+
+- `src/recalc/__init__.py` +290 −1
+- `tests/recalc/checks/a4_b2_incremental.sh` +101 −0 (plan check)
+- `tests/recalc/test_recalc.py` +91 −0 (test)
+- `tests/recalc/checks/a4_b1_order.sh` +89 −0 (plan check)
+- `tests/recalc/checks/a4_b4_speed.sh` +78 −0 (plan check)
+- `tests/recalc/checks/a4_b3_cycles.sh` +75 −0 (plan check)
+- `src/cli.py` +4 −3
+- `tests/recalc/__init__.py` +0 −0 (test)
+
 Landing pull request: [exp-a #9](https://github.com/alebairos/sheet-exp-a/pull/9)
 
 ## 7. The decision
@@ -83,7 +94,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 21 h 08 min so far
+- Lead time: 21 h 09 min so far
 - Loops: 0
 - Waste: 0 min
-- Size: nothing landed yet
+- Size: 298 lines (+294 −4, 4 files, ≤400; tests 91 lines); plan check files laid over by land, not in the size: +343 −0, 4 files

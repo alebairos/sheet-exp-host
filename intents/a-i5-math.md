@@ -32,7 +32,7 @@ Three modules under src/functions/math, one per work item, each registering its 
 
 Add src/functions/math/aggregate.py with SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN and STDEV, walking ranges and arguments as Calc does (text and blanks skipped, TRUE as 1, errors through), so the commonest formulas compute.
 
-Status: attempt 1 built, awaiting review
+Status: in review by `rev-a@alebairos`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -79,7 +79,7 @@ Status: attempt 1 built, awaiting review
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-i5-math-1` | `impl-a1@alebairos` |
-| Reviewed `wi-a-i5-math-1` | — |
+| Reviewed `wi-a-i5-math-1` | `rev-a@alebairos` |
 | Implemented `wi-a-i5-math-2` | `impl-a2@alebairos` |
 | Reviewed `wi-a-i5-math-2` | — |
 | Implemented `wi-a-i5-math-3` | `impl-a1@alebairos` |
@@ -95,7 +95,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 21 h 08 min so far
+- Lead time: 21 h 09 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet

@@ -4,7 +4,7 @@
 
 > The 9 logic and information functions and the 8 text functions of SPEC.md compute as in Calc
 
-Kind: Feature · State: planned · 2 work items · 2 bullets
+Kind: Feature · State: parked · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -65,7 +65,7 @@ Status: planned
 | Role | Who |
 | --- | --- |
 | Planned | `plan-a@alebairos` |
-| Certified | — |
+| Certified | `gate-a@alebairos` |
 | Implemented `wi-a-i6-logic-text-1` | — |
 | Reviewed `wi-a-i6-logic-text-1` | — |
 | Implemented `wi-a-i6-logic-text-2` | — |
@@ -81,7 +81,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 21 h 08 min so far
-- Loops: 3 (D1 spec 1, D2 plan 2)
-- Waste: 8 min
+- Lead time: 21 h 09 min so far
+- Loops: 4 (D1 spec 1, D2 plan 3)
+- Waste: 10 min
 - Size: nothing landed yet
