@@ -27,7 +27,12 @@ The grid first, as one plain ES module, web/grid/grid.js, with no build step and
 
 Add web/grid: a dependency-free JavaScript module and page that draws a sheet's computed values as a lettered and numbered grid, highlights the selected cell and lets you type a new value into it, so the UI has its central surface.
 
-Status: in review by `rev-a@alebairos`
+Status: landing (`381bc461484c`)
+
+**The passing review noted:** > PASS. Verify rerun in a worktree of 7ca9aea (node v26): both checks green (ok b1, ok b2); on plan base 8770f27 both red (grid.js missing). ./test.sh OK. No check file edited; all 5 paths inside web/grid and tests/web/grid.
+> ac-a9-b1 (tests/web/grid/checks/a9_b1_render.sh): renderHTML web/grid/grid.js:105-126 (column letters via colName :8-14, row numbers, data-ref on every td, class selected/num/err, HTML-escaped text :52-53); display/formatNumber :30-50 (15 significant digits, 1E+15 / 1E-05, booleans TRUE/FALSE, error code text), styled in web/grid/grid.css (num right, err red, selected blue outline).
+> ac-a9-b2 (tests/web/grid/checks/a9_b2_edit.sh): createState/select/move :58-72, parseInput :74-86 (number, TRUE/FALSE any case, "" -> blank, anything else incl. =formulas as text, as designed), edit :95-102 (pure, copies book/sheet, deletes on blank); mount :135-226 wires click select, dblclick/Enter/F2/typing edit, Enter commit + move down, Escape cancel, blur commit, arrows, Delete clears, onChange on every change.
+> Notes, not blocking: (1) tests/web/grid/grid.test.mjs (7 tests, all pass under node --test) is not run by ./test.sh, which only discovers Python unittest, so land never runs it; registering it is outside this intent's scope (scripts/test) — worth a follow-up. (2) While editing, clicking another cell commits on blur and redraws the table before the click lands, so the clicked cell may not get selected in some browsers (mount :177-185); a later UI intent may want mousedown-based selection. (3) Only mount is untested by the checks (no DOM in Node), as the design says. -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -54,11 +59,13 @@ Status: in review by `rev-a@alebairos`
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-i9-grid-1` | `impl-a2@alebairos` |
-| Reviewed `wi-a-i9-grid-1` | `rev-a@alebairos` |
+| Reviewed `wi-a-i9-grid-1` | `rev-a@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
 Outcome report: none yet.
+
+Landing pull request: [exp-a #5](https://github.com/alebairos/sheet-exp-a/pull/5)
 
 ## 7. The decision
 
@@ -66,7 +73,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 8 h 03 min so far
+- Lead time: 8 h 07 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet

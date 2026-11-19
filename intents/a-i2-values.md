@@ -26,7 +26,7 @@ Value kinds first, because the evaluator (a-i3) and every function intent build 
 
 Add src/values: the five kinds of cell value (number, text, boolean, blank, error) with conversion to and from the workbook JSON, and Calc's coercions for arithmetic, concatenation and comparison, so the evaluator and functions share one set of rules.
 
-Status: queued to land
+Status: landing (`50e142fa3f8f`)
 
 **The passing review noted:** > PASS. Verify rerun in a worktree of 23423c5: both checks green (ok b1, ok b2), ./test.sh 25 tests OK; on plan base 6a8a8fa both red (ImportError: from_json). No check file edited; the 3 paths are inside src/values and tests/values.
 > ac-a2-b1 (tests/values/checks/a2_b1_roundtrip.sh): from_json src/values/__init__.py:130-144 (null->BLANK, bool before int, {"error":..}->Error), to_json :147-164 (integral finite floats below 2^53 as int, non-finite as #NUM!); value classes immutable and hashable :21-121. The CLI part of the check passes on ./engine unchanged, as the design says.
@@ -64,13 +64,15 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Landing pull request: [exp-a #4](https://github.com/alebairos/sheet-exp-a/pull/4)
+
 ## 7. The decision
 
 Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 8 h 03 min so far
+- Lead time: 8 h 08 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet
