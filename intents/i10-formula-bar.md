@@ -27,7 +27,27 @@ One plain ES module, web/formula_bar/formula_bar.js, no build and no libraries, 
 
 Add web/formula_bar/formula_bar.js so the selected cell's formula shows and edits in a bar and Calc error names appear in red, proven by the two plan checks.
 
-Status: attempt 1 built, awaiting review
+Status: landing (`4ebacdf52b8c`)
+
+**The passing review noted:** > pass wi-i10-formula-bar-1 (commit 374d839c0bda76a6467db3a0b0bbec4161796cfa)
+> 
+> ac-b1 (b1: formula bar shows and edits the selected cell's formula): PASS
+> - reran tests/web/formula_bar/checks/b1_formula.sh → exit 0 (ok b1)
+> - barText/typedText: web/formula_bar/formula_bar.js:27-38 (formulas kept as typed)
+> - parseInput/commit: web/formula_bar/formula_bar.js:47-70 (= stays formula; number/TRUE/FALSE/blank)
+> - renderHTML/mount Enter-Escape: web/formula_bar/formula_bar.js:73-113
+> 
+> ac-b2 (b2: errors display as Calc names them): PASS
+> - reran tests/web/formula_bar/checks/b2_errors.sh → exit 0 (ok b2)
+> - errorText: web/formula_bar/formula_bar.js:41-44 (only {error: "..."} objects)
+> - renderHTML error span: web/formula_bar/formula_bar.js:73-82
+> 
+> suite: ./test.sh → all tests passed (exit 0)
+> 
+> scope: exp-b:web/formula_bar/** and exp-b:tests/web/formula_bar/** only
+> - includes README.md documenting API (belongs under web/formula_bar)
+> - plan checks under tests/web/formula_bar; law 9 drops check-file edits at land
+> - no path outside scope
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -54,11 +74,13 @@ Status: attempt 1 built, awaiting review
 | Planned | `plan-1@alebairos` |
 | Certified | `gate-1@alebairos` |
 | Implemented `wi-i10-formula-bar-1` | `impl-2@alebairos` |
-| Reviewed `wi-i10-formula-bar-1` | — |
+| Reviewed `wi-i10-formula-bar-1` | `rev-1@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
 Outcome report: none yet.
+
+Landing pull request: [exp-b #6](https://github.com/alebairos/sheet-exp-b/pull/6)
 
 ## 7. The decision
 
@@ -66,7 +88,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 22 min so far
+- Lead time: 10 h 25 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet

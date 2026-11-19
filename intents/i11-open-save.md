@@ -32,7 +32,9 @@ Three pieces in web/io, no build and no libraries. (1) io.js, pure text function
 
 Add web/io so JSON and CSV open and save keep cells and values, with a page wired to the grid and ./engine, proven by the three plan checks.
 
-Status: attempt 1 in work by `impl-2@alebairos`
+Status: attempt 1 built, awaiting review
+
+**Flagged:** outside the scope: exp-b:web/grid/.gitkeep, exp-b:web/grid/grid.js
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -52,6 +54,7 @@ Status: attempt 1 in work by `impl-2@alebairos`
 - **Out of scope:** other formats; files outside this intent's directories; shared registration goes through what I0 set up
 - **Non-functional:** matching Calc is the whole requirement here; speed is measured once, in i4-recalc
 - **Path scope:** `exp-b:web/io/**`, `exp-b:tests/web/io/**`
+- **`wi-i11-open-save-1`**: outside the scope: exp-b:web/grid/.gitkeep, exp-b:web/grid/grid.js
 
 ## 6. Evidence
 
@@ -72,7 +75,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 22 min so far
+- Lead time: 10 h 25 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet

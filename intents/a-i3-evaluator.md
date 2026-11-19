@@ -4,7 +4,7 @@
 
 > A parsed formula evaluates with Calc's operators and error propagation (#DIV/0!, #VALUE!, #REF!, #NAME?)
 
-Kind: Feature · State: planned · 1 work item · 3 bullets
+Kind: Feature · State: certified · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -53,7 +53,7 @@ Status: planned
 | Role | Who |
 | --- | --- |
 | Planned | `plan-a@alebairos` |
-| Certified | — |
+| Certified | `gate-a@alebairos` |
 | Implemented `wi-a-i3-evaluator-1` | — |
 | Reviewed `wi-a-i3-evaluator-1` | — |
 
@@ -63,11 +63,15 @@ Outcome report: none yet.
 
 ## 7. The decision
 
-Nothing waits on you.
+**SpecAccept:a-i3-evaluator**: A decision: show your human its options
+
+- Accept the spec: claims freeze, it can be admitted: `cooknship decide --answer SpecAccept:a-i3-evaluator --option accept`
+- Send the plan back with a reason: `cooknship decide --answer SpecAccept:a-i3-evaluator --option reject --text "<reason>"`
+- Shelve it; when another intent takes its place, the reason is replaced:<that intent's id>, and what waits on this one waits for it instead: `cooknship decide --answer SpecAccept:a-i3-evaluator --option shelve --text "<reason>"`
 
 ## 8. Metrics
 
-- Lead time: 8 h 44 min so far
+- Lead time: 8 h 47 min so far
 - Loops: 1 (D2 plan 1)
 - Waste: 8 min
 - Size: nothing landed yet
