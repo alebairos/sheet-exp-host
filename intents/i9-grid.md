@@ -4,7 +4,7 @@
 
 > In the browser I see a grid of cells, select one and edit its value
 
-Kind: Feature · State: in work · 1 work item · 2 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -27,7 +27,7 @@ The grid first, as one plain ES module, web/grid/grid.js, with no build step and
 
 Add web/grid/grid.js so a workbook renders as a selectable, editable table in the browser, proven by the two plan checks under Node.
 
-Status: landing (`caf47ed9691a`)
+Status: landed (`caf47ed9691a`)
 
 **The passing review noted:** > pass wi-i9-grid-1 (commit 633842e15cbd822047b24b93ccfa033775f158c4 on ancestry plan/i9-grid f0800a23)
 > 
@@ -57,8 +57,8 @@ Status: landing (`caf47ed9691a`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | the grid renders a workbook's computed values | no landed check |
-| not yet | b2 | selecting and editing a cell updates it | no landed check |
+| not yet | b1 | the grid renders a workbook's computed values | `tests/web/grid/checks/b1_render.sh` — |
+| not yet | b2 | selecting and editing a cell updates it | `tests/web/grid/checks/b2_edit.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -79,6 +79,15 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-i9-grid-1`:
+
+- `web/grid/grid.js` +226 −0
+- `tests/web/grid/checks/b2_edit.sh` +38 −0 (plan check)
+- `tests/web/grid/checks/b1_render.sh` +36 −0 (plan check)
+- `web/grid/index.html` +26 −0
+- `tests/web/grid/__init__.py` +1 −0 (plan check)
+- `web/grid/.gitkeep` +0 −1
+
 Landing pull request: [exp-b #3](https://github.com/alebairos/sheet-exp-b/pull/3)
 
 ## 7. The decision
@@ -87,7 +96,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 03 min so far
+- Lead time: 10 h 08 min so far
 - Loops: 0
 - Waste: 0 min
-- Size: nothing landed yet
+- Size: 253 lines (+252 −1, 3 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +75 −0, 3 files

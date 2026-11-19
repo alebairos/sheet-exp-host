@@ -4,7 +4,7 @@
 
 > Formulas parse as Calc reads them: A1, $A$1, ranges, Sheet2!A1, every SPEC.md operator with Calc's precedence (including -A1^2 and 2^3^2), numbers, strings, booleans and function calls
 
-Kind: Feature · State: awaiting the verdict · 1 work item · 3 bullets
+Kind: Feature · State: Met · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -62,6 +62,7 @@ Status: landed (`8f35744725a9`)
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-i1-parser-1` | `impl-a1@alebairos` |
 | Reviewed `wi-a-i1-parser-1` | `rev-a@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
@@ -69,7 +70,11 @@ Product checks:
 - `tests/parser/checks/a1_b2_precedence.sh`: pass
 - `tests/parser/checks/a1_b3_malformed.sh`: pass
 
-Outcome report: none yet.
+Outcome report:
+
+- **Built:** A formula parser in exp-a src/parser (landed via exp-a PR #3, one work item, first attempt, review passed). parse(formula) turns a cell formula into a tree and show(tree) prints it on one line. It reads formulas the way Calc does: =-A1^2 is (-A1)^2 and =2^3^2 is (2^3)^2 = 64. It handles A1, $A$1, ranges, Sheet2!A1 and 'My Sheet'!$A$1:B6, numbers, "strings" with "" escapes, TRUE/FALSE, % and function calls with skipped arguments (IF(A1,,1)). Unknown names are kept for #NAME? at evaluation. A malformed formula such as =1+ or =SUM(1, raises ParseError and never crashes. I re-ran these cases on main after the merge, and the full ./test.sh suite passes (36 tests). It follows the plan exactly: no extra dependencies, and evaluation is not included (that is the next intent). The engine's visible output does not change yet.
+- **Advice:** Adopt. The intents that follow it (evaluator, recalc, functions) build on this tree. Watch Calc corner cases the checks do not cover yet, such as whole-column refs (A:A), named ranges and array literals {1,2}. If the hidden suite needs them, park them as follow-ups when the evaluator surfaces them.
+- No media: A library API with no screen, as the plan said. Its sample inputs and outputs are the cases in tests/parser/checks/a1_*.sh
 
 Files landed by `wi-a-i1-parser-1`:
 
@@ -90,7 +95,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 8 h 26 min so far
+- Lead time: 8 h 28 min
 - Loops: 0
 - Waste: 0 min
 - Size: 465 lines (+464 −1, 5 files, 401–1,000; tests 81 lines); plan check files laid over by land, not in the size: +156 −0, 3 files

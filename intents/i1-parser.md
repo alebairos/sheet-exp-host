@@ -26,7 +26,30 @@ The tree first, because every later part (eval, recalc, functions) walks it. A r
 
 Add parse/show/ParseError in src/parser so formulas become a Calc-faithful tree and malformed input raises ParseError, proven by the three plan checks.
 
-Status: attempt 1 in work by `impl-1@alebairos`
+Status: landing (`37788f56e8dd`)
+
+**The passing review noted:** > pass wi-i1-parser-1 (commit 67bb4c17651827e403e2eba494dd1d404f552369)
+> 
+> ac-b1 (b1: references, ranges and sheet references parse): PASS
+> - reran tests/parser/checks/b1_refs.sh → exit 0 (ok b1)
+> - tokenize/Parser sheet+ref: src/parser/__init__.py:131-210, 300-342 (A1/$A$1, Sheet2!, 'My Sheet'!, ranges)
+> - parse/show entry: src/parser/__init__.py:344-357, 386+
+> 
+> ac-b2 (b2: operator precedence and associativity match Calc): PASS
+> - reran tests/parser/checks/b2_precedence.sh → exit 0 (ok b2)
+> - layers loosest-first: parse_expr..parse_pow src/parser/__init__.py:211-249 (^ left-assoc via while)
+> - unary/percent below ^: src/parser/__init__.py:251+ (Calc: -A1^2 as (^ (neg A1) 2))
+> 
+> ac-b3 (b3: malformed formula is ParseError, not a crash): PASS
+> - reran tests/parser/checks/b3_malformed.sh → exit 0 (ok b3)
+> - ParseError class: src/parser/__init__.py:11-13; expect/consume raise ParseError:176-187
+> - RecursionError → ParseError: src/parser/__init__.py:355-356
+> 
+> suite: ./test.sh → all tests passed (exit 0)
+> 
+> scope: paths under exp-b:src/parser/** and exp-b:tests/parser/** only
+> - WI commit includes tests/parser/checks/*.sh (plan contract under tests/parser); law 9 drops check-file edits at land.
+> - no path outside scope
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -55,11 +78,13 @@ Status: attempt 1 in work by `impl-1@alebairos`
 | Planned | `plan-1@alebairos` |
 | Certified | `gate-1@alebairos` |
 | Implemented `wi-i1-parser-1` | `impl-1@alebairos` |
-| Reviewed `wi-i1-parser-1` | — |
+| Reviewed `wi-i1-parser-1` | `rev-1@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
 Outcome report: none yet.
+
+Landing pull request: [exp-b #4](https://github.com/alebairos/sheet-exp-b/pull/4)
 
 ## 7. The decision
 
@@ -67,7 +92,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 04 min so far
+- Lead time: 10 h 08 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet

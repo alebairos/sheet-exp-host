@@ -26,7 +26,7 @@ Value kinds first, because the evaluator (i3) and every function intent build on
 
 Add from_json/to_json/to_number/to_text/compare in src/values so kinds and Calc coercion are one shared module, proven by the two plan checks.
 
-Status: accepted
+Status: in review by `rev-1@alebairos`
 
 **The passing review noted:** > pass wi-i2-values-1 (commit 5f0d7817d3246c2f5ce29e40c1aaf8a28966446e on ancestry plan/i2-values b4792f47)
 > 
@@ -73,7 +73,7 @@ Status: accepted
 | --- | --- |
 | Planned | `plan-1@alebairos` |
 | Certified | `gate-1@alebairos` |
-| Implemented `wi-i2-values-1` | `impl-2@alebairos` |
+| Implemented `wi-i2-values-1` | `impl-1@alebairos`, `impl-2@alebairos` |
 | Reviewed `wi-i2-values-1` | `rev-1@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
@@ -86,7 +86,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 04 min so far
+- Lead time: 10 h 08 min so far
 - Loops: 1 (D6 landing 1)
-- Waste: 10 min
+- Waste: 11 min
 - Size: nothing landed yet

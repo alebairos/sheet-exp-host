@@ -4,7 +4,7 @@
 
 > In the browser I see a grid of cells, select one and edit its value
 
-Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
+Kind: Feature · State: Met · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -60,13 +60,21 @@ Status: landed (`381bc461484c`)
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-i9-grid-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-i9-grid-1` | `rev-a@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
 - `tests/web/grid/checks/a9_b1_render.sh`: pass
 - `tests/web/grid/checks/a9_b2_edit.sh`: pass
 
-Outcome report: none yet.
+Outcome report:
+
+- **Built:** The browser grid in exp-a web/grid (landed via exp-a PR #5, one work item, first attempt, review passed). Serve the repo with python3 -m http.server and open /web/grid/. It shows lettered columns and numbered rows. Values display as Calc shows them: 0.30000000000000004 shows as 0.3, numbers are right-aligned, TRUE/FALSE appear as words and #DIV/0! is red. Click selects a cell (blue outline). Double-click, Enter, F2 or typing edits it; Enter commits and moves down, Escape cancels, arrows move and Delete clears. A typed 42 is stored as a number, TRUE as a boolean, empty input as a blank cell, and anything else, including =formulas, as text for now. It matches the plan's prototype, plus arrows and Delete. It is plain JavaScript with no libraries or build step. built/grid.png is the landed page, rendered headless from exp-a main 43e422a.
+- **Advice:** Adopt, with three follow-ups from the review. (1) The grid's own unit tests (tests/web/grid/grid.test.mjs, run by Node) are not run by ./test.sh, so land never runs them. Park a small intent to register them in the shared test script. (2) While editing, clicking another cell commits and redraws before the click lands, so the clicked cell may not get selected. Watch for it when trying it by hand; the formula-bar intent (a-i10) can switch to mousedown selection. (3) Formulas are shown as typed text until the evaluator and formula bar are wired in (a-i3, a-i10).
+- [a-i9-grid/built/grid.png](https://github.com/alebairos/sheet-exp-host/blob/735020604e1888de711141c48c3113691af6483f/a-i9-grid/built/grid.png)
+- [a-i9-grid/built/index.html](https://github.com/alebairos/sheet-exp-host/blob/735020604e1888de711141c48c3113691af6483f/a-i9-grid/built/index.html)
+- [a-i9-grid/built/grid.js](https://github.com/alebairos/sheet-exp-host/blob/735020604e1888de711141c48c3113691af6483f/a-i9-grid/built/grid.js)
+- [a-i9-grid/built/grid.css](https://github.com/alebairos/sheet-exp-host/blob/735020604e1888de711141c48c3113691af6483f/a-i9-grid/built/grid.css)
 
 Files landed by `wi-a-i9-grid-1`:
 
@@ -86,7 +94,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 8 h 25 min so far
+- Lead time: 8 h 29 min
 - Loops: 0
 - Waste: 0 min
 - Size: 269 lines (+268 −1, 5 files, ≤400; tests 61 lines); plan check files laid over by land, not in the size: +74 −0, 2 files

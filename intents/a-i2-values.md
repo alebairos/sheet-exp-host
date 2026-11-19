@@ -4,7 +4,7 @@
 
 > Cell values and coercion behave as in Calc: numbers, text, booleans, blanks and the six errors, with text-to-number, boolean-as-1/0 and blank-as-0-or-empty
 
-Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
+Kind: Feature · State: Met · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -59,13 +59,18 @@ Status: landed (`50e142fa3f8f`)
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-i2-values-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-i2-values-1` | `rev-a@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
 - `tests/values/checks/a2_b1_roundtrip.sh`: pass
 - `tests/values/checks/a2_b2_coercion.sh`: pass
 
-Outcome report: none yet.
+Outcome report:
+
+- **Built:** Cell values and Calc's coercion rules in exp-a src/values (landed via exp-a PR #4, one work item, first attempt, review passed). Workbook cells (numbers, text, true/false, blank, and the six errors as {"error": ...}) round-trip unchanged, and a whole number is written as an integer (2.0 shows 2). The coercions follow Calc: "12" becomes 12, while "abc" and "" are #VALUE!. TRUE is 1 and a blank is 0 in arithmetic and "" in text. Numbers are shown with 15 significant digits, so 0.1+0.2 is "0.3" and 1E20 is 1E+20. In comparisons TRUE=1 is true, any number sorts before any text, and text compares case-insensitively. I re-ran these cases on main and the whole suite passes. It follows the plan exactly. It is a library that the evaluator will use, so ./engine output does not change yet.
+- **Advice:** Adopt. There are two follow-ups for the intents that build on it, both from the review's notes. (1) Text order is code-point order, not Calc's locale collation. That only matters for punctuation and accents in sorting and MATCH, so watch it in a-i7-lookup. (2) from_json accepts an unknown error string such as #FOO. That is harmless unless inputs carry one. Neither needs work now.
+- No media: A library module with no screen, as the plan said. Its sample inputs and outputs are the cases in tests/values/checks/a2_*.sh
 
 Files landed by `wi-a-i2-values-1`:
 
@@ -83,7 +88,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 8 h 26 min so far
+- Lead time: 8 h 29 min
 - Loops: 0
 - Waste: 0 min
 - Size: 268 lines (+267 −1, 3 files, ≤400; tests 107 lines); plan check files laid over by land, not in the size: +95 −0, 2 files
