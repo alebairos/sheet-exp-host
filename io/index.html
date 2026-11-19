@@ -1,0 +1,14 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Workbook</title></head><body>
+<input type="file" id="open" accept=".json,.csv"> <button id="save-json">Save JSON</button> <button id="save-csv">Save CSV</button>
+<p id="message"></p><div id="grid"></div>
+<script type="module">
+import { createController, download } from "./io.js";
+import { createState, mount } from "../grid/grid.js";
+const compute = async (book) => (await fetch("/compute", {method: "POST", body: JSON.stringify(book)})).json();
+const c = createController({compute});
+const show = () => mount(document.getElementById("grid"), createState(c.state.computed, c.state.sheet), {onChange: async (s) => { await c.setBook(s.book); show(); }});
+document.getElementById("open").onchange = async (e) => { await c.openFile(e.target.files[0]); document.getElementById("message").textContent = c.state.message; show(); };
+for (const [id, f] of [["save-json", () => c.saveJSON()], ["save-csv", () => c.saveCSV()]]) document.getElementById(id).onclick = () => { const s = f(); download(s.name, s.text, s.type); };
+show();
+</script></body></html>
