@@ -1,0 +1,4 @@
+FAIL (3)
+  check workbook Sheet1!B3 =COUNT(A1:A100): Calc 39, engine {"error": "#DIV/0!"}
+  no product workbook in tests/e2e/engine/books has a chain of 100 formulas with an error in Calc's answers
+  the product suite is not importable under tests/ (as ./test.sh discovers): Start directory is not importable: '/tmp/cooknship-base-r1-engine-1420226/tests'
