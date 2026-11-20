@@ -26,7 +26,7 @@ Implement VLOOKUP, INDEX and MATCH in src/functions/lookup as a FUNCTIONS dict f
 
 Add VLOOKUP with exact and sorted approximate match, #N/A on miss, and #VALUE! for a bad column index as in Calc.
 
-Status: queued to land
+Status: landing (`d86b3a8c556a`)
 
 **The passing review noted:** > pass review of wi-i7-lookup-1 @ ec6a1e9 (attempt 1). Covers ac-b1 only.
 > 
@@ -46,7 +46,17 @@ Status: queued to land
 
 Add INDEX and MATCH (types 0 and 1) matching Calc, with #N/A/#REF!/#VALUE! as pinned in the check.
 
-Status: attempt 1 built, awaiting review
+Status: queued to land
+
+**The passing review noted:** > pass review of wi-i7-lookup-2 @ 32e6dcc (attempt 1). Covers ac-b2 only.
+> 
+> verify: tests/functions/lookup/checks/b2_index_match.sh EXIT 0 (ok b2).
+> 
+> ac-b2 / b2 (INDEX and MATCH types 0 and 1 match Calc, errors included): check green. INDEX 1-based via _pos; row/col 0 → VALUE (:57-70); out of range → REF (:94-95). MATCH exact type 0 (:127-134); type 1/omitted ascending approx last ≤ probe (:136-148); miss → NA. FUNCTIONS registers INDEX and MATCH only (:151-154).
+> 
+> scope: last_diff src/functions/lookup/__init__.py in path_scope. Commit also adds tests/functions/lookup checks (law 9 drops check edits at land — flagged). Tip FUNCTIONS is INDEX/MATCH-only; land must merge with VLOOKUP from wi-i7-lookup-1 on the same file.
+> 
+> No blocking findings.
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -74,11 +84,13 @@ Status: attempt 1 built, awaiting review
 | Implemented `wi-i7-lookup-1` | `impl-1@alebairos` |
 | Reviewed `wi-i7-lookup-1` | `rev-1@alebairos` (passed attempt 1) |
 | Implemented `wi-i7-lookup-2` | `impl-1@alebairos` |
-| Reviewed `wi-i7-lookup-2` | — |
+| Reviewed `wi-i7-lookup-2` | `rev-1@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
 Outcome report: none yet.
+
+Landing pull request: [exp-b #15](https://github.com/alebairos/sheet-exp-b/pull/15)
 
 ## 7. The decision
 
@@ -86,7 +98,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 43 min so far
+- Lead time: 26 h 44 min so far
 - Loops: 3 (D1 spec 1, D2 plan 2)
 - Waste: 9 min
 - Size: nothing landed yet

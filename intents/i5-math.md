@@ -66,7 +66,7 @@ Status: landed (`2d91c4ead6e9`)
 
 Add SUMIF, COUNTIF and AVERAGEIF matching Calc criteria (comparisons, text, wildcards).
 
-Status: queued to land
+Status: accepted
 
 **The passing review noted:** > pass review of wi-i5-math-3 @ 9ed4796 (attempt 2). Covers ac-b3 only.
 > 
@@ -135,7 +135,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 43 min so far
-- Loops: 3 (D2 plan 1, D6 landing 2)
-- Waste: 29 min
+- Lead time: 26 h 44 min so far
+- Loops: 4 (D2 plan 1, D6 landing 3)
+- Waste: 36 min
 - Size: 274 lines (+271 −3, 2 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +273 −0, 4 files

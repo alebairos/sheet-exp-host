@@ -99,7 +99,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 25 h 04 min so far
+- Lead time: 25 h 05 min so far
 - Loops: 5 (D1 spec 1, D2 plan 3, D6 landing 1)
 - Waste: 34 min
 - Size: 0 lines (+0 −0, 7 files, ≤400; tests 99 lines); plan check files laid over by land, not in the size: +219 −0, 8 files

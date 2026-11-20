@@ -4,7 +4,7 @@
 
 > The 9 logic and information functions and the 8 text functions of SPEC.md compute as in Calc
 
-Kind: Feature · State: in work · 2 work items · 2 bullets
+Kind: Feature · State: awaiting the verdict · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -46,7 +46,7 @@ Status: landed (`59e3019a2b6b`)
 
 Add CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER and TRIM with Calc coercion and errors.
 
-Status: landing (`6b84f2c990f5`)
+Status: landed (`6b84f2c990f5`)
 
 **The passing review noted:** > pass review of wi-i6-logic-text-2 @ fc10245 (attempt 2). Covers ac-b2 only.
 > 
@@ -69,7 +69,7 @@ Status: landing (`6b84f2c990f5`)
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
 | not yet | b1 | IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT, ISERROR match Calc | `tests/functions/logic_text/checks/b1_logic.sh` — |
-| not yet | b2 | CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER, TRIM match Calc, coercion and errors included | no landed check |
+| not yet | b2 | CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER, TRIM match Calc, coercion and errors included | `tests/functions/logic_text/checks/b2_text.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -100,6 +100,10 @@ Files landed by `wi-i6-logic-text-1`:
 - `tests/functions/logic_text/__init__.py` +1 −0 (plan check)
 - `tests/functions/logic_text/checks/__init__.py` +0 −0 (plan check)
 
+Files landed by `wi-i6-logic-text-2`:
+
+- `src/functions/logic_text/__init__.py` +110 −2
+
 Landing pull request: [exp-b #14](https://github.com/alebairos/sheet-exp-b/pull/14)
 
 ## 7. The decision
@@ -108,7 +112,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 43 min so far
+- Lead time: 26 h 44 min so far
 - Loops: 4 (D1 spec 1, D2 plan 2, D6 landing 1)
 - Waste: 18 min
-- Size: 110 lines (+110 −0, 1 file, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +216 −0, 4 files
+- Size: 222 lines (+220 −2, 2 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +216 −0, 4 files
