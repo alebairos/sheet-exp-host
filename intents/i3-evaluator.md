@@ -4,7 +4,7 @@
 
 > A parsed formula evaluates with Calc's operators and error propagation (#DIV/0!, #VALUE!, #REF!, #NAME?)
 
-Kind: Feature · State: in work · 1 work item · 3 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 3 bullets
 
 ## 2. What you will see
 
@@ -26,7 +26,7 @@ The operator core first, as one module src/eval built on the parser's tree (i1) 
 
 Add src.eval.evaluate with Calc operators, error propagation including #REF!, #NAME? for unknown calls, and register/registry in src/eval, proven by the three plan checks.
 
-Status: landing (`aa4b68601c18`)
+Status: landed (`aa4b68601c18`)
 
 **The passing review noted:** > pass review of wi-i3-evaluator-1 @ 1201b7a (attempt 1).
 > 
@@ -50,9 +50,9 @@ Status: landing (`aa4b68601c18`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | arithmetic, comparison, & and % match Calc | no landed check |
-| not yet | b2 | errors propagate through operators as in Calc | no landed check |
-| not yet | b3 | an unknown function is #NAME? | no landed check |
+| not yet | b1 | arithmetic, comparison, & and % match Calc | `tests/eval/checks/b1_operators.sh` — |
+| not yet | b2 | errors propagate through operators as in Calc | `tests/eval/checks/b2_errors.sh` — |
+| not yet | b3 | an unknown function is #NAME? | `tests/eval/checks/b3_names.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -73,6 +73,15 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-i3-evaluator-1`:
+
+- `src/eval/__init__.py` +300 −0
+- `tests/eval/test_eval.py` +144 −0 (test)
+- `tests/eval/checks/b3_names.sh` +85 −0 (plan check)
+- `tests/eval/checks/b1_operators.sh` +56 −0 (plan check)
+- `tests/eval/checks/b2_errors.sh` +56 −0 (plan check)
+- `tests/eval/__init__.py` +1 −0 (plan check)
+
 Landing pull request: [exp-b #8](https://github.com/alebairos/sheet-exp-b/pull/8)
 
 ## 7. The decision
@@ -81,7 +90,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 25 h 41 min so far
+- Lead time: 25 h 45 min so far
 - Loops: 4 (D1 spec 1, D2 plan 3)
 - Waste: 3 h 33 min
-- Size: nothing landed yet
+- Size: 300 lines (+300 −0, 2 files, ≤400; tests 144 lines); plan check files laid over by land, not in the size: +198 −0, 4 files

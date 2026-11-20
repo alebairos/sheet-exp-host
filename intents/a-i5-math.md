@@ -43,7 +43,7 @@ Status: landed (`23ac95711c5e`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a5-b1` | b1 | `tests/functions/math/checks/a5_b1_aggregates.sh` | red | — |
+| `ac-a5-b1` | b1 | `tests/functions/math/checks/a5_b1_aggregates.sh` | red | pass |
 
 ### `wi-a-i5-math-2`: Rounding and arithmetic functions
 
@@ -60,7 +60,7 @@ Status: landed (`a8ff6a245f5e`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a5-b2` | b2 | `tests/functions/math/checks/a5_b2_rounding.sh` | red | — |
+| `ac-a5-b2` | b2 | `tests/functions/math/checks/a5_b2_rounding.sh` | red | pass |
 
 ### `wi-a-i5-math-3`: Criteria: SUMIF, COUNTIF, AVERAGEIF
 
@@ -78,15 +78,15 @@ Status: landed (`ab6081615a13`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a5-b3` | b3 | `tests/functions/math/checks/a5_b3_criteria.sh` | red | — |
+| `ac-a5-b3` | b3 | `tests/functions/math/checks/a5_b3_criteria.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN, STDEV match Calc on ranges with blanks and text | `tests/functions/math/checks/a5_b1_aggregates.sh` — |
-| not yet | b2 | ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER, SQRT match Calc, errors included | `tests/functions/math/checks/a5_b2_rounding.sh` — |
-| not yet | b3 | SUMIF, COUNTIF, AVERAGEIF match Calc's criteria | `tests/functions/math/checks/a5_b3_criteria.sh` — |
+| PASS | b1 | SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN, STDEV match Calc on ranges with blanks and text | `tests/functions/math/checks/a5_b1_aggregates.sh` pass |
+| PASS | b2 | ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER, SQRT match Calc, errors included | `tests/functions/math/checks/a5_b2_rounding.sh` pass |
+| PASS | b3 | SUMIF, COUNTIF, AVERAGEIF match Calc's criteria | `tests/functions/math/checks/a5_b3_criteria.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -107,9 +107,23 @@ Status: landed (`ab6081615a13`)
 | Implemented `wi-a-i5-math-3` | `impl-a1@alebairos`, `impl-a2@alebairos` |
 | Reviewed `wi-a-i5-math-3` | `rev-a@alebairos` (passed attempt 2) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/functions/math/checks/a5_b1_aggregates.sh`: pass
+- `tests/functions/math/checks/a5_b2_rounding.sh`: pass
+- `tests/functions/math/checks/a5_b3_criteria.sh`: pass
+
+Outcome report:
+
+- **Built:** Landed on exp-a main (c6b525f, PR #17): src/functions/math adds all 20 math and statistics functions in three modules. aggregates.py has SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN and STDEV (passed review on the first attempt). rounding.py has ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER and SQRT (second attempt; the first one crashed on huge MOD inputs such as MOD(1E308,1E-10), which now give #VALUE! as in Calc). criteria.py has SUMIF, COUNTIF and AVERAGEIF (second attempt; the first one added matches in a different order from Calc, so a total could be off in the last bits). I re-ran the three checks on landed main and they pass, 230 formulas in all, each compared with LibreOffice's answer: a5_b1_aggregates 84, a5_b2_rounding 87 and a5_b3_criteria 59. ./test.sh passes too (64 tests). I also ran ./engine live on a sheet with 1, "t", TRUE, a blank and 4 in A1:A5 and Apple/banana/apple against 10/20/30. It gave SUM(A1:A5) 6 (text and blank skipped, TRUE counted as 1), AVERAGEIF(...,"apple",...) 20 (case-insensitive), ROUND(2.5,0) 3, ROUND(-2.5,0) -3, ROUND(1.005,2) 1.01, ROUNDUP(0.1+0.2,1) 0.3, COUNTIF(...,"b?nana") 1, SUMIF(...,">=20") 50, SQRT(-1) Err:502, MOD(-7,2.5) 0.5 and STDEV(1,2,3,4) 1.2909944487358056. Those are Calc's results. Where the work left the plan: nowhere in behaviour. The reviewer noted one thing outside the checks: SUM over a plain range can differ from Calc in the last binary digits (0.3-5.55E-17 against Calc's 0.3-1.11E-16), because Calc adds a range's numbers in a different order. Nothing shows at the 15 digits Calc displays.
+- **Advice:** Adopt: all three bullets hold on landed code, so Met fits. To try it, run the sheet above through ./engine in a clone of exp-a and compare the results with the media's calc-answers.md (LibreOffice's answer for each of the 230 check formulas). Follow up (small, optional): the intent ended up with two copies of Calc's summing helper (aggregates._calc_sum and criteria._calc_sum). Merging them is a cleanup, worth a later Standard intent if you want one. Watch: SUM's last-bit difference only matters if the hidden suite compares raw doubles rather than displayed values. Err:502 and Err:504 are kept as Calc displays them, consistent with a-i4 and a-i6; if the suite expects #VALUE! there, that is a one-line change per module.
+- [a-i5-math/README.md](https://github.com/alebairos/sheet-exp-host/blob/bfaba19b527798570488615f2396daa5560abc1a/a-i5-math/README.md)
+- [a-i5-math/calc-answers.md](https://github.com/alebairos/sheet-exp-host/blob/bfaba19b527798570488615f2396daa5560abc1a/a-i5-math/calc-answers.md)
+- [a-i5-math/math.out.json](https://github.com/alebairos/sheet-exp-host/blob/bfaba19b527798570488615f2396daa5560abc1a/a-i5-math/math.out.json)
+- [a-i5-math/math.py](https://github.com/alebairos/sheet-exp-host/blob/bfaba19b527798570488615f2396daa5560abc1a/a-i5-math/math.py)
+- [a-i5-math/probe.py](https://github.com/alebairos/sheet-exp-host/blob/bfaba19b527798570488615f2396daa5560abc1a/a-i5-math/probe.py)
+- [a-i5-math/xlsx_probe.py](https://github.com/alebairos/sheet-exp-host/blob/bfaba19b527798570488615f2396daa5560abc1a/a-i5-math/xlsx_probe.py)
+- [a-i5-math/errs.csv](https://github.com/alebairos/sheet-exp-host/blob/bfaba19b527798570488615f2396daa5560abc1a/a-i5-math/errs.csv)
 
 Files landed by `wi-a-i5-math-1`:
 
@@ -134,11 +148,15 @@ Landing pull request: [exp-a #17](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 7. The decision
 
-Nothing waits on you.
+**Verdict:a-i5-math**: A decision: show your human its options
+
+- Met: `cooknship decide --answer Verdict:a-i5-math --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-i5-math --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-i5-math --option not_met`
 
 ## 8. Metrics
 
-- Lead time: 24 h 03 min so far
+- Lead time: 24 h 07 min so far
 - Loops: 2 (D5 review 2)
 - Waste: 11 min
 - Size: 635 lines (+635 −0, 7 files, 401–1,000; tests 270 lines); plan check files laid over by land, not in the size: +372 −0, 3 files
