@@ -26,7 +26,7 @@ Ship both SPEC groups in src/functions/logic_text as one FUNCTIONS dict discover
 
 Add IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT and ISERROR matching Calc (text conditions are #VALUE!).
 
-Status: accepted
+Status: attempt 1 in work by `impl-1@alebairos`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -61,7 +61,7 @@ Status: accepted
 | --- | --- |
 | Planned | `plan-1@alebairos` |
 | Certified | `gate-1@alebairos` |
-| Implemented `wi-i6-logic-text-1` | — |
+| Implemented `wi-i6-logic-text-1` | `impl-1@alebairos` |
 | Reviewed `wi-i6-logic-text-1` | — |
 | Implemented `wi-i6-logic-text-2` | — |
 | Reviewed `wi-i6-logic-text-2` | — |
@@ -76,7 +76,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 18 min so far
+- Lead time: 26 h 22 min so far
 - Loops: 3 (D1 spec 1, D2 plan 2)
 - Waste: 10 min
 - Size: nothing landed yet

@@ -26,7 +26,15 @@ Implement the twenty callables in src/functions/math as a FUNCTIONS dict (upperc
 
 Add SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN and sample STDEV on ranges with blanks and text.
 
-Status: attempt 1 built, awaiting review
+Status: landing (`93850d3313ee`)
+
+**The passing review noted:** > pass review of wi-i5-math-1 @ 3dbc492 (attempt 1). Covers ac-b1 only.
+> 
+> verify: tests/functions/math/checks/b1_aggregates.sh EXIT 0 (ok b1).
+> 
+> ac-b1 / b1 (SUM AVERAGE MIN MAX COUNT COUNTA PRODUCT MEDIAN STDEV on ranges with blanks/text): check green via src.eval.evaluate. Diff only src/functions/math/__init__.py. _numbers skips Blank/Text, coerces Bool to 0/1, surfaces first error (:28-45). FUNCTIONS table registers all nine aggregates (:118-128). COUNTA counts non-blanks (:109-115). STDEV sample n-1 with DIV0 for n<2 (:101-106). Empty AVERAGE/STDEV → DIV0; empty MEDIAN → VALUE; empty SUM/MIN/MAX/COUNT/PRODUCT → 0 (:118-127). In path_scope; outside_scope null; no check-file edits in last_diff.
+> 
+> No blocking findings.
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -36,7 +44,17 @@ Status: attempt 1 built, awaiting review
 
 Add ROUND (half away from zero), ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER and SQRT with Calc errors.
 
-Status: attempt 1 built, awaiting review
+Status: queued to land
+
+**The passing review noted:** > pass review of wi-i5-math-2 @ 8192bb4 (attempt 1). Covers ac-b2 only.
+> 
+> verify: tests/functions/math/checks/b2_scalars.sh EXIT 0 (ok b2).
+> 
+> ac-b2 / b2 (ROUND ROUNDUP ROUNDDOWN INT MOD ABS POWER SQRT, errors included): check green. Scalars in src/functions/math/__init__.py via to_number and Decimal quantize; ROUND uses ROUND_HALF_UP (half away from zero) at :60-67. MOD uses Calc n-d*INT(n/d) with DIV0 on d=0 (:97-109). POWER(0,-1) returns DIV0 (:118+) matching certify reject / eval ^. SQRT/POWER surface NUM on domain/overflow. FUNCTIONS maps the eight names (:145-153).
+> 
+> scope: last_diff src/functions/math/__init__.py in path_scope. Commit also adds tests/functions/math/__init__.py and b2_scalars.sh (law 9 drops check edits at land — flagged). Note: this WI's tree is based on i3 main tip, not wi-i5-math-1, so its FUNCTIONS table is scalars-only; land must merge with aggregates WI.
+> 
+> No blocking findings.
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -73,9 +91,9 @@ Status: attempt 1 in work by `impl-2@alebairos`
 | Planned | `plan-1@alebairos` |
 | Certified | `gate-1@alebairos` |
 | Implemented `wi-i5-math-1` | `impl-2@alebairos` |
-| Reviewed `wi-i5-math-1` | — |
+| Reviewed `wi-i5-math-1` | `rev-1@alebairos` (passed attempt 1) |
 | Implemented `wi-i5-math-2` | `impl-1@alebairos` |
-| Reviewed `wi-i5-math-2` | — |
+| Reviewed `wi-i5-math-2` | `rev-1@alebairos` (passed attempt 1) |
 | Implemented `wi-i5-math-3` | `impl-2@alebairos` |
 | Reviewed `wi-i5-math-3` | — |
 
@@ -83,13 +101,15 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Landing pull request: [exp-b #10](https://github.com/alebairos/sheet-exp-b/pull/10)
+
 ## 7. The decision
 
 Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 18 min so far
+- Lead time: 26 h 22 min so far
 - Loops: 1 (D2 plan 1)
 - Waste: 8 min
 - Size: nothing landed yet

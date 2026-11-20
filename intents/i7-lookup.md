@@ -8,13 +8,13 @@ Kind: Feature · State: planned · 2 work items · 2 bullets
 
 ## 2. What you will see
 
-Lookup formulas match Calc. =VLOOKUP(2,A1:C3,2,0) returns the exact row's column; approximate VLOOKUP on a sorted first column finds the last key ≤ the probe; a miss is #N/A; a column index past the table (or <1) is #VALUE! (Calc Err:502), not #REF!. =INDEX(A1:C3,2,3) picks a cell; out-of-range INDEX positions are #REF! (row/col 0 is #VALUE!); =MATCH(x,range,0) is exact and =MATCH(x,range,1) is sorted approximate.
+Lookup formulas match Calc. =VLOOKUP(2,A1:C3,2,0) returns the exact row's column; approximate VLOOKUP on a sorted first column finds the last key ≤ the probe; a miss is #N/A; a column index past the table (or <1) is #VALUE! (Calc Err:502), not #REF!. =INDEX(A1:C3,2,3) picks a cell; out-of-range INDEX positions are #REF! (row/col 0 is #VALUE!); =MATCH(x,range,0) is exact and =MATCH(x,range,1) is sorted approximate. =VLOOKUP("3",A1:C4,2,0) and =MATCH("5",A1:A4,0) are #N/A.
 
 - No media: Library functions with no screen; expected values live in tests/functions/lookup/checks/b*.sh
 
 ## 3. Approach
 
-Implement VLOOKUP, INDEX and MATCH in src/functions/lookup as a FUNCTIONS dict for i0/i3 discovery. Two WIs (serial by wi_parallelism 1): VLOOKUP exact (range_lookup 0/FALSE) and sorted approximate (1/TRUE/default), then INDEX plus MATCH types 0 and 1. Arguments arrive as Range or Value per i3; walk Range.values() in row-major order to rebuild the table rectangle. VLOOKUP maps Calc Err:502 (bad column index) to #VALUE!; INDEX keeps #REF! for positions outside the range. Prefer LibreOffice Calc defaults when Excel differs. Plan checks under tests/functions/lookup/checks call evaluate on constant-cell books; their Calc pins were measured on LibreOffice 26.8.
+Implement VLOOKUP, INDEX and MATCH in src/functions/lookup as a FUNCTIONS dict for i0/i3 discovery. Two WIs (serial by wi_parallelism 1): VLOOKUP exact (range_lookup 0/FALSE) and sorted approximate (1/TRUE/default), then INDEX plus MATCH types 0 and 1. Arguments arrive as Range or Value per i3; walk Range.values() in row-major order to rebuild the table rectangle. VLOOKUP maps Calc Err:502 (bad column index) to #VALUE!; INDEX keeps #REF! for positions outside the range. Prefer LibreOffice Calc defaults when Excel differs. Plan checks under tests/functions/lookup/checks call evaluate on constant-cell books; their Calc pins were measured on LibreOffice 26.8. Exact text-vs-number lookups are #N/A (clarification: no arithmetic coercion in lookup compare).
 
 - **Reuses:** src.eval.evaluate / Range / registry (i3); src.values Number/Text/Bool/Error/to_json (i2); i0 FUNCTIONS package layout.
 - **Removes:** none
@@ -30,7 +30,7 @@ Status: planned
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b1` | b1 | `tests/functions/lookup/checks/b1_vlookup.sh` | — | — |
+| `ac-b1` | b1 | `tests/functions/lookup/checks/b1_vlookup.sh` | red | — |
 
 ### `wi-i7-lookup-2`: INDEX and MATCH
 
@@ -40,7 +40,7 @@ Status: planned
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b2` | b2 | `tests/functions/lookup/checks/b2_index_match.sh` | — | — |
+| `ac-b2` | b2 | `tests/functions/lookup/checks/b2_index_match.sh` | red | — |
 
 **Acceptance**, against the landed checks:
 
@@ -76,7 +76,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 18 min so far
-- Loops: 1 (D2 plan 1)
-- Waste: 5 min
+- Lead time: 26 h 22 min so far
+- Loops: 3 (D1 spec 1, D2 plan 2)
+- Waste: 9 min
 - Size: nothing landed yet

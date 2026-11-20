@@ -26,7 +26,7 @@ One module src/recalc on top of i3's evaluate. recalculate(book) walks every for
 
 Add src.recalc.recalculate for full workbook compute in dependency order with #REF! on cycles, and point ./engine at it (proven by library and CLI cases).
 
-Status: landing (`169c884da938`)
+Status: landed (`169c884da938`)
 
 **The passing review noted:** > pass review of wi-i4-recalc-1 @ 9cb2fb7 (attempt 1). Covers ac-b1 and ac-b3 only (b2/b4 are wi-i4-recalc-2).
 > 
@@ -60,9 +60,9 @@ Status: accepted · depends on `wi-i4-recalc-1`
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | chains of formula cells compute in dependency order | no landed check |
+| not yet | b1 | chains of formula cells compute in dependency order | `tests/recalc/checks/b1_order.sh` — |
 | not yet | b2 | an edit recomputes only its dependents | no landed check |
-| not yet | b3 | a cycle gives an error | no landed check |
+| not yet | b3 | a cycle gives an error | `tests/recalc/checks/b3_cycle.sh` — |
 | not yet | b4 | 10,000 dependent cells recompute in under one second | no landed check |
 
 ## 5. Out of scope and risks
@@ -85,6 +85,16 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-i4-recalc-1`:
+
+- `src/recalc/__init__.py` +255 −0
+- `tests/recalc/checks/b1_order.sh` +97 −0 (plan check)
+- `tests/recalc/checks/b2_incremental.sh` +91 −0 (plan check)
+- `tests/recalc/checks/b3_cycle.sh` +81 −0 (plan check)
+- `tests/recalc/checks/b4_perf.sh` +32 −0 (plan check)
+- `src/cli.py` +4 −17
+- `tests/recalc/__init__.py` +1 −0 (plan check; the WI's edit was dropped)
+
 Landing pull request: [exp-b #9](https://github.com/alebairos/sheet-exp-b/pull/9)
 
 ## 7. The decision
@@ -93,7 +103,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 18 min so far
+- Lead time: 26 h 22 min so far
 - Loops: 1 (D2 plan 1)
 - Waste: 9 min
-- Size: nothing landed yet
+- Size: 276 lines (+259 −17, 2 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +302 −0, 5 files

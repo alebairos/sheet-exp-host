@@ -32,7 +32,7 @@ The engine on main already computes both workbooks exactly as Calc (0 mismatches
 
 Adds the product's end-to-end suite under tests/e2e/engine: whole multi-sheet workbooks (every function group, cross-sheet formulas, and a 100-formula chain carrying an error) run through ./engine and compared cell by cell with LibreOffice Calc's answers, so ./test.sh guards the engine as a whole.
 
-Status: accepted
+Status: attempt 1 built, awaiting review
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -58,7 +58,7 @@ Status: accepted
 | --- | --- |
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
-| Implemented `wi-a-r1-engine-1` | — |
+| Implemented `wi-a-r1-engine-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-r1-engine-1` | — |
 
 Product checks: not recorded yet.
@@ -71,7 +71,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 24 h 39 min so far
+- Lead time: 24 h 44 min so far
 - Loops: 4 (D1 spec 1, D2 plan 3)
 - Waste: 20 min
 - Size: nothing landed yet
