@@ -1,0 +1,7 @@
+FAIL (6)
+  check workbook Data!F8 =ROUND(E8*(1-VLOOKUP(B8,$G$2:$H$4,2,0)),2): Calc 4.28, engine 4.27
+  check workbook Summary!A2 =SUM(Data!F2:F9): Calc 41.53, engine 41.52
+  check workbook Summary!C3 =COUNTIF(Calc!A1:A5,"<>x"): Calc 4, engine 0
+  check workbook Summary!C6 =A1-A2&"": Calc "1.97", engine "1.98"
+  no product workbooks in tests/e2e/engine/books
+  the product suite is not importable under tests/ (as ./test.sh discovers): Start directory is not importable: '/tmp/cooknship-base-r1-engine-1420226/tests'
