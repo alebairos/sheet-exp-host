@@ -26,7 +26,17 @@ Implement VLOOKUP, INDEX and MATCH in src/functions/lookup as a FUNCTIONS dict f
 
 Add VLOOKUP with exact and sorted approximate match, #N/A on miss, and #VALUE! for a bad column index as in Calc.
 
-Status: attempt 1 built, awaiting review
+Status: queued to land
+
+**The passing review noted:** > pass review of wi-i7-lookup-1 @ ec6a1e9 (attempt 1). Covers ac-b1 only.
+> 
+> verify: tests/functions/lookup/checks/b1_vlookup.sh EXIT 0 (ok b1).
+> 
+> ac-b1 / b1 (VLOOKUP exact and sorted approximate match Calc): check green. VLOOKUP in src/functions/lookup/__init__.py: exact scan via compare (:92-99); approx last key ≤ probe (:101-113); bad col index → VALUE not REF (:85-86); miss → NA (:99,:112). range_lookup omitted/TRUE/nonzero ≈ approx (:57-68). FUNCTIONS registers VLOOKUP only (:116-118).
+> 
+> scope: last_diff src/functions/lookup/__init__.py in path_scope. Commit also adds tests/functions/lookup/__init__.py and b1_vlookup.sh (law 9 drops check edits at land — flagged). INDEX/MATCH intentionally absent (wi-i7-lookup-2).
+> 
+> No blocking findings.
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -62,7 +72,7 @@ Status: attempt 1 built, awaiting review
 | Planned | `plan-1@alebairos` |
 | Certified | `gate-1@alebairos` |
 | Implemented `wi-i7-lookup-1` | `impl-1@alebairos` |
-| Reviewed `wi-i7-lookup-1` | — |
+| Reviewed `wi-i7-lookup-1` | `rev-1@alebairos` (passed attempt 1) |
 | Implemented `wi-i7-lookup-2` | `impl-1@alebairos` |
 | Reviewed `wi-i7-lookup-2` | — |
 
@@ -76,7 +86,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 42 min so far
+- Lead time: 26 h 43 min so far
 - Loops: 3 (D1 spec 1, D2 plan 2)
 - Waste: 9 min
 - Size: nothing landed yet

@@ -44,7 +44,7 @@ Status: landed (`93850d3313ee`)
 
 Add ROUND (half away from zero), ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER and SQRT with Calc errors.
 
-Status: landing (`2d91c4ead6e9`)
+Status: landed (`2d91c4ead6e9`)
 
 **The passing review noted:** > pass review of wi-i5-math-2 @ 5fa81d3 (attempt 2). Covers ac-b2 only.
 > 
@@ -89,7 +89,7 @@ Status: queued to land
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
 | not yet | b1 | SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN, STDEV match Calc on ranges with blanks and text | `tests/functions/math/checks/b1_aggregates.sh` — |
-| not yet | b2 | ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER, SQRT match Calc, errors included | no landed check |
+| not yet | b2 | ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER, SQRT match Calc, errors included | `tests/functions/math/checks/b2_scalars.sh` — |
 | not yet | b3 | SUMIF, COUNTIF, AVERAGEIF match Calc's criteria | no landed check |
 
 ## 5. Out of scope and risks
@@ -123,6 +123,10 @@ Files landed by `wi-i5-math-1`:
 - `tests/functions/math/checks/b3_conditional.sh` +79 −0 (plan check)
 - `tests/functions/math/__init__.py` +1 −0 (plan check)
 
+Files landed by `wi-i5-math-2`:
+
+- `src/functions/math/__init__.py` +143 −3
+
 Landing pull request: [exp-b #13](https://github.com/alebairos/sheet-exp-b/pull/13)
 
 ## 7. The decision
@@ -131,7 +135,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 42 min so far
+- Lead time: 26 h 43 min so far
 - Loops: 3 (D2 plan 1, D6 landing 2)
 - Waste: 29 min
-- Size: 128 lines (+128 −0, 1 file, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +273 −0, 4 files
+- Size: 274 lines (+271 −3, 2 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +273 −0, 4 files

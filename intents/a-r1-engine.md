@@ -41,15 +41,15 @@ Status: landed (`19f721db9d31`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-r1-b1` | b1 | `tests/e2e/engine/checks/a_r1_b1_workbooks.sh` | red | — |
-| `ac-r1-b2` | b2 | `tests/e2e/engine/checks/a_r1_b2_chain.sh` | red | — |
+| `ac-r1-b1` | b1 | `tests/e2e/engine/checks/a_r1_b1_workbooks.sh` | red | pass |
+| `ac-r1-b2` | b2 | `tests/e2e/engine/checks/a_r1_b2_chain.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | multi-sheet workbooks mixing every function group compute as Calc does | `tests/e2e/engine/checks/a_r1_b1_workbooks.sh` — |
-| not yet | b2 | a workbook with a chain of 100 formulas and an error in it computes, the error propagating as in Calc | `tests/e2e/engine/checks/a_r1_b2_chain.sh` — |
+| PASS | b1 | multi-sheet workbooks mixing every function group compute as Calc does | `tests/e2e/engine/checks/a_r1_b1_workbooks.sh` pass |
+| PASS | b2 | a workbook with a chain of 100 formulas and an error in it computes, the error propagating as in Calc | `tests/e2e/engine/checks/a_r1_b2_chain.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -66,7 +66,10 @@ Status: landed (`19f721db9d31`)
 | Implemented `wi-a-r1-engine-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-r1-engine-1` | `rev-a@alebairos` (passed attempt 2) |
 
-Product checks: not recorded yet.
+Product checks:
+
+- `tests/e2e/engine/checks/a_r1_b1_workbooks.sh`: pass
+- `tests/e2e/engine/checks/a_r1_b2_chain.sh`: pass
 
 Outcome report: none yet.
 
@@ -96,7 +99,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 25 h 03 min so far
+- Lead time: 25 h 04 min so far
 - Loops: 5 (D1 spec 1, D2 plan 3, D6 landing 1)
 - Waste: 34 min
 - Size: 0 lines (+0 −0, 7 files, ≤400; tests 99 lines); plan check files laid over by land, not in the size: +219 −0, 8 files

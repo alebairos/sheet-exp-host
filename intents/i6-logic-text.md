@@ -46,17 +46,17 @@ Status: landed (`59e3019a2b6b`)
 
 Add CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER and TRIM with Calc coercion and errors.
 
-Status: in review by `rev-1@alebairos`
+Status: landing (`6b84f2c990f5`)
 
-**The passing review noted:** > pass review of wi-i6-logic-text-2 @ af5d434 (attempt 1). Covers ac-b2 only.
+**The passing review noted:** > pass review of wi-i6-logic-text-2 @ fc10245 (attempt 2). Covers ac-b2 only.
 > 
-> verify: tests/functions/logic_text/checks/b2_text.sh EXIT 0 (ok b2), run against WI tip (check identical to plan_oid eeb0040; also already on main via wi-i6-logic-text-1 land).
+> verify: tests/functions/logic_text/checks/b2_text.sh EXIT 0 (ok b2). Spot-check b1_logic.sh EXIT 0 after merge onto landed logic.
 > 
-> ac-b2 / b2 (CONCATENATE LEFT RIGHT MID LEN UPPER LOWER TRIM match Calc, coercion and errors): check green. Text callables in src/functions/logic_text/__init__.py. All eight coerce via to_text (:46-126); errors propagate. LEFT/RIGHT default count 1, negative count → VALUE via _nonneg_int (:33-43, :58-77). MID 1-based start, start < 1 → VALUE (:80-94). TRIM strips/collapses ASCII spaces only (:118-126). FUNCTIONS registers the eight text names only (:129-138). Registry on tip surfaces those eight.
+> ac-b2 / b2 (CONCATENATE LEFT RIGHT MID LEN UPPER LOWER TRIM match Calc, coercion and errors): check green. Text callables coerce via to_text in src/functions/logic_text/__init__.py; LEFT/RIGHT/MID/_nonneg_int and TRIM ASCII collapse preserved. FUNCTIONS now holds landed logic/info plus the eight text names (:200-217). Registry surfaces all 17.
+> 
+> land-retry: attempt 1 was text-only and conflicted with wi-1. Attempt 2 rebuilds on main keeping logic callables while appending text — addresses the land failure.
 > 
 > scope: last_diff src/functions/logic_text/__init__.py in path_scope. No outside-scope paths.
-> 
-> flag (not refuse): tip FUNCTIONS is text-only by design so parallel wi-1 can merge. wi-i6-logic-text-1 already landed on main (logic-only FUNCTIONS). git merge-tree shows content conflict on the same file; land must combine both callables and both dict entries (b1 is #NAME? on this tip). Commit message already anticipates that merge.
 > 
 > No blocking findings.
 
@@ -86,7 +86,7 @@ Status: in review by `rev-1@alebairos`
 | Implemented `wi-i6-logic-text-1` | `impl-1@alebairos` |
 | Reviewed `wi-i6-logic-text-1` | `rev-1@alebairos` (passed attempt 1) |
 | Implemented `wi-i6-logic-text-2` | `impl-1@alebairos`, `impl-2@alebairos` |
-| Reviewed `wi-i6-logic-text-2` | `rev-1@alebairos` (passed attempt 1) |
+| Reviewed `wi-i6-logic-text-2` | `rev-1@alebairos` (passed attempt 2) |
 
 Product checks: not recorded yet.
 
@@ -100,7 +100,7 @@ Files landed by `wi-i6-logic-text-1`:
 - `tests/functions/logic_text/__init__.py` +1 −0 (plan check)
 - `tests/functions/logic_text/checks/__init__.py` +0 −0 (plan check)
 
-Landing pull request: [exp-b #11](https://github.com/alebairos/sheet-exp-b/pull/11)
+Landing pull request: [exp-b #14](https://github.com/alebairos/sheet-exp-b/pull/14)
 
 ## 7. The decision
 
@@ -108,7 +108,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 42 min so far
+- Lead time: 26 h 43 min so far
 - Loops: 4 (D1 spec 1, D2 plan 2, D6 landing 1)
 - Waste: 18 min
 - Size: 110 lines (+110 −0, 1 file, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +216 −0, 4 files
