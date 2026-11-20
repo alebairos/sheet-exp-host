@@ -4,7 +4,7 @@
 
 > The 20 math and statistics functions of SPEC.md compute as in Calc, including ranges, blanks, text in ranges, and ROUND's half-away-from-zero
 
-Kind: Feature · State: in work · 3 work items · 3 bullets
+Kind: Feature · State: awaiting the verdict · 3 work items · 3 bullets
 
 ## 2. What you will see
 
@@ -66,7 +66,7 @@ Status: landed (`2d91c4ead6e9`)
 
 Add SUMIF, COUNTIF and AVERAGEIF matching Calc criteria (comparisons, text, wildcards).
 
-Status: landing (`23e1ea1cf65d`)
+Status: landed (`23e1ea1cf65d`)
 
 **The passing review noted:** > pass review of wi-i5-math-3 @ f7cdd90 (attempt 3). Covers ac-b3 only.
 > 
@@ -90,7 +90,7 @@ Status: landing (`23e1ea1cf65d`)
 | --- | --- | --- | --- |
 | not yet | b1 | SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN, STDEV match Calc on ranges with blanks and text | `tests/functions/math/checks/b1_aggregates.sh` — |
 | not yet | b2 | ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER, SQRT match Calc, errors included | `tests/functions/math/checks/b2_scalars.sh` — |
-| not yet | b3 | SUMIF, COUNTIF, AVERAGEIF match Calc's criteria | no landed check |
+| not yet | b3 | SUMIF, COUNTIF, AVERAGEIF match Calc's criteria | `tests/functions/math/checks/b3_conditional.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -127,6 +127,10 @@ Files landed by `wi-i5-math-2`:
 
 - `src/functions/math/__init__.py` +143 −3
 
+Files landed by `wi-i5-math-3`:
+
+- `src/functions/math/__init__.py` +201 −2
+
 Landing pull request: [exp-b #16](https://github.com/alebairos/sheet-exp-b/pull/16)
 
 ## 7. The decision
@@ -135,7 +139,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 50 min so far
+- Lead time: 26 h 53 min so far
 - Loops: 4 (D2 plan 1, D6 landing 3)
 - Waste: 37 min
-- Size: 274 lines (+271 −3, 2 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +273 −0, 4 files
+- Size: 477 lines (+472 −5, 3 files, 401–1,000; tests 0 lines); plan check files laid over by land, not in the size: +273 −0, 4 files
