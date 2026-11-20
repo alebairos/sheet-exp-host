@@ -1,0 +1,175 @@
+diff --git i/web/grid/grid.css w/web/grid/grid.css
+index 777c3a2..5742ec2 100644
+--- i/web/grid/grid.css
++++ w/web/grid/grid.css
+@@ -7,3 +7,10 @@ table.grid { border-collapse: collapse; font: 14px system-ui, sans-serif; }
+ .grid td.err { color: #b00020; text-align: center; }
+ .grid td.selected { outline: 2px solid #1a73e8; outline-offset: -2px; }
+ .grid td input { width: 100%; box-sizing: border-box; border: 0; padding: 0; font: inherit; outline: none; background: transparent; }
++.grid-scroll { overflow: auto; position: relative; height: 100%; }
++.grid-space { position: relative; }
++.grid-space table.grid { position: sticky; top: 0; left: 0; table-layout: fixed; }
++.grid th.corner, .grid th.row { width: 48px; min-width: 48px; box-sizing: border-box; }
++.grid thead th { height: 24px; box-sizing: border-box; }
++.grid td { width: 88px; min-width: 88px; max-width: 88px; height: 22px; box-sizing: border-box; overflow: hidden; }
++.grid tbody th { height: 22px; box-sizing: border-box; }
+diff --git i/web/grid/grid.js w/web/grid/grid.js
+index b8b5b0a..7aa755b 100644
+--- i/web/grid/grid.js
++++ w/web/grid/grid.js
+@@ -101,15 +101,25 @@ export function edit(state, ref, text) {
+   return { ...state, book: { ...state.book, sheets: { ...state.book.sheets, [state.sheet]: cells } } };
+ }
+ 
+-/** The grid as an HTML table; every cell carries data-ref, the selected one class "selected". */
+-export function renderHTML(state, { rows = 20, cols = 8 } = {}) {
++/** How far the sheet reaches: its used cells and the selection, plus a margin; never under rows x cols. */
++export function extent(state, { rows = 20, cols = 8, margin = 10 } = {}) {
++  let r = 0, c = 0;
++  for (const ref of [...Object.keys(cellsOf(state)), state.selected]) {
++    const p = parseRef(ref);
++    if (p) { r = Math.max(r, p.row); c = Math.max(c, p.col + 1); }
++  }
++  return { rows: Math.max(rows, r + margin), cols: Math.max(cols, c + 2) };
++}
++
++/** The window of the grid from row `top` and column index `left` as an HTML table; every cell carries data-ref, the selected one class "selected". */
++export function renderHTML(state, { rows = 20, cols = 8, top = 1, left = 0 } = {}) {
+   const cells = cellsOf(state);
+   const out = ['<table class="grid"><thead><tr><th class="corner"></th>'];
+-  for (let c = 0; c < cols; c++) out.push(`<th class="col">${colName(c)}</th>`);
++  for (let c = left; c < left + cols; c++) out.push(`<th class="col">${colName(c)}</th>`);
+   out.push("</tr></thead><tbody>");
+-  for (let r = 1; r <= rows; r++) {
++  for (let r = top; r < top + rows; r++) {
+     out.push(`<tr><th class="row">${r}</th>`);
+-    for (let c = 0; c < cols; c++) {
++    for (let c = left; c < left + cols; c++) {
+       const ref = colName(c) + r;
+       const v = cells[ref];
+       const cls = [];
+@@ -126,6 +136,7 @@ export function renderHTML(state, { rows = 20, cols = 8 } = {}) {
+ }
+ 
+ const ARROWS = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0] };
++const ROW_H = 22, COL_W = 88, HEAD_H = 24, HEAD_W = 48;
+ 
+ /**
+  * Draws the grid into `container` and wires it: click selects; double-click, Enter, F2 or
+@@ -135,20 +146,47 @@ const ARROWS = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowR
+ export function mount(container, state, { rows = 20, cols = 8, onChange = () => {} } = {}) {
+   let s = state;
+   let editing = null;
++  let top = 1, left = 0;
+   const doc = container.ownerDocument;
+-  const tdOf = (ref) => container.querySelector(`td[data-ref="${ref}"]`);
++  container.classList.add("grid-scroll");
++  const space = doc.createElement("div");
++  space.className = "grid-space";
++  container.appendChild(space);
++  const tdOf = (ref) => space.querySelector(`td[data-ref="${ref}"]`);
++  const fit = () => ({
++    rows: Math.max(1, Math.floor((container.clientHeight - HEAD_H) / ROW_H)) || rows,
++    cols: Math.max(1, Math.floor((container.clientWidth - HEAD_W) / COL_W)) || cols,
++  });
+   const draw = () => {
+     editing = null;
+-    container.innerHTML = renderHTML(s, { rows, cols });
++    const ext = extent(s, { rows, cols });
++    space.style.height = HEAD_H + ext.rows * ROW_H + "px";
++    space.style.width = HEAD_W + ext.cols * COL_W + "px";
++    const f = fit();
++    space.innerHTML = renderHTML(s, { rows: f.rows + 1, cols: f.cols + 1, top, left });
++  };
++  // Scroll so the selected cell is inside the fully visible window.
++  const follow = () => {
++    const p = parseRef(s.selected);
++    const f = fit();
++    if (!p) return;
++    if (p.row < top) top = p.row;
++    else if (p.row >= top + f.rows) top = p.row - f.rows + 1;
++    if (p.col < left) left = p.col;
++    else if (p.col >= left + f.cols) left = p.col - f.cols + 1;
++    container.scrollTop = (top - 1) * ROW_H;
++    container.scrollLeft = left * COL_W;
+   };
+   const update = (next) => {
+     s = next;
+     draw();
++    follow();
++    draw();
+     onChange(s);
+   };
+-  const inside = (ref) => {
+-    const p = parseRef(ref);
+-    return p && p.col < cols && p.row <= rows;
++  const onScroll = () => {
++    const t = 1 + Math.floor(container.scrollTop / ROW_H), l = Math.floor(container.scrollLeft / COL_W);
++    if (t !== top || l !== left) { top = t; left = l; if (!editing) draw(); }
+   };
+ 
+   const startEdit = (ref, initial) => {
+@@ -166,7 +204,7 @@ export function mount(container, state, { rows = 20, cols = 8, onChange = () =>
+       if (e.key === "Enter") {
+         e.preventDefault();
+         const next = edit(s, ref, input.value);
+-        update(inside(move(next, 0, 1).selected) ? move(next, 0, 1) : next);
++        update(move(next, 0, 1));
+         container.focus();
+       } else if (e.key === "Escape") {
+         e.preventDefault();
+@@ -193,8 +231,13 @@ export function mount(container, state, { rows = 20, cols = 8, onChange = () =>
+   const onKey = (e) => {
+     if (editing) return;
+     if (ARROWS[e.key]) {
+-      const next = move(s, ...ARROWS[e.key]);
+-      if (inside(next.selected)) update(next);
++      update(move(s, ...ARROWS[e.key]));
++      e.preventDefault();
++    } else if (e.key === "PageDown" || e.key === "PageUp") {
++      const n = fit().rows;
++      const d = e.key === "PageDown" ? n : -n;
++      top = Math.max(1, top + d);
++      update(move(s, 0, d));
+       e.preventDefault();
+     } else if (e.key === "Enter" || e.key === "F2") {
+       startEdit(s.selected);
+@@ -212,14 +255,16 @@ export function mount(container, state, { rows = 20, cols = 8, onChange = () =>
+   container.addEventListener("click", onClick);
+   container.addEventListener("dblclick", onDblClick);
+   container.addEventListener("keydown", onKey);
++  container.addEventListener("scroll", onScroll);
+   draw();
+   return {
+     get state() { return s; },
+-    setState(next) { s = next; draw(); },
++    setState(next) { s = next; draw(); follow(); draw(); },
+     destroy() {
+       container.removeEventListener("click", onClick);
+       container.removeEventListener("dblclick", onDblClick);
+       container.removeEventListener("keydown", onKey);
++      container.removeEventListener("scroll", onScroll);
+       container.innerHTML = "";
+     },
+   };
+diff --git i/web/io/index.html w/web/io/index.html
+index 14913df..c574861 100644
+--- i/web/io/index.html
++++ w/web/io/index.html
+@@ -14,6 +14,7 @@
+     #formula-bar .fx { font-style: italic; color: #666; }
+     #formula-bar .text { flex: 1; max-width: 40em; font-family: ui-monospace, monospace; }
+     #formula-bar .error { color: #b00020; font-weight: 600; }
++    #grid { height: calc(100vh - 9rem); border: 1px solid #ccc; }
+   </style>
+ </head>
+ <body>
+@@ -86,7 +87,7 @@
+       busy = busy.then(async () => {
+         for (const ref of refs) await controller.edit(ref, inputText(typed[ref]));
+         showMessage();
+-        show(s.selected);
++        show(grid ? grid.state.selected : s.selected);
+       });
+     };
+     const show = (ref) => {
