@@ -46,7 +46,19 @@ Status: landed (`59e3019a2b6b`)
 
 Add CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER and TRIM with Calc coercion and errors.
 
-Status: in review by `rev-1@alebairos`
+Status: accepted
+
+**The passing review noted:** > pass review of wi-i6-logic-text-2 @ af5d434 (attempt 1). Covers ac-b2 only.
+> 
+> verify: tests/functions/logic_text/checks/b2_text.sh EXIT 0 (ok b2), run against WI tip (check identical to plan_oid eeb0040; also already on main via wi-i6-logic-text-1 land).
+> 
+> ac-b2 / b2 (CONCATENATE LEFT RIGHT MID LEN UPPER LOWER TRIM match Calc, coercion and errors): check green. Text callables in src/functions/logic_text/__init__.py. All eight coerce via to_text (:46-126); errors propagate. LEFT/RIGHT default count 1, negative count → VALUE via _nonneg_int (:33-43, :58-77). MID 1-based start, start < 1 → VALUE (:80-94). TRIM strips/collapses ASCII spaces only (:118-126). FUNCTIONS registers the eight text names only (:129-138). Registry on tip surfaces those eight.
+> 
+> scope: last_diff src/functions/logic_text/__init__.py in path_scope. No outside-scope paths.
+> 
+> flag (not refuse): tip FUNCTIONS is text-only by design so parallel wi-1 can merge. wi-i6-logic-text-1 already landed on main (logic-only FUNCTIONS). git merge-tree shows content conflict on the same file; land must combine both callables and both dict entries (b1 is #NAME? on this tip). Commit message already anticipates that merge.
+> 
+> No blocking findings.
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -74,7 +86,7 @@ Status: in review by `rev-1@alebairos`
 | Implemented `wi-i6-logic-text-1` | `impl-1@alebairos` |
 | Reviewed `wi-i6-logic-text-1` | `rev-1@alebairos` (passed attempt 1) |
 | Implemented `wi-i6-logic-text-2` | `impl-2@alebairos` |
-| Reviewed `wi-i6-logic-text-2` | `rev-1@alebairos` |
+| Reviewed `wi-i6-logic-text-2` | `rev-1@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
@@ -96,7 +108,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 36 min so far
-- Loops: 3 (D1 spec 1, D2 plan 2)
-- Waste: 10 min
+- Lead time: 26 h 38 min so far
+- Loops: 4 (D1 spec 1, D2 plan 2, D6 landing 1)
+- Waste: 17 min
 - Size: 110 lines (+110 −0, 1 file, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +216 −0, 4 files

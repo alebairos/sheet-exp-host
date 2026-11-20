@@ -42,8 +42,8 @@ Status: landed (`169c884da938`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b1` | b1 | `tests/recalc/checks/b1_order.sh` | red | — |
-| `ac-b3` | b3 | `tests/recalc/checks/b3_cycle.sh` | red | — |
+| `ac-b1` | b1 | `tests/recalc/checks/b1_order.sh` | red | pass |
+| `ac-b3` | b3 | `tests/recalc/checks/b3_cycle.sh` | red | pass |
 
 ### `wi-i4-recalc-2`: Incremental dirty recalc
 
@@ -65,17 +65,17 @@ Status: landed (`aa7a225f355c`) · depends on `wi-i4-recalc-1`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b2` | b2 | `tests/recalc/checks/b2_incremental.sh` | red | — |
-| `ac-b4` | b4 | `tests/recalc/checks/b4_perf.sh` | red | — |
+| `ac-b2` | b2 | `tests/recalc/checks/b2_incremental.sh` | red | pass |
+| `ac-b4` | b4 | `tests/recalc/checks/b4_perf.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | chains of formula cells compute in dependency order | `tests/recalc/checks/b1_order.sh` — |
-| not yet | b2 | an edit recomputes only its dependents | `tests/recalc/checks/b2_incremental.sh` — |
-| not yet | b3 | a cycle gives an error | `tests/recalc/checks/b3_cycle.sh` — |
-| not yet | b4 | 10,000 dependent cells recompute in under one second | `tests/recalc/checks/b4_perf.sh` — |
+| PASS | b1 | chains of formula cells compute in dependency order | `tests/recalc/checks/b1_order.sh` pass |
+| PASS | b2 | an edit recomputes only its dependents | `tests/recalc/checks/b2_incremental.sh` pass |
+| PASS | b3 | a cycle gives an error | `tests/recalc/checks/b3_cycle.sh` pass |
+| PASS | b4 | 10,000 dependent cells recompute in under one second | `tests/recalc/checks/b4_perf.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -93,7 +93,12 @@ Status: landed (`aa7a225f355c`) · depends on `wi-i4-recalc-1`
 | Implemented `wi-i4-recalc-2` | `impl-1@alebairos` |
 | Reviewed `wi-i4-recalc-2` | `rev-1@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
+
+- `tests/recalc/checks/b1_order.sh`: pass
+- `tests/recalc/checks/b2_incremental.sh`: pass
+- `tests/recalc/checks/b3_cycle.sh`: pass
+- `tests/recalc/checks/b4_perf.sh`: pass
 
 Outcome report: none yet.
 
@@ -119,7 +124,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 37 min so far
+- Lead time: 26 h 39 min so far
 - Loops: 1 (D2 plan 1)
 - Waste: 9 min
 - Size: 328 lines (+270 −58, 3 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +302 −0, 5 files

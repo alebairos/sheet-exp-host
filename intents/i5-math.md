@@ -44,7 +44,7 @@ Status: landed (`93850d3313ee`)
 
 Add ROUND (half away from zero), ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER and SQRT with Calc errors.
 
-Status: attempt 2 in work by `impl-1@alebairos`
+Status: in review by `rev-1@alebairos`
 
 **The passing review noted:** > pass review of wi-i5-math-2 @ 8192bb4 (attempt 1). Covers ac-b2 only.
 > 
@@ -64,7 +64,7 @@ Status: attempt 2 in work by `impl-1@alebairos`
 
 Add SUMIF, COUNTIF and AVERAGEIF matching Calc criteria (comparisons, text, wildcards).
 
-Status: accepted
+Status: attempt 2 built, awaiting review
 
 **The passing review noted:** > pass review of wi-i5-math-3 @ a88a6a43 (attempt 1). Covers ac-b3 only.
 > 
@@ -127,7 +127,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 37 min so far
+- Lead time: 26 h 39 min so far
 - Loops: 3 (D2 plan 1, D6 landing 2)
 - Waste: 29 min
 - Size: 128 lines (+128 −0, 1 file, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +273 −0, 4 files
