@@ -1,0 +1,2 @@
+ok walk-through: open, edit a formula, see the error, fix it, save
+ok
