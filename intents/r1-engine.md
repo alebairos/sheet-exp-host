@@ -48,15 +48,15 @@ Status: landed (`995feadc6695`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-r1-b1` | b1 | `tests/e2e/engine/checks/r1_b1_workbooks.sh` | red | — |
-| `ac-r1-b2` | b2 | `tests/e2e/engine/checks/r1_b2_chain.sh` | red | — |
+| `ac-r1-b1` | b1 | `tests/e2e/engine/checks/r1_b1_workbooks.sh` | red | pass |
+| `ac-r1-b2` | b2 | `tests/e2e/engine/checks/r1_b2_chain.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | multi-sheet workbooks mixing every function group compute as Calc does | `tests/e2e/engine/checks/r1_b1_workbooks.sh` — |
-| not yet | b2 | a workbook with a chain of 100 formulas and an error in it computes, the error propagating as in Calc | `tests/e2e/engine/checks/r1_b2_chain.sh` — |
+| PASS | b1 | multi-sheet workbooks mixing every function group compute as Calc does | `tests/e2e/engine/checks/r1_b1_workbooks.sh` pass |
+| PASS | b2 | a workbook with a chain of 100 formulas and an error in it computes, the error propagating as in Calc | `tests/e2e/engine/checks/r1_b2_chain.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -74,7 +74,10 @@ Status: landed (`995feadc6695`)
 | Implemented `wi-r1-engine-1` | `impl-1@alebairos` |
 | Reviewed `wi-r1-engine-1` | `rev-1@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
+
+- `tests/e2e/engine/checks/r1_b1_workbooks.sh`: pass
+- `tests/e2e/engine/checks/r1_b2_chain.sh`: pass
 
 Outcome report: none yet.
 
@@ -105,7 +108,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 30 h 43 min so far
+- Lead time: 30 h 46 min so far
 - Loops: 6 (D1 spec 2, D2 plan 4)
 - Waste: 2 h 47 min
 - Size: 26 lines (+20 −6, 10 files, ≤400; tests 1509 lines); plan check files laid over by land, not in the size: +1739 −0, 6 files

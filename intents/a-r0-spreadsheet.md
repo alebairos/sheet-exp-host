@@ -4,7 +4,7 @@
 
 > A spreadsheet that computes like LibreOffice on real workbooks: realistic workbooks (a budget, a grade sheet, a lookup table) compute and display as Calc does
 
-Kind: Feature · State: in work · 2 work items · 2 bullets
+Kind: Feature · State: awaiting the verdict · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -42,7 +42,7 @@ Status: landed (`d3a6753ff0e3`)
 
 Adds a browser test that opens each of the three workbooks in the app page, checks its first sheet shows as Calc computes it, reads a formula in the formula bar and saves it back unchanged, so the page keeps handling real workbooks.
 
-Status: landing (`4fc698577f4f`) · depends on `wi-a-r0-spreadsheet-1`
+Status: landed (`4fc698577f4f`) · depends on `wi-a-r0-spreadsheet-1`
 
 **The passing review noted:** > PASS. ac-r0-b2 (b2): reran tests/e2e/workbooks/checks/a_r0_b2_browser.sh in a worktree of 8df8a35 with local chromium. Result: "ok budget, grades and orders open, display and save in the browser" plus the product-test half "ok", exit 0. On the base 566787d (main after WI-1 landed) it exits 1 with "./test.sh discovers no tests in tests/e2e/workbooks/test_browser.py", so the base is red. Full ./test.sh on the WI: 75 tests OK. The 4 test_browser tests ran, none skipped, through the $CHROME wrapper. Evidence: test_browser.py:22-32 runs browser_walk.mjs per book (skipped only on exit 2 = no browser or no node). browser_walk.mjs:53 opens via DOM.setFileInputFiles on #open. :55-63 compares every cell of A1:H20 with books/<name>.shown.json, blanks included. :65-69 clicks the first formula cell with real mouse events and waits for the bar to read the formula as typed. :71-76 clicks #save-json and requires the download to equal the opened book. :77 fails on any page exception. books/*.shown.json equal the plan's checks/a_r0_shown.json. I checked them independently against books/*.calc.json: all 269 first-sheet cells agree (Summary 34, Grades 121, Orders 114). Mutation: changing grades.shown.json Grades!E3 to "69.71" makes test_grades_in_the_browser fail with "Calc shows 69.71, the grid 69.7". Scope: all 5 paths are under exp-a:tests/e2e/workbooks/** and no product code changed. Nits, not blocking: (1) test_shown_matches_calc (test_browser.py:46-54) only checks that shown.json covers the first sheet's cells, not that its values equal calc.json, so the name says more than it checks. The plan check binds the values, but the product suite alone would not catch a drifted shown.json. (2) browser_walk.mjs:27 leaves its e2e-workbooks-saved-* temp dir behind on every run. -- rev-a@alebairos
 
@@ -55,7 +55,7 @@ Status: landing (`4fc698577f4f`) · depends on `wi-a-r0-spreadsheet-1`
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
 | not yet | b1 | three realistic workbooks compute as Calc does through the CLI | `tests/e2e/workbooks/checks/a_r0_b1_cli.sh` — |
-| not yet | b2 | the same workbooks open, display and save in the browser | no landed check |
+| not yet | b2 | the same workbooks open, display and save in the browser | `tests/e2e/workbooks/checks/a_r0_b2_browser.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -97,6 +97,14 @@ Files landed by `wi-a-r0-spreadsheet-1`:
 - `tests/e2e/workbooks/books/orders.json` +4 −0 (test)
 - `tests/e2e/workbooks/__init__.py` +0 −0 (test)
 
+Files landed by `wi-a-r0-spreadsheet-2`:
+
+- `tests/e2e/workbooks/browser_walk.mjs` +86 −0 (test)
+- `tests/e2e/workbooks/test_browser.py` +58 −0 (test)
+- `tests/e2e/workbooks/books/budget.shown.json` +5 −0 (test)
+- `tests/e2e/workbooks/books/grades.shown.json` +4 −0 (test)
+- `tests/e2e/workbooks/books/orders.shown.json` +4 −0 (test)
+
 Landing pull request: [exp-a #21](https://github.com/alebairos/sheet-exp-a/pull/21)
 
 ## 7. The decision
@@ -105,7 +113,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 29 h 05 min so far
+- Lead time: 29 h 07 min so far
 - Loops: 0
 - Waste: 0 min
-- Size: 0 lines (+0 −0, 8 files, ≤400; tests 121 lines); plan check files laid over by land, not in the size: +326 −0, 8 files
+- Size: 0 lines (+0 −0, 13 files, ≤400; tests 278 lines); plan check files laid over by land, not in the size: +326 −0, 8 files
