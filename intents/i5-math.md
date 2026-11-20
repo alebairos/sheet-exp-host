@@ -44,7 +44,7 @@ Status: landed (`93850d3313ee`)
 
 Add ROUND (half away from zero), ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER and SQRT with Calc errors.
 
-Status: accepted
+Status: attempt 2 in work by `impl-1@alebairos`
 
 **The passing review noted:** > pass review of wi-i5-math-2 @ 8192bb4 (attempt 1). Covers ac-b2 only.
 > 
@@ -64,7 +64,17 @@ Status: accepted
 
 Add SUMIF, COUNTIF and AVERAGEIF matching Calc criteria (comparisons, text, wildcards).
 
-Status: in review by `rev-1@alebairos`
+Status: accepted
+
+**The passing review noted:** > pass review of wi-i5-math-3 @ a88a6a43 (attempt 1). Covers ac-b3 only.
+> 
+> verify: tests/functions/math/checks/b3_conditional.sh EXIT 0 (ok b3), run against WI tip (check on tip via plan commit f6c895b; identical to main's already-landed plan check).
+> 
+> ac-b3 / b3 (SUMIF COUNTIF AVERAGEIF match Calc's criteria): check green via src.eval.evaluate. Criteria parse/compare in src/functions/math/__init__.py: prefixes and numeric/text dual-equality for bare numeric text (:93-122); case-insensitive text and * ? ~ wildcards (:73-90, :135-139); COUNTIF "10"→2 / "3"→1 behavior via number+text equality on op "=" (:118-120, :145-153). SUMIF/AVERAGEIF optional sum_range (:215-225, :159-182). Empty AVERAGEIF → DIV0 (:206-212). FUNCTIONS registers the three names (:232-236). Discovery surfaces SUMIF COUNTIF AVERAGEIF.
+> 
+> scope: last_diff src/functions/math/__init__.py in path_scope. Tip also has tests/functions/math/__init__.py and b3_conditional.sh (law 9 drops check edits at land — flagged). Note: this WI's tree is based on pre-math-1 main tip, so its FUNCTIONS table is conditionals-only; land must merge with aggregates (landed) and scalars (queued) WIs on the same file.
+> 
+> No blocking findings.
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -95,7 +105,7 @@ Status: in review by `rev-1@alebairos`
 | Implemented `wi-i5-math-2` | `impl-1@alebairos` |
 | Reviewed `wi-i5-math-2` | `rev-1@alebairos` (passed attempt 1) |
 | Implemented `wi-i5-math-3` | `impl-2@alebairos` |
-| Reviewed `wi-i5-math-3` | `rev-1@alebairos` |
+| Reviewed `wi-i5-math-3` | `rev-1@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
@@ -117,7 +127,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 35 min so far
-- Loops: 2 (D2 plan 1, D6 landing 1)
-- Waste: 27 min
+- Lead time: 26 h 37 min so far
+- Loops: 3 (D2 plan 1, D6 landing 2)
+- Waste: 29 min
 - Size: 128 lines (+128 −0, 1 file, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +273 −0, 4 files

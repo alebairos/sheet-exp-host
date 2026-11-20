@@ -4,7 +4,7 @@
 
 > A workbook recalculates in dependency order, recomputes only what an edit affects, and reports a circular reference as an error instead of hanging
 
-Kind: Feature · State: in work · 2 work items · 4 bullets
+Kind: Feature · State: awaiting the verdict · 2 work items · 4 bullets
 
 ## 2. What you will see
 
@@ -49,7 +49,7 @@ Status: landed (`169c884da938`)
 
 Extend recalculate with changed+previous so an edit re-evaluates only dependents (via module-bound src.eval.evaluate), and keep a 10k chain under one second.
 
-Status: landing (`aa7a225f355c`) · depends on `wi-i4-recalc-1`
+Status: landed (`aa7a225f355c`) · depends on `wi-i4-recalc-1`
 
 **The passing review noted:** > pass review of wi-i4-recalc-2 @ deaecc2 (attempt 1). Covers ac-b2 and ac-b4 only (b1/b3 already landed on wi-i4-recalc-1).
 > 
@@ -73,9 +73,9 @@ Status: landing (`aa7a225f355c`) · depends on `wi-i4-recalc-1`
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
 | not yet | b1 | chains of formula cells compute in dependency order | `tests/recalc/checks/b1_order.sh` — |
-| not yet | b2 | an edit recomputes only its dependents | no landed check |
+| not yet | b2 | an edit recomputes only its dependents | `tests/recalc/checks/b2_incremental.sh` — |
 | not yet | b3 | a cycle gives an error | `tests/recalc/checks/b3_cycle.sh` — |
-| not yet | b4 | 10,000 dependent cells recompute in under one second | no landed check |
+| not yet | b4 | 10,000 dependent cells recompute in under one second | `tests/recalc/checks/b4_perf.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -107,6 +107,10 @@ Files landed by `wi-i4-recalc-1`:
 - `src/cli.py` +4 −17
 - `tests/recalc/__init__.py` +1 −0 (plan check; the WI's edit was dropped)
 
+Files landed by `wi-i4-recalc-2`:
+
+- `src/recalc/__init__.py` +11 −41
+
 Landing pull request: [exp-b #12](https://github.com/alebairos/sheet-exp-b/pull/12)
 
 ## 7. The decision
@@ -115,7 +119,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 35 min so far
+- Lead time: 26 h 37 min so far
 - Loops: 1 (D2 plan 1)
 - Waste: 9 min
-- Size: 276 lines (+259 −17, 2 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +302 −0, 5 files
+- Size: 328 lines (+270 −58, 3 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +302 −0, 5 files

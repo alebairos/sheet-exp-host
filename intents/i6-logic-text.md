@@ -46,7 +46,7 @@ Status: landed (`59e3019a2b6b`)
 
 Add CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER and TRIM with Calc coercion and errors.
 
-Status: attempt 1 built, awaiting review
+Status: in review by `rev-1@alebairos`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -74,7 +74,7 @@ Status: attempt 1 built, awaiting review
 | Implemented `wi-i6-logic-text-1` | `impl-1@alebairos` |
 | Reviewed `wi-i6-logic-text-1` | `rev-1@alebairos` (passed attempt 1) |
 | Implemented `wi-i6-logic-text-2` | `impl-2@alebairos` |
-| Reviewed `wi-i6-logic-text-2` | — |
+| Reviewed `wi-i6-logic-text-2` | `rev-1@alebairos` |
 
 Product checks: not recorded yet.
 
@@ -96,7 +96,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 34 min so far
+- Lead time: 26 h 36 min so far
 - Loops: 3 (D1 spec 1, D2 plan 2)
 - Waste: 10 min
 - Size: 110 lines (+110 −0, 1 file, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +216 −0, 4 files
