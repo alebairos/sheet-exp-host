@@ -4,7 +4,7 @@
 
 > The 20 math and statistics functions of SPEC.md compute as in Calc, including ranges, blanks, text in ranges, and ROUND's half-away-from-zero
 
-Kind: Feature · State: awaiting the verdict · 3 work items · 3 bullets
+Kind: Feature · State: Met · 3 work items · 3 bullets
 
 ## 2. What you will see
 
@@ -110,6 +110,7 @@ Status: landed (`23e1ea1cf65d`)
 | Reviewed `wi-i5-math-2` | `rev-1@alebairos` (passed attempt 2) |
 | Implemented `wi-i5-math-3` | `impl-1@alebairos`, `impl-2@alebairos` |
 | Reviewed `wi-i5-math-3` | `rev-1@alebairos` (passed attempt 3) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
@@ -117,7 +118,11 @@ Product checks:
 - `tests/functions/math/checks/b2_scalars.sh`: pass
 - `tests/functions/math/checks/b3_conditional.sh`: pass
 
-Outcome report: none yet.
+Outcome report:
+
+- **Built:** The twenty SPEC math/statistics functions landed in src/functions/math as one FUNCTIONS dict for i0/i3 discovery. Aggregates (SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN, STDEV) walk ranges skipping blanks and text; scalars (ROUND half-away-from-zero, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER, SQRT) match Calc errors including POWER(0,-1) → #DIV/0! to stay aligned with the evaluator; criteria ops (SUMIF, COUNTIF, AVERAGEIF) follow Calc wildcards and case-insensitive text. Three WIs landed (oids 93850d3, 2d91c4e, 23e1ea1); wi-2 and wi-3 needed land retries (attempts 2 and 3) from tip conflicts on the shared module. Product checks b1–b3 all pass.
+- **Advice:** Adopt. Follow up on packing parallel WIs into one module — the land-retry pattern (same as i6 text) will keep biting until merges preserve sibling callables. Watch ROUND half-away-from-zero and COUNTIF numeric-looking text criteria if Calc versions drift.
+- No media: Library functions with no screen; expected values live in tests/functions/math/checks/b*.sh
 
 Files landed by `wi-i5-math-1`:
 
@@ -143,7 +148,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 55 min so far
+- Lead time: 26 h 58 min
 - Loops: 4 (D2 plan 1, D6 landing 3)
 - Waste: 37 min
 - Size: 477 lines (+472 −5, 3 files, 401–1,000; tests 0 lines); plan check files laid over by land, not in the size: +273 −0, 4 files

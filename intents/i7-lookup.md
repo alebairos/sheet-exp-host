@@ -4,7 +4,7 @@
 
 > VLOOKUP, INDEX and MATCH compute as in Calc, exact and approximate, with #N/A and #REF! where Calc gives them
 
-Kind: Feature · State: in work · 2 work items · 2 bullets
+Kind: Feature · State: awaiting the verdict · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -46,7 +46,7 @@ Status: landed (`d86b3a8c556a`)
 
 Add INDEX and MATCH (types 0 and 1) matching Calc, with #N/A/#REF!/#VALUE! as pinned in the check.
 
-Status: landing (`01a3fd67215e`)
+Status: landed (`01a3fd67215e`)
 
 **The passing review noted:** > pass review of wi-i7-lookup-2 @ 8bd812c (attempt 2). Covers ac-b2 only.
 > 
@@ -69,7 +69,7 @@ Status: landing (`01a3fd67215e`)
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
 | not yet | b1 | VLOOKUP exact and sorted approximate match Calc | `tests/functions/lookup/checks/b1_vlookup.sh` — |
-| not yet | b2 | INDEX and MATCH (types 0 and 1) match Calc, errors included | no landed check |
+| not yet | b2 | INDEX and MATCH (types 0 and 1) match Calc, errors included | `tests/functions/lookup/checks/b2_index_match.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -99,6 +99,10 @@ Files landed by `wi-i7-lookup-1`:
 - `tests/functions/lookup/checks/b1_vlookup.sh` +90 −0 (plan check)
 - `tests/functions/lookup/__init__.py` +1 −0 (plan check)
 
+Files landed by `wi-i7-lookup-2`:
+
+- `src/functions/lookup/__init__.py` +98 −3
+
 Landing pull request: [exp-b #17](https://github.com/alebairos/sheet-exp-b/pull/17)
 
 ## 7. The decision
@@ -107,7 +111,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 55 min so far
+- Lead time: 27 h 05 min so far
 - Loops: 4 (D1 spec 1, D2 plan 2, D6 landing 1)
 - Waste: 20 min
-- Size: 118 lines (+118 −0, 1 file, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +182 −0, 3 files
+- Size: 219 lines (+216 −3, 2 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +182 −0, 3 files

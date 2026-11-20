@@ -4,7 +4,7 @@
 
 > I can work in the spreadsheet in the browser: open a workbook, edit a formula, see the error, fix it, save
 
-Kind: Feature · State: planned · 1 work item · 1 bullet
+Kind: Feature · State: in work · 1 work item · 1 bullet
 
 ## 2. What you will see
 
@@ -30,11 +30,11 @@ Most value first: the missing piece is on the page, not in the parts. Today web/
 
 Puts the formula bar above the grid on the app page (web/io/index.html) so you can see and edit a cell's formula and its error, and adds a headless-browser test that opens a workbook, edits a formula, sees #DIV/0!, fixes it and saves, so ./test.sh guards the whole UI.
 
-Status: planned
+Status: accepted
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-r2-b1` | b1 | `tests/e2e/ui/checks/a_r2_b1_walkthrough.sh` | — | — |
+| `ac-r2-b1` | b1 | `tests/e2e/ui/checks/a_r2_b1_walkthrough.sh` | red | — |
 
 **Acceptance**, against the landed checks:
 
@@ -53,9 +53,9 @@ Status: planned
 | Role | Who |
 | --- | --- |
 | Planned | `plan-a@alebairos` |
-| Certified | — |
-| Implemented `wi-a-r2-ui-1` | — |
-| Reviewed `wi-a-r2-ui-1` | — |
+| Certified | `gate-a@alebairos` |
+| Implemented `wi-a-r2-ui-1` | `impl-a2@alebairos` |
+| Reviewed `wi-a-r2-ui-1` | `rev-a@alebairos` |
 
 Product checks: not recorded yet.
 
@@ -67,7 +67,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 25 h 17 min so far
-- Loops: 0
-- Waste: 0 min
+- Lead time: 25 h 27 min so far
+- Loops: 1 (D5 review 1)
+- Waste: 7 min
 - Size: nothing landed yet
