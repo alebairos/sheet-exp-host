@@ -1,0 +1,2 @@
+FAIL selecting B1 shows its formula in the formula bar: wanted "=A1/A2", the page shows null
+FAIL the product suite has no tests under tests/e2e/ui (discovered from tests/, as ./test.sh does)
