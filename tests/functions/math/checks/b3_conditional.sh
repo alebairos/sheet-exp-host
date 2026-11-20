@@ -1,5 +1,7 @@
 #!/bin/sh
 # b3: SUMIF, COUNTIF, AVERAGEIF match Calc criteria (numeric, ">5", text).
+# COUNTIF(E1:E9,"10")=2 and COUNTIF(A1:A8,"3")=1 verified on LibreOffice Calc 26.8 (text
+# criterion matches both the numeric 10 / text "10", and text "3").
 # Contract (plan i5-math / i3-evaluator): tests call src.eval.evaluate and src.values.to_json.
 # Functions are discovered via src.functions.math.FUNCTIONS (uppercase name → callable), merged by
 # src.eval.registry(). Callables take positional args (Range for refs/ranges via .values(), else Value)

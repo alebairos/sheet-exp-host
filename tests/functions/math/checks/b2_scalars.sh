@@ -4,7 +4,8 @@
 # Functions are discovered via src.functions.math.FUNCTIONS (uppercase name → callable), merged by
 # src.eval.registry(). Callables take positional args (Range for refs/ranges via .values(), else Value)
 # and return a Value. ROUND is half away from zero (ROUND(1.5,0)=2, ROUND(-1.5,0)=-2). BOOK cells
-# are constants. Results compare type-strict: True never passes as 1.
+# are constants. POWER(0,-1) is #DIV/0! to match src.eval's ^ / the certify reject
+# (LibreOffice 26.8 shows #NUM! for the same case). Results compare type-strict: True never passes as 1.
 set -eu
 cd "$(dirname "$0")/../../../.."
 export PYTHONDONTWRITEBYTECODE=1
@@ -86,7 +87,7 @@ run([
     ("=POWER(2,10)", 1024),
     ("=POWER(2,-1)", 0.5),
     ("=POWER(0,0)", 1),
-    ("=POWER(0,-1)", E("#NUM!")),
+    ("=POWER(0,-1)", E("#DIV/0!")),
     ("=POWER(-1,0.5)", E("#NUM!")),
     ("=POWER(\"2\",3)", 8),
     ("=POWER(A8,2)", E("#VALUE!")),
