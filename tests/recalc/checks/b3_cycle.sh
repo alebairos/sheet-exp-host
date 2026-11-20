@@ -1,12 +1,14 @@
 #!/bin/sh
 # b3: a cycle gives an error (does not hang).
 # Contract: cells on a circular reference become {"error": "#REF!"} (SPEC-listed
-# error used for a broken reference chain). recalculate returns promptly.
+# error used for a broken reference chain). recalculate returns promptly, and
+# ./engine - prints those #REF! values within a timeout (no hang).
 set -eu
 cd "$(dirname "$0")/../../.."
 export PYTHONDONTWRITEBYTECODE=1
 python3 - <<'PY'
 import json
+import subprocess
 import sys
 
 from src.recalc import recalculate
@@ -14,6 +16,15 @@ from src.recalc import recalculate
 
 def is_ref_error(v):
     return isinstance(v, dict) and v.get("error") == "#REF!"
+
+
+def engine(book):
+    raw = subprocess.check_output(
+        ["./engine", "-"],
+        input=json.dumps(book).encode(),
+        timeout=5,
+    )
+    return json.loads(raw)
 
 
 bad = 0
@@ -26,6 +37,19 @@ for addr in ("A1", "A2"):
     if not is_ref_error(got):
         bad += 1
         print("FAIL cycle %s: got %s want #REF!" % (addr, json.dumps(got)))
+
+try:
+    cli = engine(book)
+except subprocess.TimeoutExpired:
+    bad += 1
+    print("FAIL cli cycle hung past 5s")
+    cli = None
+if cli is not None:
+    for addr in ("A1", "A2"):
+        got = cli["sheets"]["Sheet1"][addr]
+        if not is_ref_error(got):
+            bad += 1
+            print("FAIL cli cycle %s: got %s want #REF!" % (addr, json.dumps(got)))
 
 # Self-cycle.
 book2 = {"sheets": {"Sheet1": {"A1": "=A1+1"}}}

@@ -3,6 +3,8 @@
 # Contract: recalculate(book, changed=[(sheet, addr), ...], previous=prior_computed)
 # re-evaluates only the dirty cells' transitive formula dependents. Unrelated
 # formulas are not passed to src.eval.evaluate; their values come from previous.
+# The spy patches src.eval.evaluate on the module: recalc must call
+# `src.eval.evaluate(...)` (or eval_mod.evaluate), not a from-import binding.
 set -eu
 cd "$(dirname "$0")/../../.."
 export PYTHONDONTWRITEBYTECODE=1
