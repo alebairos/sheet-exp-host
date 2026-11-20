@@ -4,7 +4,7 @@
 
 > A spreadsheet that computes like LibreOffice on real workbooks: realistic workbooks (a budget, a grade sheet, a lookup table) compute and display as Calc does
 
-Kind: Feature · State: awaiting the verdict · 2 work items · 2 bullets
+Kind: Feature · State: Met · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -73,13 +73,21 @@ Status: landed (`4fc698577f4f`) · depends on `wi-a-r0-spreadsheet-1`
 | Reviewed `wi-a-r0-spreadsheet-1` | `rev-a@alebairos` (passed attempt 1) |
 | Implemented `wi-a-r0-spreadsheet-2` | `impl-a1@alebairos` |
 | Reviewed `wi-a-r0-spreadsheet-2` | `rev-a@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
 - `tests/e2e/workbooks/checks/a_r0_b1_cli.sh`: pass
 - `tests/e2e/workbooks/checks/a_r0_b2_browser.sh`: pass
 
-Outcome report: none yet.
+Outcome report:
+
+- **Built:** Three workbooks are now part of the product's own test suite (exp-a PR #21, both work items landed on the first attempt, passed review and the land test). They are a household budget (Summary, Income, Expenses), a grade sheet (Grades, Scale) and an order sheet (Orders, Catalog): 7 sheets and 182 formulas, using all 40 SPEC functions and cross-sheet references. ./test.sh now runs each through the CLI and compares every cell with what LibreOffice Calc computed (441 answers; the reviewer recomputed them in LibreOffice 26.8 and all matched). It also opens each in headless Chrome and checks three things: the first sheet shows as Calc shows it, a formula reads as typed in the formula bar, and Save JSON gives the workbook back unchanged. The suite has 75 tests, all passing. This followed the plan: the engine and page already matched Calc, so no product code changed and only tests/e2e/workbooks was added. The screenshots show the three workbooks in the page as it is now. They come from the plan, and since the page code did not change they still match it.
+- **Advice:** Adopt: these workbooks now guard the engine and the page against regressions on realistic use. Follow up: (1) the browser shows only a workbook's first sheet, so the other sheets are covered only through the CLI and Save JSON; sheet tabs would be a separate intent if you want them; (2) test_shown_matches_calc checks only that shown.json covers the first sheet, not that its values equal Calc's answers, so tighten it; (3) browser_walk.mjs leaves a temp directory behind on each run. Watch: the budget's COUNTIF(E2:E7,"with*") relies on Calc's wildcard setting, which is on by default; with wildcards off, Calc gives 0.
+- [a-r0-spreadsheet/README.md](https://github.com/alebairos/sheet-exp-host/blob/dfead4508dc930b9b46d9052512bce68d8198dd4/a-r0-spreadsheet/README.md)
+- [a-r0-spreadsheet/1-budget.png](https://github.com/alebairos/sheet-exp-host/blob/dfead4508dc930b9b46d9052512bce68d8198dd4/a-r0-spreadsheet/1-budget.png)
+- [a-r0-spreadsheet/2-grades.png](https://github.com/alebairos/sheet-exp-host/blob/dfead4508dc930b9b46d9052512bce68d8198dd4/a-r0-spreadsheet/2-grades.png)
+- [a-r0-spreadsheet/3-orders.png](https://github.com/alebairos/sheet-exp-host/blob/dfead4508dc930b9b46d9052512bce68d8198dd4/a-r0-spreadsheet/3-orders.png)
 
 Files landed by `wi-a-r0-spreadsheet-1`:
 
@@ -116,7 +124,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 29 h 08 min so far
+- Lead time: 29 h 10 min
 - Loops: 0
 - Waste: 0 min
 - Size: 0 lines (+0 −0, 13 files, ≤400; tests 278 lines); plan check files laid over by land, not in the size: +326 −0, 8 files

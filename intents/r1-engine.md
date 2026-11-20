@@ -4,7 +4,7 @@
 
 > The engine computes whole workbooks end to end through the CLI: formulas, functions and recalculation together
 
-Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
+Kind: Feature · State: Met · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -73,13 +73,24 @@ Status: landed (`995feadc6695`)
 | Certified | `gate-1@alebairos` |
 | Implemented `wi-r1-engine-1` | `impl-1@alebairos` |
 | Reviewed `wi-r1-engine-1` | `rev-1@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
 - `tests/e2e/engine/checks/r1_b1_workbooks.sh`: pass
 - `tests/e2e/engine/checks/r1_b2_chain.sh`: pass
 
-Outcome report: none yet.
+Outcome report:
+
+- **Built:** The engine now computes whole workbooks end to end through the CLI. wi-r1-engine-1 landed (oid 995feadc, PR exp-b#18 merged) and closed the three measured Calc gaps in src/functions/math: ROUND via Decimal format(.15g), COUNTIF <> for blank/number/bool vs text, and COUNT over errors. An e2e suite under tests/e2e/engine pins mixed multi-sheet and 100-formula chain workbooks to LibreOffice Calc answers; both product checks pass. Left the plan only by deleting tests/e2e/.gitkeep (design.removes allowed it) and by fixing those gaps in math alone with no src/eval edits.
+- **Advice:** Adopt. Follow up only if new Calc mismatches appear outside those three gaps. Watch that future function work stays inside path scope and keeps the e2e pins as the source of truth.
+- [r1-engine/README.md](https://github.com/alebairos/sheet-exp-host/blob/b64d33fc5ef726272f90524daebe34d1a6bbab11/r1-engine/README.md)
+- [r1-engine/calc-answers.md](https://github.com/alebairos/sheet-exp-host/blob/b64d33fc5ef726272f90524daebe34d1a6bbab11/r1-engine/calc-answers.md)
+- [r1-engine/books.json](https://github.com/alebairos/sheet-exp-host/blob/b64d33fc5ef726272f90524daebe34d1a6bbab11/r1-engine/books.json)
+- [r1-engine/calc.json](https://github.com/alebairos/sheet-exp-host/blob/b64d33fc5ef726272f90524daebe34d1a6bbab11/r1-engine/calc.json)
+- [r1-engine/books.py](https://github.com/alebairos/sheet-exp-host/blob/b64d33fc5ef726272f90524daebe34d1a6bbab11/r1-engine/books.py)
+- [r1-engine/bookprobe.py](https://github.com/alebairos/sheet-exp-host/blob/b64d33fc5ef726272f90524daebe34d1a6bbab11/r1-engine/bookprobe.py)
+- [r1-engine/gencheck.py](https://github.com/alebairos/sheet-exp-host/blob/b64d33fc5ef726272f90524daebe34d1a6bbab11/r1-engine/gencheck.py)
 
 Files landed by `wi-r1-engine-1`:
 
@@ -108,7 +119,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 30 h 46 min so far
+- Lead time: 30 h 49 min
 - Loops: 6 (D1 spec 2, D2 plan 4)
 - Waste: 2 h 47 min
 - Size: 26 lines (+20 −6, 10 files, ≤400; tests 1509 lines); plan check files laid over by land, not in the size: +1739 −0, 6 files
