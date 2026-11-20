@@ -4,7 +4,7 @@
 
 > VLOOKUP, INDEX and MATCH compute as in Calc, exact and approximate, with #N/A and #REF! where Calc gives them
 
-Kind: Feature · State: planned · 2 work items · 2 bullets
+Kind: Feature · State: certified · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -60,7 +60,7 @@ Status: planned
 | Role | Who |
 | --- | --- |
 | Planned | `plan-1@alebairos` |
-| Certified | — |
+| Certified | `gate-1@alebairos` |
 | Implemented `wi-i7-lookup-1` | — |
 | Reviewed `wi-i7-lookup-1` | — |
 | Implemented `wi-i7-lookup-2` | — |
@@ -72,11 +72,15 @@ Outcome report: none yet.
 
 ## 7. The decision
 
-Nothing waits on you.
+**SpecAccept:i7-lookup**: A decision: show your human its options
+
+- Accept the spec: claims freeze, it can be admitted: `cooknship decide --answer SpecAccept:i7-lookup --option accept`
+- Send the plan back with a reason: `cooknship decide --answer SpecAccept:i7-lookup --option reject --text "<reason>"`
+- Shelve it; when another intent takes its place, the reason is replaced:<that intent's id>, and what waits on this one waits for it instead: `cooknship decide --answer SpecAccept:i7-lookup --option shelve --text "<reason>"`
 
 ## 8. Metrics
 
-- Lead time: 26 h 22 min so far
+- Lead time: 26 h 33 min so far
 - Loops: 3 (D1 spec 1, D2 plan 2)
 - Waste: 9 min
 - Size: nothing landed yet

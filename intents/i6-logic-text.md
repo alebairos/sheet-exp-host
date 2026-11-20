@@ -26,7 +26,17 @@ Ship both SPEC groups in src/functions/logic_text as one FUNCTIONS dict discover
 
 Add IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT and ISERROR matching Calc (text conditions are #VALUE!).
 
-Status: attempt 1 in work by `impl-1@alebairos`
+Status: landing (`59e3019a2b6b`)
+
+**The passing review noted:** > pass review of wi-i6-logic-text-1 @ bcc4ee0 (attempt 1). Covers ac-b1 only.
+> 
+> verify: tests/functions/logic_text/checks/b1_logic.sh EXIT 0 (ok b1), run against WI tip with plan/i6-logic-text check overlaid (check not in last_diff; lives on plan_oid eeb0040).
+> 
+> ac-b1 / b1 (IF IFERROR AND OR NOT ISBLANK ISNUMBER ISTEXT ISERROR match Calc): check green. Logic/info callables in src/functions/logic_text/__init__.py. IF/AND/OR/NOT coerce via to_bool (:33-78); text conditions yield VALUE. IFERROR returns fallback on Error Values (:44-48). ISNUMBER accepts Number and Bool per clarification (:85-88). ISBLANK/ISTEXT/ISERROR are type checks (:81-96). FUNCTIONS registers the nine names (:99-109). Registry discovery surfaces all nine.
+> 
+> scope: last_diff src/functions/logic_text/__init__.py in path_scope. No outside-scope paths. Text functions intentionally absent (wi-i6-logic-text-2).
+> 
+> No blocking findings.
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -36,7 +46,7 @@ Status: attempt 1 in work by `impl-1@alebairos`
 
 Add CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER and TRIM with Calc coercion and errors.
 
-Status: accepted
+Status: attempt 1 built, awaiting review
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -62,13 +72,15 @@ Status: accepted
 | Planned | `plan-1@alebairos` |
 | Certified | `gate-1@alebairos` |
 | Implemented `wi-i6-logic-text-1` | `impl-1@alebairos` |
-| Reviewed `wi-i6-logic-text-1` | — |
-| Implemented `wi-i6-logic-text-2` | — |
+| Reviewed `wi-i6-logic-text-1` | `rev-1@alebairos` (passed attempt 1) |
+| Implemented `wi-i6-logic-text-2` | `impl-2@alebairos` |
 | Reviewed `wi-i6-logic-text-2` | — |
 
 Product checks: not recorded yet.
 
 Outcome report: none yet.
+
+Landing pull request: [exp-b #11](https://github.com/alebairos/sheet-exp-b/pull/11)
 
 ## 7. The decision
 
@@ -76,7 +88,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 22 min so far
+- Lead time: 26 h 33 min so far
 - Loops: 3 (D1 spec 1, D2 plan 2)
 - Waste: 10 min
 - Size: nothing landed yet

@@ -49,7 +49,7 @@ Status: landed (`169c884da938`)
 
 Extend recalculate with changed+previous so an edit re-evaluates only dependents (via module-bound src.eval.evaluate), and keep a 10k chain under one second.
 
-Status: accepted · depends on `wi-i4-recalc-1`
+Status: in review by `rev-1@alebairos` · depends on `wi-i4-recalc-1`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -78,8 +78,8 @@ Status: accepted · depends on `wi-i4-recalc-1`
 | Certified | `gate-1@alebairos` |
 | Implemented `wi-i4-recalc-1` | `impl-1@alebairos` |
 | Reviewed `wi-i4-recalc-1` | `rev-1@alebairos` (passed attempt 1) |
-| Implemented `wi-i4-recalc-2` | — |
-| Reviewed `wi-i4-recalc-2` | — |
+| Implemented `wi-i4-recalc-2` | `impl-1@alebairos` |
+| Reviewed `wi-i4-recalc-2` | `rev-1@alebairos` |
 
 Product checks: not recorded yet.
 
@@ -103,7 +103,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 22 min so far
+- Lead time: 26 h 33 min so far
 - Loops: 1 (D2 plan 1)
 - Waste: 9 min
 - Size: 276 lines (+259 −17, 2 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +302 −0, 5 files

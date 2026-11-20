@@ -26,7 +26,7 @@ Implement the twenty callables in src/functions/math as a FUNCTIONS dict (upperc
 
 Add SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN and sample STDEV on ranges with blanks and text.
 
-Status: landing (`93850d3313ee`)
+Status: landed (`93850d3313ee`)
 
 **The passing review noted:** > pass review of wi-i5-math-1 @ 3dbc492 (attempt 1). Covers ac-b1 only.
 > 
@@ -64,7 +64,7 @@ Status: queued to land
 
 Add SUMIF, COUNTIF and AVERAGEIF matching Calc criteria (comparisons, text, wildcards).
 
-Status: attempt 1 in work by `impl-2@alebairos`
+Status: attempt 1 built, awaiting review
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -74,7 +74,7 @@ Status: attempt 1 in work by `impl-2@alebairos`
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN, STDEV match Calc on ranges with blanks and text | no landed check |
+| not yet | b1 | SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN, STDEV match Calc on ranges with blanks and text | `tests/functions/math/checks/b1_aggregates.sh` — |
 | not yet | b2 | ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER, SQRT match Calc, errors included | no landed check |
 | not yet | b3 | SUMIF, COUNTIF, AVERAGEIF match Calc's criteria | no landed check |
 
@@ -101,6 +101,14 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-i5-math-1`:
+
+- `src/functions/math/__init__.py` +128 −0
+- `tests/functions/math/checks/b2_scalars.sh` +103 −0 (plan check)
+- `tests/functions/math/checks/b1_aggregates.sh` +90 −0 (plan check)
+- `tests/functions/math/checks/b3_conditional.sh` +79 −0 (plan check)
+- `tests/functions/math/__init__.py` +1 −0 (plan check)
+
 Landing pull request: [exp-b #10](https://github.com/alebairos/sheet-exp-b/pull/10)
 
 ## 7. The decision
@@ -109,7 +117,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 22 min so far
+- Lead time: 26 h 33 min so far
 - Loops: 1 (D2 plan 1)
 - Waste: 8 min
-- Size: nothing landed yet
+- Size: 128 lines (+128 −0, 1 file, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +273 −0, 4 files
