@@ -40,7 +40,7 @@ Status: landed (`d86b3a8c556a`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b1` | b1 | `tests/functions/lookup/checks/b1_vlookup.sh` | red | — |
+| `ac-b1` | b1 | `tests/functions/lookup/checks/b1_vlookup.sh` | red | pass |
 
 ### `wi-i7-lookup-2`: INDEX and MATCH
 
@@ -62,14 +62,14 @@ Status: landed (`01a3fd67215e`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b2` | b2 | `tests/functions/lookup/checks/b2_index_match.sh` | red | — |
+| `ac-b2` | b2 | `tests/functions/lookup/checks/b2_index_match.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | VLOOKUP exact and sorted approximate match Calc | `tests/functions/lookup/checks/b1_vlookup.sh` — |
-| not yet | b2 | INDEX and MATCH (types 0 and 1) match Calc, errors included | `tests/functions/lookup/checks/b2_index_match.sh` — |
+| PASS | b1 | VLOOKUP exact and sorted approximate match Calc | `tests/functions/lookup/checks/b1_vlookup.sh` pass |
+| PASS | b2 | INDEX and MATCH (types 0 and 1) match Calc, errors included | `tests/functions/lookup/checks/b2_index_match.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -88,7 +88,10 @@ Status: landed (`01a3fd67215e`)
 | Implemented `wi-i7-lookup-2` | `impl-1@alebairos`, `impl-2@alebairos` |
 | Reviewed `wi-i7-lookup-2` | `rev-1@alebairos` (passed attempt 2) |
 
-Product checks: not recorded yet.
+Product checks:
+
+- `tests/functions/lookup/checks/b1_vlookup.sh`: pass
+- `tests/functions/lookup/checks/b2_index_match.sh`: pass
 
 Outcome report: none yet.
 
@@ -111,7 +114,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 27 h 05 min so far
+- Lead time: 27 h 06 min so far
 - Loops: 4 (D1 spec 1, D2 plan 2, D6 landing 1)
 - Waste: 20 min
 - Size: 219 lines (+216 −3, 2 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +182 −0, 3 files

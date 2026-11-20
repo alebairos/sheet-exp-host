@@ -30,7 +30,7 @@ Most value first: the missing piece is on the page, not in the parts. Today web/
 
 Puts the formula bar above the grid on the app page (web/io/index.html) so you can see and edit a cell's formula and its error, and adds a headless-browser test that opens a workbook, edits a formula, sees #DIV/0!, fixes it and saves, so ./test.sh guards the whole UI.
 
-Status: accepted
+Status: attempt 2 in work by `impl-a1@alebairos`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -54,7 +54,7 @@ Status: accepted
 | --- | --- |
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
-| Implemented `wi-a-r2-ui-1` | `impl-a2@alebairos` |
+| Implemented `wi-a-r2-ui-1` | `impl-a1@alebairos`, `impl-a2@alebairos` |
 | Reviewed `wi-a-r2-ui-1` | `rev-a@alebairos` |
 
 Product checks: not recorded yet.
@@ -67,7 +67,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 25 h 27 min so far
+- Lead time: 25 h 28 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 7 min
 - Size: nothing landed yet
