@@ -4,7 +4,7 @@
 
 > I can work in the spreadsheet in the browser: open a workbook, edit a formula, see the error, fix it, save
 
-Kind: Feature · State: awaiting the verdict · 1 work item · 1 bullet
+Kind: Feature · State: Met · 1 work item · 1 bullet
 
 ## 2. What you will see
 
@@ -64,6 +64,7 @@ Status: landed (`fa207f2b6389`)
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-r2-ui-1` | `impl-a1@alebairos`, `impl-a2@alebairos` |
 | Reviewed `wi-a-r2-ui-1` | `rev-a@alebairos` (passed attempt 2) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
@@ -95,15 +96,11 @@ Landing pull request: [exp-a #19](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 7. The decision
 
-**Verdict:a-r2-ui**: A decision: show your human its options
-
-- Met: `cooknship decide --answer Verdict:a-r2-ui --option met`
-- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-r2-ui --option partially`
-- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-r2-ui --option not_met`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 25 h 37 min so far
+- Lead time: 25 h 38 min
 - Loops: 1 (D5 review 1)
 - Waste: 7 min
 - Size: 45 lines (+42 −3, 6 files, ≤400; tests 231 lines); plan check files laid over by land, not in the size: +205 −0, 3 files
