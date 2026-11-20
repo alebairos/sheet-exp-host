@@ -4,7 +4,7 @@
 
 > The engine computes whole workbooks end to end through the CLI: formulas, functions and recalculation together
 
-Kind: Feature · State: in work · 1 work item · 2 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -32,7 +32,7 @@ HITL Clarified again: section 5 OOS cannot be amended in the ledger, so it will 
 
 Fix the measured ROUND, COUNTIF <>, and COUNT-over-error gaps so the embedded Calc workbooks match, then add tests/e2e/engine so ./test.sh runs those whole-workbook checks against LibreOffice answers.
 
-Status: landing (`995feadc6695`)
+Status: landed (`995feadc6695`)
 
 **Flagged:** outside the scope: exp-b:tests/e2e/.gitkeep
 
@@ -55,8 +55,8 @@ Status: landing (`995feadc6695`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | multi-sheet workbooks mixing every function group compute as Calc does | no landed check |
-| not yet | b2 | a workbook with a chain of 100 formulas and an error in it computes, the error propagating as in Calc | no landed check |
+| not yet | b1 | multi-sheet workbooks mixing every function group compute as Calc does | `tests/e2e/engine/checks/r1_b1_workbooks.sh` — |
+| not yet | b2 | a workbook with a chain of 100 formulas and an error in it computes, the error propagating as in Calc | `tests/e2e/engine/checks/r1_b2_chain.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -78,6 +78,25 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-r1-engine-1`:
+
+- `tests/e2e/engine/books/chain.calc.json` +751 −0 (test)
+- `tests/e2e/engine/checks/r1_b2_calc.json` +751 −0 (plan check)
+- `tests/e2e/engine/books/chain.json` +423 −0 (test)
+- `tests/e2e/engine/checks/r1_b2_book.json` +423 −0 (plan check)
+- `tests/e2e/engine/checks/r1_b1_workbooks.sh` +153 −0 (plan check)
+- `tests/e2e/engine/checks/r1_b2_chain.sh` +148 −0 (plan check)
+- `tests/e2e/engine/books/mixed.calc.json` +135 −0 (test)
+- `tests/e2e/engine/checks/r1_b1_calc.json` +135 −0 (plan check)
+- `tests/e2e/engine/books/mixed.json` +129 −0 (test)
+- `tests/e2e/engine/checks/r1_b1_book.json` +129 −0 (plan check)
+- `tests/e2e/engine/test_engine.py` +67 −0 (test)
+- `src/functions/math/__init__.py` +20 −6
+- `tests/__init__.py` +1 −0 (test)
+- `tests/e2e/.gitkeep` +0 −1 (test)
+- `tests/e2e/__init__.py` +1 −0 (test)
+- `tests/e2e/engine/__init__.py` +1 −0 (test)
+
 Landing pull request: [exp-b #18](https://github.com/alebairos/sheet-exp-b/pull/18)
 
 ## 7. The decision
@@ -86,7 +105,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 30 h 33 min so far
+- Lead time: 30 h 43 min so far
 - Loops: 6 (D1 spec 2, D2 plan 4)
 - Waste: 2 h 47 min
-- Size: nothing landed yet
+- Size: 26 lines (+20 −6, 10 files, ≤400; tests 1509 lines); plan check files laid over by land, not in the size: +1739 −0, 6 files
