@@ -1,0 +1,90 @@
+test_chain_workbook_matches_calc (tests.e2e.engine.test_workbooks.WorkbookTest.test_chain_workbook_matches_calc)
+100-formula chains: #DIV/0! through a chain and SUM, #N/A through text, a chain written bottom-up. ... ok
+test_mixed_workbook_matches_calc (tests.e2e.engine.test_workbooks.WorkbookTest.test_mixed_workbook_matches_calc)
+Data, Summary and Calc sheets reading each other, all 40 SPEC functions together. ... ok
+test_open_edit_error_fix_save_in_the_browser (tests.e2e.ui.test_walkthrough.WalkthroughTest.test_open_edit_error_fix_save_in_the_browser) ... ok
+test_budget_in_the_browser (tests.e2e.workbooks.test_browser.WorkbookBrowserTest.test_budget_in_the_browser)
+The household budget: Summary shows as Calc shows it; open, formula bar, save. ... ok
+test_grades_in_the_browser (tests.e2e.workbooks.test_browser.WorkbookBrowserTest.test_grades_in_the_browser)
+The grade sheet: Grades shows as Calc shows it; open, formula bar, save. ... ok
+test_orders_in_the_browser (tests.e2e.workbooks.test_browser.WorkbookBrowserTest.test_orders_in_the_browser)
+The order sheet: Orders shows as Calc shows it; open, formula bar, save. ... ok
+test_shown_matches_calc (tests.e2e.workbooks.test_browser.WorkbookBrowserTest.test_shown_matches_calc)
+books/<name>.shown.json covers every cell of the first sheet Calc computed (the grid's view of it). ... ok
+test_budget_matches_calc (tests.e2e.workbooks.test_cli.WorkbookCliTest.test_budget_matches_calc)
+A household budget: a Summary reading Income and Expenses. ... ok
+test_grades_matches_calc (tests.e2e.workbooks.test_cli.WorkbookCliTest.test_grades_matches_calc)
+A grade sheet: Grades looking letters up in a Scale. ... ok
+test_orders_matches_calc (tests.e2e.workbooks.test_cli.WorkbookCliTest.test_orders_matches_calc)
+An order sheet: Orders pricing lines from a product Catalog. ... ok
+test_workbooks_use_every_spec_function (tests.e2e.workbooks.test_cli.WorkbookCliTest.test_workbooks_use_every_spec_function)
+Between them the three workbooks call all 40 of SPEC's functions. ... ok
+test_function_returning_range_collapses (tests.eval.test_eval.CallTest.test_function_returning_range_collapses) ... ok
+test_missing_argument_is_blank (tests.eval.test_eval.CallTest.test_missing_argument_is_blank) ... ok
+test_registered_late_is_found (tests.eval.test_eval.CallTest.test_registered_late_is_found) ... ok
+test_unknown_function_does_not_evaluate_args (tests.eval.test_eval.CallTest.test_unknown_function_does_not_evaluate_args) ... ok
+test_unparseable_formula_is_an_error_value (tests.eval.test_eval.MalformedTest.test_unparseable_formula_is_an_error_value) ... ok
+test_arithmetic (tests.eval.test_eval.OperatorTest.test_arithmetic) ... ok
+test_comparison_returns_bool (tests.eval.test_eval.OperatorTest.test_comparison_returns_bool) ... ok
+test_concat_bool_as_number (tests.eval.test_eval.OperatorTest.test_concat_bool_as_number) ... ok
+test_overflow_is_num (tests.eval.test_eval.OperatorTest.test_overflow_is_num) ... ok
+test_power_like_calc (tests.eval.test_eval.OperatorTest.test_power_like_calc) ... ok
+test_blank_reference_is_zero (tests.eval.test_eval.ReferenceTest.test_blank_reference_is_zero) ... ok
+test_formula_cell_read_as_it_stands (tests.eval.test_eval.ReferenceTest.test_formula_cell_read_as_it_stands) ... ok
+test_multi_cell_range_in_operator (tests.eval.test_eval.ReferenceTest.test_multi_cell_range_in_operator) ... ok
+test_other_sheet_relative_to_own (tests.eval.test_eval.ReferenceTest.test_other_sheet_relative_to_own) ... ok
+test_quoted_and_case_insensitive_sheet (tests.eval.test_eval.ReferenceTest.test_quoted_and_case_insensitive_sheet) ... ok
+test_range_corners_normalised (tests.eval.test_eval.ReferenceTest.test_range_corners_normalised) ... ok
+test_unknown_sheet_is_ref (tests.eval.test_eval.ReferenceTest.test_unknown_sheet_is_ref) ... ok
+test_deep_nesting_is_a_parse_error (tests.parser.test_parser.Malformed.test_deep_nesting_is_a_parse_error) ... ok
+test_parse_errors (tests.parser.test_parser.Malformed.test_parse_errors) ... ok
+test_call_missing_and_semicolon (tests.parser.test_parser.Nodes.test_call_missing_and_semicolon) ... ok
+test_column_letters (tests.parser.test_parser.Nodes.test_column_letters) ... ok
+test_literals (tests.parser.test_parser.Nodes.test_literals) ... ok
+test_names_and_function_like_refs (tests.parser.test_parser.Nodes.test_names_and_function_like_refs) ... ok
+test_quoted_sheet_escape (tests.parser.test_parser.Nodes.test_quoted_sheet_escape) ... ok
+test_range_keeps_one_sheet (tests.parser.test_parser.Nodes.test_range_keeps_one_sheet) ... ok
+test_ref_fields (tests.parser.test_parser.Nodes.test_ref_fields) ... ok
+test_calc_order (tests.parser.test_parser.Precedence.test_calc_order) ... ok
+test_whitespace (tests.parser.test_parser.Precedence.test_whitespace) ... ok
+test_engine_computes_and_prints_one_cell (tests.recalc.test_recalc.Cli.test_engine_computes_and_prints_one_cell) ... ok
+test_a_range_that_holds_its_own_cell (tests.recalc.test_recalc.Cycles.test_a_range_that_holds_its_own_cell) ... ok
+test_the_cycle_error_flows_as_any_error (tests.recalc.test_recalc.Cycles.test_the_cycle_error_flows_as_any_error) ... ok
+test_two_cycles_joined_by_a_reader (tests.recalc.test_recalc.Cycles.test_two_cycles_joined_by_a_reader) ... ok
+test_an_edit_inside_a_range_on_another_sheet (tests.recalc.test_recalc.Edits.test_an_edit_inside_a_range_on_another_sheet) ... ok
+test_blanking_a_formula_frees_its_readers (tests.recalc.test_recalc.Edits.test_blanking_a_formula_frees_its_readers) ... ok
+test_set_on_a_new_sheet_resolves_references_to_it (tests.recalc.test_recalc.Edits.test_set_on_a_new_sheet_resolves_references_to_it) ... ok
+test_a_formula_that_does_not_parse_is_value_error (tests.recalc.test_recalc.Order.test_a_formula_that_does_not_parse_is_value_error) ... ok
+test_bad_input_is_an_empty_workbook (tests.recalc.test_recalc.Order.test_bad_input_is_an_empty_workbook) ... ok
+test_output_keeps_input_order_and_constants (tests.recalc.test_recalc.Order.test_output_keeps_input_order_and_constants) ... ok
+test_range_over_formulas_is_read_after_them (tests.recalc.test_recalc.Order.test_range_over_formulas_is_read_after_them) ... ok
+test_cell (tests.test_cli.CliTest.test_cell) ... ok
+test_cell_absolute_ref (tests.test_cli.CliTest.test_cell_absolute_ref) ... ok
+test_cell_blank_is_null (tests.test_cli.CliTest.test_cell_blank_is_null) ... ok
+test_file_round_trip (tests.test_cli.CliTest.test_file_round_trip) ... ok
+test_stdin_round_trip (tests.test_cli.CliTest.test_stdin_round_trip) ... ok
+test_types_preserved (tests.test_cli.CliTest.test_types_preserved) ... ok
+test_compute_does_not_alias_input (tests.test_cli.ComputeTest.test_compute_does_not_alias_input) ... ok
+test_group_packages_exist (tests.test_registry.RegistryTest.test_group_packages_exist) ... ok
+test_register_decorator_returns_fn (tests.test_registry.RegistryTest.test_register_decorator_returns_fn) ... ok
+test_registry_is_a_copy (tests.test_registry.RegistryTest.test_registry_is_a_copy) ... ok
+test_blank (tests.values.test_values.CompareTest.test_blank) ... ok
+test_bools_are_numbers (tests.values.test_values.CompareTest.test_bools_are_numbers) ... ok
+test_errors (tests.values.test_values.CompareTest.test_errors) ... ok
+test_numbers_and_text (tests.values.test_values.CompareTest.test_numbers_and_text) ... ok
+test_immutable (tests.values.test_values.JsonTest.test_immutable) ... ok
+test_integral_float_is_int (tests.values.test_values.JsonTest.test_integral_float_is_int) ... ok
+test_kinds (tests.values.test_values.JsonTest.test_kinds) ... ok
+test_non_finite_is_num_error (tests.values.test_values.JsonTest.test_non_finite_is_num_error) ... ok
+test_roundtrip (tests.values.test_values.JsonTest.test_roundtrip) ... ok
+test_kinds (tests.values.test_values.ToBoolTest.test_kinds) ... ok
+test_error_passes (tests.values.test_values.ToNumberTest.test_error_passes) ... ok
+test_numbers_bools_blank (tests.values.test_values.ToNumberTest.test_numbers_bools_blank) ... ok
+test_text (tests.values.test_values.ToNumberTest.test_text) ... ok
+test_general_format (tests.values.test_values.ToTextTest.test_general_format) ... ok
+test_other_kinds (tests.values.test_values.ToTextTest.test_other_kinds) ... ok
+
+----------------------------------------------------------------------
+Ran 75 tests in 15.403s
+
+OK
