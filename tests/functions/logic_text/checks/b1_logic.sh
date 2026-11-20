@@ -3,9 +3,9 @@
 # Contract (plan i6-logic-text / i3-evaluator): tests call src.eval.evaluate and src.values.to_json.
 # Functions are discovered via src.functions.logic_text.FUNCTIONS (uppercase name → callable), merged by
 # src.eval.registry(). Callables take positional args (Range for refs/ranges via .values(), else Value)
-# and return a Value. IF uses Calc truthiness (0 and FALSE false; non-zero numbers and non-empty text
-# true). IFERROR sees error Values. BOOK cells are constants. Results compare type-strict: True never
-# passes as 1.
+# and return a Value. IF/AND/OR/NOT use src.values.to_bool: 0 and FALSE are false, non-zero numbers
+# true, blank is false, text is #VALUE! (Calc). IFERROR sees error Values. BOOK cells are constants.
+# Results compare type-strict: True never passes as 1.
 set -eu
 cd "$(dirname "$0")/../../../.."
 export PYTHONDONTWRITEBYTECODE=1
@@ -54,8 +54,8 @@ run([
     ("=IF(A5,\"a\",\"b\")", "b"),
     ("=IF(A3,10,20)", 10),
     ("=IF(A6,10,20)", 20),
-    ("=IF(\"x\",1,2)", 1),
-    ("=IF(\"\",1,2)", 2),
+    ("=IF(\"x\",1,2)", E("#VALUE!")),
+    ("=IF(\"\",1,2)", E("#VALUE!")),
     ("=IF(A1>0,A1,0)", 5),
     ("=IF(FALSE,1)", False),
     ("=IF(B1,1,2)", E("#N/A")),
@@ -69,6 +69,7 @@ run([
     ("=AND(TRUE,FALSE)", False),
     ("=AND(1,0)", False),
     ("=AND(A3,A1)", True),
+    ("=AND(TRUE,\"x\")", E("#VALUE!")),
     ("=AND(FALSE,B1)", E("#N/A")),
     ("=AND(TRUE,B1)", E("#N/A")),
     ("=OR(FALSE,0)", False),
@@ -76,6 +77,7 @@ run([
     ("=OR(FALSE,FALSE)", False),
     ("=OR(A6,A5)", False),
     ("=OR(A6,A3)", True),
+    ("=OR(FALSE,\"x\")", E("#VALUE!")),
     ("=OR(FALSE,B1)", E("#N/A")),
     ("=NOT(FALSE)", True),
     ("=NOT(TRUE)", False),
@@ -83,6 +85,7 @@ run([
     ("=NOT(1)", False),
     ("=NOT(A6)", True),
     ("=NOT(A3)", False),
+    ("=NOT(\"x\")", E("#VALUE!")),
     ("=NOT(B1)", E("#N/A")),
     ("=ISBLANK(Z9)", True),
     ("=ISBLANK(A1)", False),
