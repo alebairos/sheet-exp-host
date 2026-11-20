@@ -4,7 +4,7 @@
 
 > The 20 math and statistics functions of SPEC.md compute as in Calc, including ranges, blanks, text in ranges, and ROUND's half-away-from-zero
 
-Kind: Feature · State: in work · 3 work items · 3 bullets
+Kind: Feature · State: awaiting the verdict · 3 work items · 3 bullets
 
 ## 2. What you will see
 
@@ -66,7 +66,7 @@ Status: landed (`a8ff6a245f5e`)
 
 Add src/functions/math/criteria.py with Calc's criteria matching (comparison prefixes, wildcards, case-insensitive text, blanks) and SUMIF, COUNTIF, AVERAGEIF on top of it, so conditional totals match Calc.
 
-Status: landing (`ab6081615a13`)
+Status: landed (`ab6081615a13`)
 
 **The passing review noted:** > PASS (attempt 2). Reran verify on b1f5ec4 (worktree): a5_b3_criteria.sh "ok b3: 59 cases match Calc"; base red as in attempt 1; ./test.sh OK.
 > - The attempt-1 defect is fixed: src/functions/math/criteria.py now adds SUMIF/AVERAGEIF matches with _calc_sum (Calc's KahanSum: Neumaier with the last term held back and cancelled to 0 when approxEqual to minus the rest), in the criteria range's walk order, instead of math.fsum.
@@ -86,7 +86,7 @@ Status: landing (`ab6081615a13`)
 | --- | --- | --- | --- |
 | not yet | b1 | SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN, STDEV match Calc on ranges with blanks and text | `tests/functions/math/checks/a5_b1_aggregates.sh` — |
 | not yet | b2 | ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER, SQRT match Calc, errors included | `tests/functions/math/checks/a5_b2_rounding.sh` — |
-| not yet | b3 | SUMIF, COUNTIF, AVERAGEIF match Calc's criteria | no landed check |
+| not yet | b3 | SUMIF, COUNTIF, AVERAGEIF match Calc's criteria | `tests/functions/math/checks/a5_b3_criteria.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -125,6 +125,11 @@ Files landed by `wi-a-i5-math-2`:
 - `src/functions/math/rounding.py` +151 −0
 - `tests/functions/math/test_rounding.py` +78 −0 (test)
 
+Files landed by `wi-a-i5-math-3`:
+
+- `src/functions/math/criteria.py` +279 −0
+- `tests/functions/math/test_criteria.py` +120 −0 (test)
+
 Landing pull request: [exp-a #17](https://github.com/alebairos/sheet-exp-a/pull/17)
 
 ## 7. The decision
@@ -133,7 +138,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 22 h 27 min so far
+- Lead time: 24 h 03 min so far
 - Loops: 2 (D5 review 2)
 - Waste: 11 min
-- Size: 356 lines (+356 −0, 5 files, ≤400; tests 150 lines); plan check files laid over by land, not in the size: +372 −0, 3 files
+- Size: 635 lines (+635 −0, 7 files, 401–1,000; tests 270 lines); plan check files laid over by land, not in the size: +372 −0, 3 files

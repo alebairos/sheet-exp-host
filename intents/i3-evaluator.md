@@ -26,7 +26,19 @@ The operator core first, as one module src/eval built on the parser's tree (i1) 
 
 Add src.eval.evaluate with Calc operators, error propagation including #REF!, #NAME? for unknown calls, and register/registry in src/eval, proven by the three plan checks.
 
-Status: accepted
+Status: landing (`aa4b68601c18`)
+
+**The passing review noted:** > pass review of wi-i3-evaluator-1 @ 1201b7a (attempt 1).
+> 
+> verify (detached worktree at WI commit): b1_operators.sh EXIT 0 (ok b1); b2_errors.sh EXIT 0 (ok b2); b3_names.sh EXIT 0 (ok b3 + ok b3 calling convention); ./test.sh EXIT 0.
+> 
+> ac-b1 / b1 (arithmetic, comparison, & and % match Calc): check tests/eval/checks/b1_operators.sh green. Diff implements operators via _binary/_on_number using to_number/to_text/compare at src/eval/__init__.py:179-206; % and unary minus at :154-157; ^ and / via _pow/_div at :220-236. Covered by unit cases in tests/eval/test_eval.py.
+> 
+> ac-b2 / b2 (errors propagate through operators): check tests/eval/checks/b2_errors.sh green. Error operands short-circuit in _binary (:185-204); x/0 → DIV0 in _div (:220-223); missing sheet → REF via Range.values/_cell (:94-108,:279-286). Matches design's #REF!/#DIV/0!/#VALUE! flow.
+> 
+> ac-b3 / b3 (unknown function is #NAME?): check tests/eval/checks/b3_names.sh green and imports from src.eval import register (clarification satisfied; prior rejection about src.functions.register is fixed in the certified check). register/registry at :59-79 merge discover_functions FUNCTIONS with _REGISTERED; unknown Call returns NAME before arg eval at _call :160-165; bare Name → NAME at :149-150.
+> 
+> scope: last_diff only src/eval/__init__.py and tests/eval/test_eval.py under path_scope; outside_scope null. No findings blocking land.
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -54,12 +66,14 @@ Status: accepted
 | --- | --- |
 | Planned | `plan-1@alebairos` |
 | Certified | `gate-1@alebairos` |
-| Implemented `wi-i3-evaluator-1` | — |
-| Reviewed `wi-i3-evaluator-1` | — |
+| Implemented `wi-i3-evaluator-1` | `impl-2@alebairos` |
+| Reviewed `wi-i3-evaluator-1` | `rev-1@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
 Outcome report: none yet.
+
+Landing pull request: [exp-b #8](https://github.com/alebairos/sheet-exp-b/pull/8)
 
 ## 7. The decision
 
@@ -67,7 +81,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 24 h 05 min so far
+- Lead time: 25 h 41 min so far
 - Loops: 4 (D1 spec 1, D2 plan 3)
 - Waste: 3 h 33 min
 - Size: nothing landed yet
