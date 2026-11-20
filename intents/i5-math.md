@@ -66,7 +66,7 @@ Status: landed (`2d91c4ead6e9`)
 
 Add SUMIF, COUNTIF and AVERAGEIF matching Calc criteria (comparisons, text, wildcards).
 
-Status: queued to land
+Status: landing (`23e1ea1cf65d`)
 
 **The passing review noted:** > pass review of wi-i5-math-3 @ f7cdd90 (attempt 3). Covers ac-b3 only.
 > 
@@ -127,7 +127,7 @@ Files landed by `wi-i5-math-2`:
 
 - `src/functions/math/__init__.py` +143 −3
 
-Landing pull request: [exp-b #13](https://github.com/alebairos/sheet-exp-b/pull/13)
+Landing pull request: [exp-b #16](https://github.com/alebairos/sheet-exp-b/pull/16)
 
 ## 7. The decision
 
@@ -135,7 +135,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 47 min so far
+- Lead time: 26 h 50 min so far
 - Loops: 4 (D2 plan 1, D6 landing 3)
 - Waste: 37 min
 - Size: 274 lines (+271 −3, 2 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +273 −0, 4 files

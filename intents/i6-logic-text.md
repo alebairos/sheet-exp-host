@@ -4,7 +4,7 @@
 
 > The 9 logic and information functions and the 8 text functions of SPEC.md compute as in Calc
 
-Kind: Feature · State: awaiting the verdict · 2 work items · 2 bullets
+Kind: Feature · State: Met · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -87,6 +87,7 @@ Status: landed (`6b84f2c990f5`)
 | Reviewed `wi-i6-logic-text-1` | `rev-1@alebairos` (passed attempt 1) |
 | Implemented `wi-i6-logic-text-2` | `impl-1@alebairos`, `impl-2@alebairos` |
 | Reviewed `wi-i6-logic-text-2` | `rev-1@alebairos` (passed attempt 2) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
@@ -115,15 +116,11 @@ Landing pull request: [exp-b #14](https://github.com/alebairos/sheet-exp-b/pull/
 
 ## 7. The decision
 
-**Verdict:i6-logic-text**: A decision: show your human its options
-
-- Met: `cooknship decide --answer Verdict:i6-logic-text --option met`
-- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:i6-logic-text --option partially`
-- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:i6-logic-text --option not_met`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 47 min so far
+- Lead time: 26 h 48 min
 - Loops: 4 (D1 spec 1, D2 plan 2, D6 landing 1)
 - Waste: 18 min
 - Size: 222 lines (+220 −2, 2 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +216 −0, 4 files

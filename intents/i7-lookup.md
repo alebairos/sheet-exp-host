@@ -46,7 +46,7 @@ Status: landed (`d86b3a8c556a`)
 
 Add INDEX and MATCH (types 0 and 1) matching Calc, with #N/A/#REF!/#VALUE! as pinned in the check.
 
-Status: queued to land
+Status: accepted
 
 **The passing review noted:** > pass review of wi-i7-lookup-2 @ 32e6dcc (attempt 1). Covers ac-b2 only.
 > 
@@ -105,7 +105,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 47 min so far
-- Loops: 3 (D1 spec 1, D2 plan 2)
-- Waste: 9 min
+- Lead time: 26 h 50 min so far
+- Loops: 4 (D1 spec 1, D2 plan 2, D6 landing 1)
+- Waste: 19 min
 - Size: 118 lines (+118 −0, 1 file, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +182 −0, 3 files
