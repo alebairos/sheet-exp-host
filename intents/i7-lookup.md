@@ -4,7 +4,7 @@
 
 > VLOOKUP, INDEX and MATCH compute as in Calc, exact and approximate, with #N/A and #REF! where Calc gives them
 
-Kind: Feature · State: certified · 2 work items · 2 bullets
+Kind: Feature · State: in work · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -26,7 +26,7 @@ Implement VLOOKUP, INDEX and MATCH in src/functions/lookup as a FUNCTIONS dict f
 
 Add VLOOKUP with exact and sorted approximate match, #N/A on miss, and #VALUE! for a bad column index as in Calc.
 
-Status: planned
+Status: accepted
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -36,7 +36,7 @@ Status: planned
 
 Add INDEX and MATCH (types 0 and 1) matching Calc, with #N/A/#REF!/#VALUE! as pinned in the check.
 
-Status: planned
+Status: accepted
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -72,15 +72,11 @@ Outcome report: none yet.
 
 ## 7. The decision
 
-**SpecAccept:i7-lookup**: A decision: show your human its options
-
-- Accept the spec: claims freeze, it can be admitted: `cooknship decide --answer SpecAccept:i7-lookup --option accept`
-- Send the plan back with a reason: `cooknship decide --answer SpecAccept:i7-lookup --option reject --text "<reason>"`
-- Shelve it; when another intent takes its place, the reason is replaced:<that intent's id>, and what waits on this one waits for it instead: `cooknship decide --answer SpecAccept:i7-lookup --option shelve --text "<reason>"`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 33 min so far
+- Lead time: 26 h 34 min so far
 - Loops: 3 (D1 spec 1, D2 plan 2)
 - Waste: 9 min
 - Size: nothing landed yet

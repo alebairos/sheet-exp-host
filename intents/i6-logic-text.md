@@ -26,7 +26,7 @@ Ship both SPEC groups in src/functions/logic_text as one FUNCTIONS dict discover
 
 Add IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT and ISERROR matching Calc (text conditions are #VALUE!).
 
-Status: landing (`59e3019a2b6b`)
+Status: landed (`59e3019a2b6b`)
 
 **The passing review noted:** > pass review of wi-i6-logic-text-1 @ bcc4ee0 (attempt 1). Covers ac-b1 only.
 > 
@@ -56,7 +56,7 @@ Status: attempt 1 built, awaiting review
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT, ISERROR match Calc | no landed check |
+| not yet | b1 | IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT, ISERROR match Calc | `tests/functions/logic_text/checks/b1_logic.sh` — |
 | not yet | b2 | CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER, TRIM match Calc, coercion and errors included | no landed check |
 
 ## 5. Out of scope and risks
@@ -80,6 +80,14 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-i6-logic-text-1`:
+
+- `tests/functions/logic_text/checks/b1_logic.sh` +116 −0 (plan check)
+- `src/functions/logic_text/__init__.py` +110 −0
+- `tests/functions/logic_text/checks/b2_text.sh` +99 −0 (plan check)
+- `tests/functions/logic_text/__init__.py` +1 −0 (plan check)
+- `tests/functions/logic_text/checks/__init__.py` +0 −0 (plan check)
+
 Landing pull request: [exp-b #11](https://github.com/alebairos/sheet-exp-b/pull/11)
 
 ## 7. The decision
@@ -88,7 +96,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 33 min so far
+- Lead time: 26 h 34 min so far
 - Loops: 3 (D1 spec 1, D2 plan 2)
 - Waste: 10 min
-- Size: nothing landed yet
+- Size: 110 lines (+110 −0, 1 file, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +216 −0, 4 files

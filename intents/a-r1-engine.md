@@ -32,7 +32,7 @@ The engine on main already computes both workbooks exactly as Calc (0 mismatches
 
 Adds the product's end-to-end suite under tests/e2e/engine: whole multi-sheet workbooks (every function group, cross-sheet formulas, and a 100-formula chain carrying an error) run through ./engine and compared cell by cell with LibreOffice Calc's answers, so ./test.sh guards the engine as a whole.
 
-Status: accepted
+Status: attempt 2 built, awaiting review
 
 **The passing review noted:** > PASS, wi-a-r1-engine-1 @ cdadae2 (plan 6dbab0a). Verify rerun in clean worktrees of both commits.
 > - The diff is 7 files, all inside the scope (exp-a:tests/e2e/engine/**, tests/e2e/__init__.py). No engine code changed, and no check file is touched (git diff 6dbab0a..cdadae2 lists only the books, the two __init__.py files and test_workbooks.py).
@@ -81,7 +81,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 24 h 54 min so far
+- Lead time: 24 h 56 min so far
 - Loops: 5 (D1 spec 1, D2 plan 3, D6 landing 1)
-- Waste: 33 min
+- Waste: 34 min
 - Size: nothing landed yet
