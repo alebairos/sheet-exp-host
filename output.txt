@@ -1,0 +1,8 @@
+FAIL (7)
+  the product has no tests/e2e/workbooks/books/budget.json
+  the product has no tests/e2e/workbooks/books/budget.calc.json
+  the product has no tests/e2e/workbooks/books/grades.json
+  the product has no tests/e2e/workbooks/books/grades.calc.json
+  the product has no tests/e2e/workbooks/books/orders.json
+  the product has no tests/e2e/workbooks/books/orders.calc.json
+  ./test.sh discovers no tests in tests/e2e/workbooks/test_cli.py
