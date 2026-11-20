@@ -1,0 +1,6 @@
+ok constants_roundtrip
+ok cell_flag
+discovered ['logic_text', 'lookup', 'math']
+ok discover_functions
+ok part_dirs
+all tests passed
