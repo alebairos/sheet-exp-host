@@ -5,6 +5,7 @@
 # src.eval.registry(). Callables take positional args (Range for refs/ranges via .values(), else Value)
 # and return a Value. IF/AND/OR/NOT use src.values.to_bool: 0 and FALSE are false, non-zero numbers
 # true, blank is false, text is #VALUE! (Calc). IFERROR sees error Values. BOOK cells are constants.
+# ISNUMBER accepts Bool (Calc treats TRUE/FALSE as 1/0; clarification on i6).
 # Results compare type-strict: True never passes as 1.
 set -eu
 cd "$(dirname "$0")/../../../.."
@@ -95,8 +96,8 @@ run([
     ("=ISNUMBER(A1)", True),
     ("=ISNUMBER(\"3\")", False),
     ("=ISNUMBER(A2)", False),
-    ("=ISNUMBER(TRUE)", False),
-    ("=ISNUMBER(A3)", False),
+    ("=ISNUMBER(TRUE)", True),
+    ("=ISNUMBER(A3)", True),
     ("=ISNUMBER(B1)", False),
     ("=ISTEXT(\"3\")", True),
     ("=ISTEXT(A2)", True),
