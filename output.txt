@@ -1,0 +1,3 @@
+FAIL (2)
+  no product workbooks in tests/e2e/engine/books
+  the product suite has no tests under tests/e2e/engine (discovered from tests/, as ./test.sh does)
