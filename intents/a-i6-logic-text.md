@@ -4,7 +4,7 @@
 
 > The 9 logic and information functions and the 8 text functions of SPEC.md compute as in Calc
 
-Kind: Feature · State: in work · 2 work items · 2 bullets
+Kind: Feature · State: awaiting the verdict · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -51,7 +51,7 @@ Status: landed (`e68ed241fd38`)
 
 Add src/functions/logic_text/text.py with CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER and TRIM, coercing numbers, booleans and blanks to text as Calc does and returning Calc's errors, so text formulas match Calc.
 
-Status: landing (`3fbaf7a6a2d2`)
+Status: landed (`3fbaf7a6a2d2`)
 
 **The passing review noted:** > PASS. Reran verify on 08debe5 (worktree): a6_b2_concat_len.sh "32 cases match Calc", a6_b2_left_right_mid.sh "37", a6_b2_case_trim.sh "23"; on the plan commit 90fa643 all three fail (32/32, 37/37, 23/23 differ). ./test.sh OK.
 > - ac-a6-b2-concat-len, -left-right-mid, -case-trim (b2): src/functions/logic_text/text.py:31 _text (booleans as 1/0, then src.values.to_text, errors through), :39 _count (truncated, negative or non-finite Err:502), CONCATENATE :52, LEFT/RIGHT :63-82 (count defaults to 1), MID :85 (start < 1 Err:502, too few args Err:511), LEN/UPPER (ß->ẞ)/LOWER/TRIM (spaces only) :114-131.
@@ -71,7 +71,7 @@ Status: landing (`3fbaf7a6a2d2`)
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
 | not yet | b1 | IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT, ISERROR match Calc | `tests/functions/logic_text/checks/a6_b1_if.sh` —, `tests/functions/logic_text/checks/a6_b1_and_or_not.sh` —, `tests/functions/logic_text/checks/a6_b1_is.sh` — |
-| not yet | b2 | CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER, TRIM match Calc, coercion and errors included | no landed check |
+| not yet | b2 | CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER, TRIM match Calc, coercion and errors included | `tests/functions/logic_text/checks/a6_b2_concat_len.sh` —, `tests/functions/logic_text/checks/a6_b2_left_right_mid.sh` —, `tests/functions/logic_text/checks/a6_b2_case_trim.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -106,6 +106,11 @@ Files landed by `wi-a-i6-logic-text-1`:
 - `tests/functions/logic_text/checks/a6_b2_case_trim.sh` +62 −0 (plan check)
 - `tests/functions/logic_text/__init__.py` +0 −0 (test)
 
+Files landed by `wi-a-i6-logic-text-2`:
+
+- `src/functions/logic_text/text.py` +131 −0
+- `tests/functions/logic_text/test_text.py` +76 −0 (test)
+
 Landing pull request: [exp-a #16](https://github.com/alebairos/sheet-exp-a/pull/16)
 
 ## 7. The decision
@@ -114,7 +119,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 21 h 45 min so far
+- Lead time: 22 h 06 min so far
 - Loops: 4 (D1 spec 1, D2 plan 3)
 - Waste: 13 min
-- Size: 172 lines (+172 −0, 3 files, ≤400; tests 69 lines); plan check files laid over by land, not in the size: +439 −0, 6 files
+- Size: 303 lines (+303 −0, 5 files, ≤400; tests 145 lines); plan check files laid over by land, not in the size: +439 −0, 6 files

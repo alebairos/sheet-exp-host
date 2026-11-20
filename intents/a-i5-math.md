@@ -49,7 +49,7 @@ Status: landed (`23ac95711c5e`)
 
 Add src/functions/math/rounding.py with ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER and SQRT, rounding on the decimal value Calc shows and returning Calc's errors, so numeric formulas match Calc to the last digit.
 
-Status: landing (`a8ff6a245f5e`)
+Status: landed (`a8ff6a245f5e`)
 
 **The passing review noted:** > PASS (attempt 2). Reran verify on e250e4b (worktree): a5_b2_rounding.sh "ok b2: 87 cases match Calc"; base red as in attempt 1; ./test.sh OK.
 > - The attempt-1 defect is fixed: src/functions/math/rounding.py mod() now returns #VALUE! when a / b or floor(a/b)*b is not finite, and _approx_floor passes non-finite input through instead of raising; _round keeps x when rounding overflows. No exception escapes any more.
@@ -85,7 +85,7 @@ Status: queued to land
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
 | not yet | b1 | SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN, STDEV match Calc on ranges with blanks and text | `tests/functions/math/checks/a5_b1_aggregates.sh` — |
-| not yet | b2 | ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER, SQRT match Calc, errors included | no landed check |
+| not yet | b2 | ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER, SQRT match Calc, errors included | `tests/functions/math/checks/a5_b2_rounding.sh` — |
 | not yet | b3 | SUMIF, COUNTIF, AVERAGEIF match Calc's criteria | no landed check |
 
 ## 5. Out of scope and risks
@@ -120,6 +120,11 @@ Files landed by `wi-a-i5-math-1`:
 - `tests/functions/math/test_aggregates.py` +72 −0 (test)
 - `tests/functions/math/__init__.py` +0 −0 (test)
 
+Files landed by `wi-a-i5-math-2`:
+
+- `src/functions/math/rounding.py` +151 −0
+- `tests/functions/math/test_rounding.py` +78 −0 (test)
+
 Landing pull request: [exp-a #15](https://github.com/alebairos/sheet-exp-a/pull/15)
 
 ## 7. The decision
@@ -128,7 +133,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 21 h 45 min so far
+- Lead time: 22 h 06 min so far
 - Loops: 2 (D5 review 2)
 - Waste: 11 min
-- Size: 205 lines (+205 −0, 3 files, ≤400; tests 72 lines); plan check files laid over by land, not in the size: +372 −0, 3 files
+- Size: 356 lines (+356 −0, 5 files, ≤400; tests 150 lines); plan check files laid over by land, not in the size: +372 −0, 3 files
