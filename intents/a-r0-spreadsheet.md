@@ -36,7 +36,7 @@ Status: landed (`d3a6753ff0e3`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-r0-b1` | b1 | `tests/e2e/workbooks/checks/a_r0_b1_cli.sh` | red | — |
+| `ac-r0-b1` | b1 | `tests/e2e/workbooks/checks/a_r0_b1_cli.sh` | red | pass |
 
 ### `wi-a-r0-spreadsheet-2`: The same workbooks in the browser
 
@@ -48,14 +48,14 @@ Status: landed (`4fc698577f4f`) · depends on `wi-a-r0-spreadsheet-1`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-r0-b2` | b2 | `tests/e2e/workbooks/checks/a_r0_b2_browser.sh` | red | — |
+| `ac-r0-b2` | b2 | `tests/e2e/workbooks/checks/a_r0_b2_browser.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | three realistic workbooks compute as Calc does through the CLI | `tests/e2e/workbooks/checks/a_r0_b1_cli.sh` — |
-| not yet | b2 | the same workbooks open, display and save in the browser | `tests/e2e/workbooks/checks/a_r0_b2_browser.sh` — |
+| PASS | b1 | three realistic workbooks compute as Calc does through the CLI | `tests/e2e/workbooks/checks/a_r0_b1_cli.sh` pass |
+| PASS | b2 | the same workbooks open, display and save in the browser | `tests/e2e/workbooks/checks/a_r0_b2_browser.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -74,7 +74,10 @@ Status: landed (`4fc698577f4f`) · depends on `wi-a-r0-spreadsheet-1`
 | Implemented `wi-a-r0-spreadsheet-2` | `impl-a1@alebairos` |
 | Reviewed `wi-a-r0-spreadsheet-2` | `rev-a@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
+
+- `tests/e2e/workbooks/checks/a_r0_b1_cli.sh`: pass
+- `tests/e2e/workbooks/checks/a_r0_b2_browser.sh`: pass
 
 Outcome report: none yet.
 
@@ -113,7 +116,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 29 h 07 min so far
+- Lead time: 29 h 08 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: 0 lines (+0 −0, 13 files, ≤400; tests 278 lines); plan check files laid over by land, not in the size: +326 −0, 8 files
