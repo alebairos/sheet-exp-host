@@ -4,7 +4,7 @@
 
 > I can work in the spreadsheet in the browser: open a workbook, edit a formula, see the error, fix it, save
 
-Kind: Feature · State: in work · 1 work item · 1 bullet
+Kind: Feature · State: awaiting the verdict · 1 work item · 1 bullet
 
 ## 2. What you will see
 
@@ -30,7 +30,7 @@ Most value first: the missing piece is on the page, not in the parts. Today web/
 
 Puts the formula bar above the grid on the app page (web/io/index.html) so you can see and edit a cell's formula and its error, and adds a headless-browser test that opens a workbook, edits a formula, sees #DIV/0!, fixes it and saves, so ./test.sh guards the whole UI.
 
-Status: landing (`fa207f2b6389`)
+Status: landed (`fa207f2b6389`)
 
 **The passing review noted:** > PASS (attempt 2), wi-a-r2-ui-1 @ fd125ae (plan fcfcc8d). It already contains current exp-a main (e2731, which has a-r1-engine).
 > - Attempt 1's blocking finding is fixed (web/io/index.html:61-78). onCommit now puts the bar's committed value into controller.state.book as is, then recomputes through the page's own compute, with a "Could not compute" message on error, the same way io.js does it. It no longer re-enters the value as grid text.
@@ -48,7 +48,7 @@ Status: landing (`fa207f2b6389`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | that walk-through runs end to end in a browser test | no landed check |
+| not yet | b1 | that walk-through runs end to end in a browser test | `tests/e2e/ui/checks/a_r2_b1_walkthrough.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -69,6 +69,18 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-r2-ui-1`:
+
+- `tests/e2e/ui/walkthrough.mjs` +122 −0 (test)
+- `tests/e2e/ui/checks/a_r2_walk.mjs` +84 −0 (plan check)
+- `tests/e2e/ui/browser.mjs` +78 −0 (test)
+- `tests/e2e/ui/checks/a_r2_cdp.mjs` +70 −0 (plan check)
+- `tests/e2e/ui/checks/a_r2_b1_walkthrough.sh` +51 −0 (plan check)
+- `web/io/index.html` +37 −3
+- `tests/e2e/ui/test_walkthrough.py` +31 −0 (test)
+- `web/io/README.md` +5 −0
+- `tests/e2e/ui/__init__.py` +0 −0 (test)
+
 Landing pull request: [exp-a #19](https://github.com/alebairos/sheet-exp-a/pull/19)
 
 ## 7. The decision
@@ -80,4 +92,4 @@ Nothing waits on you.
 - Lead time: 25 h 34 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 7 min
-- Size: nothing landed yet
+- Size: 45 lines (+42 −3, 6 files, ≤400; tests 231 lines); plan check files laid over by land, not in the size: +205 −0, 3 files
