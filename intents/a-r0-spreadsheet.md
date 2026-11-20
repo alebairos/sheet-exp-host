@@ -30,7 +30,7 @@ Most value first: the engine and the page already compute and show all three wor
 
 Adds a budget, a grade sheet and an order sheet with Calc's answers to the product's e2e suite, with a test that runs each through ./engine and compares every cell, so these real workbooks keep computing as Calc does.
 
-Status: landing (`d3a6753ff0e3`)
+Status: landed (`d3a6753ff0e3`)
 
 **The passing review noted:** > PASS. ac-r0-b1 (b1): reran tests/e2e/workbooks/checks/a_r0_b1_cli.sh in a worktree of 629e643: "ok", exit 0. On the plan commit fe9dcd8 it exits 1 (no product books, no discoverable test_cli), so the base is red. Full ./test.sh on the WI: 71 tests OK, including the 4 new tests.e2e.workbooks.test_cli tests (budget/grades/orders match Calc, all 40 SPEC functions used). Evidence: the books/*.json and *.calc.json are byte-identical in content to the plan's a_r0_books.json / a_r0_calc.json (product_books() in a_r0_common.py passes). test_cli.py:47-53 runs each book through ./engine via stdin, and :37-41 compares numbers within 1e-9 relative and text/bool by exact type. :59-71 checks every cell, sheet order (:57) and a cross-sheet formula (:72). :87-92 pins all 40 SPEC functions. Independent check: I rebuilt the three books as .fods (wildcards on, as in a new Calc document) and recomputed them in LibreOffice 26.8 headless. All 441 stored Calc answers match (budget 152, grades 139, orders 150). Mutation: changing one stored answer (grades Grades!E3 +1e-6) makes test_grades_matches_calc fail, so the test has teeth. Scope: all 8 paths are under exp-a:tests/e2e/workbooks/** and no product code changed. Note for the human: the budget book's COUNTIF(E2:E7,"with*") relies on Calc's wildcard setting, which is on by default; with wildcards off, Calc gives 0. -- rev-a@alebairos
 
@@ -52,7 +52,7 @@ Status: accepted · depends on `wi-a-r0-spreadsheet-1`
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | three realistic workbooks compute as Calc does through the CLI | no landed check |
+| not yet | b1 | three realistic workbooks compute as Calc does through the CLI | `tests/e2e/workbooks/checks/a_r0_b1_cli.sh` — |
 | not yet | b2 | the same workbooks open, display and save in the browser | no landed check |
 
 ## 5. Out of scope and risks
@@ -76,6 +76,25 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-r0-spreadsheet-1`:
+
+- `tests/e2e/workbooks/test_cli.py` +95 −0 (test)
+- `tests/e2e/workbooks/checks/a_r0_common.py` +80 −0 (plan check)
+- `tests/e2e/workbooks/checks/a_r0_browser.mjs` +74 −0 (plan check)
+- `tests/e2e/workbooks/checks/a_r0_cdp.mjs` +70 −0 (plan check)
+- `tests/e2e/workbooks/checks/a_r0_b2_browser.sh` +31 −0 (plan check)
+- `tests/e2e/workbooks/checks/a_r0_b1_cli.sh` +26 −0 (plan check)
+- `tests/e2e/workbooks/checks/a_r0_books.json` +15 −0 (plan check)
+- `tests/e2e/workbooks/checks/a_r0_calc.json` +15 −0 (plan check)
+- `tests/e2e/workbooks/checks/a_r0_shown.json` +15 −0 (plan check)
+- `tests/e2e/workbooks/books/budget.calc.json` +5 −0 (test)
+- `tests/e2e/workbooks/books/budget.json` +5 −0 (test)
+- `tests/e2e/workbooks/books/grades.calc.json` +4 −0 (test)
+- `tests/e2e/workbooks/books/grades.json` +4 −0 (test)
+- `tests/e2e/workbooks/books/orders.calc.json` +4 −0 (test)
+- `tests/e2e/workbooks/books/orders.json` +4 −0 (test)
+- `tests/e2e/workbooks/__init__.py` +0 −0 (test)
+
 Landing pull request: [exp-a #20](https://github.com/alebairos/sheet-exp-a/pull/20)
 
 ## 7. The decision
@@ -84,7 +103,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 28 h 29 min so far
+- Lead time: 28 h 55 min so far
 - Loops: 0
 - Waste: 0 min
-- Size: nothing landed yet
+- Size: 0 lines (+0 −0, 8 files, ≤400; tests 121 lines); plan check files laid over by land, not in the size: +326 −0, 8 files
