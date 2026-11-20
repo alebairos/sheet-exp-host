@@ -4,7 +4,7 @@
 
 > The 20 math and statistics functions of SPEC.md compute as in Calc, including ranges, blanks, text in ranges, and ROUND's half-away-from-zero
 
-Kind: Feature · State: awaiting the verdict · 3 work items · 3 bullets
+Kind: Feature · State: Met · 3 work items · 3 bullets
 
 ## 2. What you will see
 
@@ -106,6 +106,7 @@ Status: landed (`ab6081615a13`)
 | Reviewed `wi-a-i5-math-2` | `rev-a@alebairos` (passed attempt 2) |
 | Implemented `wi-a-i5-math-3` | `impl-a1@alebairos`, `impl-a2@alebairos` |
 | Reviewed `wi-a-i5-math-3` | `rev-a@alebairos` (passed attempt 2) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
@@ -148,15 +149,11 @@ Landing pull request: [exp-a #17](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 7. The decision
 
-**Verdict:a-i5-math**: A decision: show your human its options
-
-- Met: `cooknship decide --answer Verdict:a-i5-math --option met`
-- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-i5-math --option partially`
-- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-i5-math --option not_met`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 24 h 07 min so far
+- Lead time: 24 h 07 min
 - Loops: 2 (D5 review 2)
 - Waste: 11 min
 - Size: 635 lines (+635 −0, 7 files, 401–1,000; tests 270 lines); plan check files laid over by land, not in the size: +372 −0, 3 files

@@ -42,17 +42,17 @@ Status: landed (`aa4b68601c18`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b1` | b1 | `tests/eval/checks/b1_operators.sh` | red | — |
-| `ac-b2` | b2 | `tests/eval/checks/b2_errors.sh` | red | — |
-| `ac-b3` | b3 | `tests/eval/checks/b3_names.sh` | red | — |
+| `ac-b1` | b1 | `tests/eval/checks/b1_operators.sh` | red | pass |
+| `ac-b2` | b2 | `tests/eval/checks/b2_errors.sh` | red | pass |
+| `ac-b3` | b3 | `tests/eval/checks/b3_names.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | arithmetic, comparison, & and % match Calc | `tests/eval/checks/b1_operators.sh` — |
-| not yet | b2 | errors propagate through operators as in Calc | `tests/eval/checks/b2_errors.sh` — |
-| not yet | b3 | an unknown function is #NAME? | `tests/eval/checks/b3_names.sh` — |
+| PASS | b1 | arithmetic, comparison, & and % match Calc | `tests/eval/checks/b1_operators.sh` pass |
+| PASS | b2 | errors propagate through operators as in Calc | `tests/eval/checks/b2_errors.sh` pass |
+| PASS | b3 | an unknown function is #NAME? | `tests/eval/checks/b3_names.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -69,9 +69,17 @@ Status: landed (`aa4b68601c18`)
 | Implemented `wi-i3-evaluator-1` | `impl-2@alebairos` |
 | Reviewed `wi-i3-evaluator-1` | `rev-1@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/eval/checks/b1_operators.sh`: pass
+- `tests/eval/checks/b2_errors.sh`: pass
+- `tests/eval/checks/b3_names.sh`: pass
+
+Outcome report:
+
+- **Built:** Landed src/eval: evaluate(formula, book, sheet) walks the parser tree with Calc operators (+ - * / ^ & comparisons % unary minus), Range refs with #REF! for missing sheets, error propagation (#DIV/0! #VALUE! #REF! #NAME?), and register/registry in src/eval that merges i0 discover_functions (per your clarification; earlier plan-check rejection about src.functions.register was fixed before land). One WI (wi-i3-evaluator-1) reviewed green on all three checks and merged via exp-b #8 (oid aa4b686). Stayed with the plan: no function bodies here, no recalc order, CLI cells still unchanged until i4.
+- **Advice:** Adopt. Follow up with i4-recalc so evaluated values show in ./engine cells; function intents can plug into src.eval.register. Nothing to watch beyond that handoff.
+- No media: A library module with no screen; sample formulas live in tests/eval/checks/b*.sh
 
 Files landed by `wi-i3-evaluator-1`:
 
@@ -86,11 +94,15 @@ Landing pull request: [exp-b #8](https://github.com/alebairos/sheet-exp-b/pull/8
 
 ## 7. The decision
 
-Nothing waits on you.
+**Verdict:i3-evaluator**: A decision: show your human its options
+
+- Met: `cooknship decide --answer Verdict:i3-evaluator --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:i3-evaluator --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:i3-evaluator --option not_met`
 
 ## 8. Metrics
 
-- Lead time: 25 h 45 min so far
+- Lead time: 25 h 48 min so far
 - Loops: 4 (D1 spec 1, D2 plan 3)
 - Waste: 3 h 33 min
 - Size: 300 lines (+300 −0, 2 files, ≤400; tests 144 lines); plan check files laid over by land, not in the size: +198 −0, 4 files
