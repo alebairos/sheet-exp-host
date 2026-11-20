@@ -1,0 +1,3 @@
+ok budget, grades and orders open, display and save in the browser
+FAIL (1)
+  ./test.sh discovers no tests in tests/e2e/workbooks/test_browser.py
