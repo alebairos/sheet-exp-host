@@ -4,7 +4,7 @@
 
 > The engine computes whole workbooks end to end through the CLI: formulas, functions and recalculation together
 
-Kind: Feature · State: in work · 1 work item · 2 bullets
+Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -32,7 +32,7 @@ The engine on main already computes both workbooks exactly as Calc (0 mismatches
 
 Adds the product's end-to-end suite under tests/e2e/engine: whole multi-sheet workbooks (every function group, cross-sheet formulas, and a 100-formula chain carrying an error) run through ./engine and compared cell by cell with LibreOffice Calc's answers, so ./test.sh guards the engine as a whole.
 
-Status: landing (`19f721db9d31`)
+Status: landed (`19f721db9d31`)
 
 **The passing review noted:** > PASS (attempt 2), wi-a-r1-engine-1 @ cdadae2. This is the same commit I passed on attempt 1, and that review's evidence stands: base red on both checks, both checks green, 7 files all in scope, and the .calc.json answers match a LibreOffice recompute cell for cell (534 cells, 0 mismatches).
 > - Why it came back: the code is not at fault. Land run 44665161642 staged it with "tests green", then the push to the product failed on GitHub's side ("remote: error: unable to write file .../objects/.../pack-847394aa...pack: No such file or directory"). CompleteLanding then reported LandAborted because the head of cooknship/a-r1-engine was not b4f0ced. That is an infrastructure failure, so resubmitting the same code for this reason is legitimate.
@@ -48,8 +48,8 @@ Status: landing (`19f721db9d31`)
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | multi-sheet workbooks mixing every function group compute as Calc does | no landed check |
-| not yet | b2 | a workbook with a chain of 100 formulas and an error in it computes, the error propagating as in Calc | no landed check |
+| not yet | b1 | multi-sheet workbooks mixing every function group compute as Calc does | `tests/e2e/engine/checks/a_r1_b1_workbooks.sh` — |
+| not yet | b2 | a workbook with a chain of 100 formulas and an error in it computes, the error propagating as in Calc | `tests/e2e/engine/checks/a_r1_b2_chain.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -70,6 +70,24 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-r1-engine-1`:
+
+- `tests/e2e/engine/test_workbooks.py` +81 −0 (test)
+- `tests/e2e/engine/checks/a_r1_common.py` +77 −0 (plan check)
+- `tests/e2e/engine/checks/a_r1_b1_workbooks.sh` +44 −0 (plan check)
+- `tests/e2e/engine/checks/a_r1_chain.py` +41 −0 (plan check)
+- `tests/e2e/engine/checks/a_r1_b2_chain.sh` +39 −0 (plan check)
+- `tests/e2e/engine/books/mixed.calc.json` +5 −0 (test)
+- `tests/e2e/engine/books/mixed.json` +5 −0 (test)
+- `tests/e2e/engine/checks/a_r1_b1_book.json` +5 −0 (plan check)
+- `tests/e2e/engine/checks/a_r1_b1_calc.json` +5 −0 (plan check)
+- `tests/e2e/engine/books/chain.calc.json` +4 −0 (test)
+- `tests/e2e/engine/books/chain.json` +4 −0 (test)
+- `tests/e2e/engine/checks/a_r1_b2_book.json` +4 −0 (plan check)
+- `tests/e2e/engine/checks/a_r1_b2_calc.json` +4 −0 (plan check)
+- `tests/e2e/__init__.py` +0 −0 (test)
+- `tests/e2e/engine/__init__.py` +0 −0 (test)
+
 Landing pull request: [exp-a #18](https://github.com/alebairos/sheet-exp-a/pull/18)
 
 ## 7. The decision
@@ -78,7 +96,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 25 h 00 min so far
+- Lead time: 25 h 03 min so far
 - Loops: 5 (D1 spec 1, D2 plan 3, D6 landing 1)
 - Waste: 34 min
-- Size: nothing landed yet
+- Size: 0 lines (+0 −0, 7 files, ≤400; tests 99 lines); plan check files laid over by land, not in the size: +219 −0, 8 files

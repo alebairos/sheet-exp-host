@@ -4,7 +4,7 @@
 
 > A workbook recalculates in dependency order, recomputes only what an edit affects, and reports a circular reference as an error instead of hanging
 
-Kind: Feature · State: awaiting the verdict · 2 work items · 4 bullets
+Kind: Feature · State: Met · 2 work items · 4 bullets
 
 ## 2. What you will see
 
@@ -92,6 +92,7 @@ Status: landed (`aa7a225f355c`) · depends on `wi-i4-recalc-1`
 | Reviewed `wi-i4-recalc-1` | `rev-1@alebairos` (passed attempt 1) |
 | Implemented `wi-i4-recalc-2` | `impl-1@alebairos` |
 | Reviewed `wi-i4-recalc-2` | `rev-1@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
@@ -100,7 +101,11 @@ Product checks:
 - `tests/recalc/checks/b3_cycle.sh`: pass
 - `tests/recalc/checks/b4_perf.sh`: pass
 
-Outcome report: none yet.
+Outcome report:
+
+- **Built:** Workbook recalculation landed on exp-b as planned. src/recalc.recalculate topo-sorts formula cells, evaluates in dependency order via src.eval.evaluate, marks cycle cells as #REF! without hanging the rest of the sheet, and with changed+previous recomputes only the dirty closure. ./engine now prints computed values (and --cell) instead of formula text. Both work items landed on attempt 1 (wi-i4-recalc-1 oid 169c884, wi-i4-recalc-2 oid aa7a225); b1–b4 all pass on the product, including the 10k chain under one second (~0.3s in review). Left the plan only in cycle-detect internals: iterative Kahn leftovers replaced a recursive Tarjan so long acyclic chains stay within the stack and the perf budget.
+- **Advice:** Adopt. Follow up when functions land so they share this dependency graph rather than reintroducing full-sheet recompute. Watch the CLI path: future intents that change formula evaluation must keep ./engine wired to recalculate, since the suite goes through it.
+- No media: Library plus CLI wiring; sample workbooks and timings live in tests/recalc/checks/b*.sh
 
 Files landed by `wi-i4-recalc-1`:
 
@@ -124,7 +129,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 39 min so far
+- Lead time: 26 h 41 min
 - Loops: 1 (D2 plan 1)
 - Waste: 9 min
 - Size: 328 lines (+270 −58, 3 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +302 −0, 5 files

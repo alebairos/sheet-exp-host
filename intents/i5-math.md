@@ -44,15 +44,17 @@ Status: landed (`93850d3313ee`)
 
 Add ROUND (half away from zero), ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER and SQRT with Calc errors.
 
-Status: in review by `rev-1@alebairos`
+Status: landing (`2d91c4ead6e9`)
 
-**The passing review noted:** > pass review of wi-i5-math-2 @ 8192bb4 (attempt 1). Covers ac-b2 only.
+**The passing review noted:** > pass review of wi-i5-math-2 @ 5fa81d3 (attempt 2). Covers ac-b2 only.
 > 
-> verify: tests/functions/math/checks/b2_scalars.sh EXIT 0 (ok b2).
+> verify: tests/functions/math/checks/b2_scalars.sh EXIT 0 (ok b2), run against WI tip.
 > 
-> ac-b2 / b2 (ROUND ROUNDUP ROUNDDOWN INT MOD ABS POWER SQRT, errors included): check green. Scalars in src/functions/math/__init__.py via to_number and Decimal quantize; ROUND uses ROUND_HALF_UP (half away from zero) at :60-67. MOD uses Calc n-d*INT(n/d) with DIV0 on d=0 (:97-109). POWER(0,-1) returns DIV0 (:118+) matching certify reject / eval ^. SQRT/POWER surface NUM on domain/overflow. FUNCTIONS maps the eight names (:145-153).
+> ac-b2 / b2 (ROUND ROUNDUP ROUNDDOWN INT MOD ABS POWER SQRT, errors included): check green. Scalars added on top of landed aggregates in src/functions/math/__init__.py via to_number and Decimal quantize; ROUND uses ROUND_HALF_UP (half away from zero) at :166-173. MOD uses Calc n-d*INT(n/d) with DIV0 on d=0 (:203-215). POWER(0,-1) returns DIV0 (:224-240) matching certify reject / eval ^. SQRT/POWER surface NUM on domain/overflow. FUNCTIONS maps aggregates plus the eight scalar names (:246-268).
 > 
-> scope: last_diff src/functions/math/__init__.py in path_scope. Commit also adds tests/functions/math/__init__.py and b2_scalars.sh (law 9 drops check edits at land — flagged). Note: this WI's tree is based on i3 main tip, not wi-i5-math-1, so its FUNCTIONS table is scalars-only; land must merge with aggregates WI.
+> land-retry: attempt 1 was scalars-only on pre-math-1 tip (merge conflict with landed aggregates). Attempt 2 rebases onto main and keeps aggregates while appending scalars — addresses the land failure; last_diff is additive on the shared file.
+> 
+> scope: last_diff src/functions/math/__init__.py in path_scope. No outside-scope paths. Criteria ops still absent (wi-i5-math-3).
 > 
 > No blocking findings.
 
@@ -64,15 +66,17 @@ Status: in review by `rev-1@alebairos`
 
 Add SUMIF, COUNTIF and AVERAGEIF matching Calc criteria (comparisons, text, wildcards).
 
-Status: attempt 2 built, awaiting review
+Status: queued to land
 
-**The passing review noted:** > pass review of wi-i5-math-3 @ a88a6a43 (attempt 1). Covers ac-b3 only.
+**The passing review noted:** > pass review of wi-i5-math-3 @ 9ed4796 (attempt 2). Covers ac-b3 only.
 > 
-> verify: tests/functions/math/checks/b3_conditional.sh EXIT 0 (ok b3), run against WI tip (check on tip via plan commit f6c895b; identical to main's already-landed plan check).
+> verify: tests/functions/math/checks/b3_conditional.sh EXIT 0 (ok b3), run against WI tip.
 > 
-> ac-b3 / b3 (SUMIF COUNTIF AVERAGEIF match Calc's criteria): check green via src.eval.evaluate. Criteria parse/compare in src/functions/math/__init__.py: prefixes and numeric/text dual-equality for bare numeric text (:93-122); case-insensitive text and * ? ~ wildcards (:73-90, :135-139); COUNTIF "10"→2 / "3"→1 behavior via number+text equality on op "=" (:118-120, :145-153). SUMIF/AVERAGEIF optional sum_range (:215-225, :159-182). Empty AVERAGEIF → DIV0 (:206-212). FUNCTIONS registers the three names (:232-236). Discovery surfaces SUMIF COUNTIF AVERAGEIF.
+> ac-b3 / b3 (SUMIF COUNTIF AVERAGEIF match Calc's criteria): check green. Criteria parse/match in src/functions/math/__init__.py: wildcards (:162-179), parse (:182-211), numeric/text dual-equality (:231-245); COUNTIF via _count_matched (:317-318, :332). SUMIF/AVERAGEIF optional sum_range via _matched/:_conditional (:248-314, :331-333). Empty AVERAGEIF → DIV0 in _average_of (:295-301). FUNCTIONS keeps landed aggregates and adds the three criteria names (:321-333).
 > 
-> scope: last_diff src/functions/math/__init__.py in path_scope. Tip also has tests/functions/math/__init__.py and b3_conditional.sh (law 9 drops check edits at land — flagged). Note: this WI's tree is based on pre-math-1 main tip, so its FUNCTIONS table is conditionals-only; land must merge with aggregates (landed) and scalars (queued) WIs on the same file.
+> land-retry: attempt 1 was conditionals-only and conflicted after aggregates landed. Attempt 2 merges main and combines FUNCTIONS so aggregates + criteria coexist — addresses the land failure.
+> 
+> scope: machine last_diff is src/functions/math/__init__.py (in path_scope). Merge commit also pulls already-landed main paths (logic_text, recalc, checks) as parents of the merge — not new WI authorship; flagged for land awareness only.
 > 
 > No blocking findings.
 
@@ -103,9 +107,9 @@ Status: attempt 2 built, awaiting review
 | Implemented `wi-i5-math-1` | `impl-2@alebairos` |
 | Reviewed `wi-i5-math-1` | `rev-1@alebairos` (passed attempt 1) |
 | Implemented `wi-i5-math-2` | `impl-1@alebairos` |
-| Reviewed `wi-i5-math-2` | `rev-1@alebairos` (passed attempt 1) |
+| Reviewed `wi-i5-math-2` | `rev-1@alebairos` (passed attempt 2) |
 | Implemented `wi-i5-math-3` | `impl-2@alebairos` |
-| Reviewed `wi-i5-math-3` | `rev-1@alebairos` (passed attempt 1) |
+| Reviewed `wi-i5-math-3` | `rev-1@alebairos` (passed attempt 2) |
 
 Product checks: not recorded yet.
 
@@ -119,7 +123,7 @@ Files landed by `wi-i5-math-1`:
 - `tests/functions/math/checks/b3_conditional.sh` +79 −0 (plan check)
 - `tests/functions/math/__init__.py` +1 −0 (plan check)
 
-Landing pull request: [exp-b #10](https://github.com/alebairos/sheet-exp-b/pull/10)
+Landing pull request: [exp-b #13](https://github.com/alebairos/sheet-exp-b/pull/13)
 
 ## 7. The decision
 
@@ -127,7 +131,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 39 min so far
+- Lead time: 26 h 42 min so far
 - Loops: 3 (D2 plan 1, D6 landing 2)
 - Waste: 29 min
 - Size: 128 lines (+128 −0, 1 file, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +273 −0, 4 files

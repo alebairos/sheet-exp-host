@@ -26,7 +26,7 @@ Implement VLOOKUP, INDEX and MATCH in src/functions/lookup as a FUNCTIONS dict f
 
 Add VLOOKUP with exact and sorted approximate match, #N/A on miss, and #VALUE! for a bad column index as in Calc.
 
-Status: attempt 1 in work by `impl-1@alebairos`
+Status: attempt 1 built, awaiting review
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -36,7 +36,7 @@ Status: attempt 1 in work by `impl-1@alebairos`
 
 Add INDEX and MATCH (types 0 and 1) matching Calc, with #N/A/#REF!/#VALUE! as pinned in the check.
 
-Status: accepted
+Status: attempt 1 built, awaiting review
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -63,7 +63,7 @@ Status: accepted
 | Certified | `gate-1@alebairos` |
 | Implemented `wi-i7-lookup-1` | `impl-1@alebairos` |
 | Reviewed `wi-i7-lookup-1` | — |
-| Implemented `wi-i7-lookup-2` | — |
+| Implemented `wi-i7-lookup-2` | `impl-1@alebairos` |
 | Reviewed `wi-i7-lookup-2` | — |
 
 Product checks: not recorded yet.
@@ -76,7 +76,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 38 min so far
+- Lead time: 26 h 42 min so far
 - Loops: 3 (D1 spec 1, D2 plan 2)
 - Waste: 9 min
 - Size: nothing landed yet
