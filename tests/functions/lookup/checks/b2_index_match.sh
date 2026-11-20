@@ -9,7 +9,7 @@
 # is approximate on an ascending range (largest value ≤ lookup; below first key #N/A; above last key
 # returns last position). INDEX(row, col) is 1-based; row/col 0 is #VALUE!; out of range is #REF!;
 # negative index is Err:502 → #VALUE!. A single-column INDEX may take only the row argument.
-# Text that coerces to a number matches that number under MATCH type 0.
+# Text lookup against numeric keys is #N/A under MATCH type 0 (no type coercion).
 set -eu
 cd "$(dirname "$0")/../../../.."
 export PYTHONDONTWRITEBYTECODE=1
@@ -73,7 +73,7 @@ run([
     ("=MATCH(5,A1:A4,0)", 3),
     ("=MATCH(3,A1:A4,0)", 2),
     ("=MATCH(4,A1:A4,0)", E("#N/A")),
-    ("=MATCH(\"5\",A1:A4,0)", 3),
+    ("=MATCH(\"5\",A1:A4,0)", E("#N/A")),
     ("=MATCH(\"carrot\",E1:E3,0)", 3),
     ("=MATCH(Z9,A1:A4,0)", E("#N/A")),
     ("=MATCH(H1,A1:A4,0)", E("#N/A")),

@@ -8,8 +8,8 @@
 # Calc pins (LibreOffice 26.8.1.1, measured): range_lookup omitted/TRUE/nonzero ⇒ approximate
 # (largest first-column value ≤ lookup; first column sorted ascending); 0/FALSE ⇒ exact (#N/A if
 # missing). Approximate below the first key is #N/A; above the last key returns the last row.
-# Text keys match numbers that coerce equal (VLOOKUP("3",…) hits numeric 3). Column index <1,
-# negative, or past the table width is Err:502 in Calc → #VALUE! in this project's error set
+# Text lookup against numeric keys is #N/A (no type coercion; values._rank puts text after
+# numbers). Column index <1, negative, or past the table width is Err:502 → #VALUE!
 # (Calc does not emit #REF! for an oversized VLOOKUP column index).
 set -eu
 cd "$(dirname "$0")/../../../.."
@@ -65,7 +65,7 @@ run([
     ("=VLOOKUP(5,A1:C4,3,0)", 50),
     ("=VLOOKUP(7,A1:C4,2,FALSE)", "yellow"),
     ("=VLOOKUP(4,A1:C4,2,0)", E("#N/A")),
-    ("=VLOOKUP(\"3\",A1:C4,2,0)", "green"),
+    ("=VLOOKUP(\"3\",A1:C4,2,0)", E("#N/A")),
     ("=VLOOKUP(\"banana\",E1:G3,2,0)", "fruit"),
     ("=VLOOKUP(\"zebra\",E1:G3,2,0)", E("#N/A")),
     ("=VLOOKUP(Z9,A1:C4,2,0)", E("#N/A")),
