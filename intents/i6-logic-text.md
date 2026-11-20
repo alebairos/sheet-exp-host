@@ -4,19 +4,43 @@
 
 > The 9 logic and information functions and the 8 text functions of SPEC.md compute as in Calc
 
-Kind: Feature · State: parked · 0 work items · 2 bullets
+Kind: Feature · State: in work · 2 work items · 2 bullets
 
 ## 2. What you will see
 
-No design in the plan.
+Logic and text formulas match Calc. =IF(TRUE,1,2) is 1 and =IF(0,"a","b") is "b"; =IF("x",1,2) is #VALUE!; =IFERROR(1/0,"x") is "x"; =AND(TRUE,1) is TRUE and =AND(TRUE,"x") is #VALUE!; =OR(FALSE,"x") and =NOT("x") are #VALUE!; =ISBLANK(Z9) is TRUE while =ISNUMBER("3") is FALSE and =ISNUMBER(TRUE) is TRUE and =ISTEXT("3") is TRUE; =ISERROR(1/0) is TRUE. =CONCATENATE("a",1) is "a1"; =LEFT("abcd",2) is "ab"; =MID("abcd",2,2) is "bc"; =LEN("ab") is 2; =UPPER("a") is "A"; =TRIM("  a  b  ") collapses internal space the way Calc does.
+
+- No media: Library functions with no screen; expected values live in tests/functions/logic_text/checks/b*.sh
 
 ## 3. Approach
 
-No design in the plan.
+Ship both SPEC groups in src/functions/logic_text as one FUNCTIONS dict discovered by i0/i3. Two parallel WIs: logic and information (IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT, ISERROR) then text (CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER, TRIM). IFERROR must see error Values (i3 leaves them in). IF, AND, OR and NOT coerce conditions through src.values.to_bool: non-zero numbers are true, 0 and blank are false, text is #VALUE! (same as Calc and the landed to_bool). Text functions coerce numbers through to_text where Calc does. Plan checks call evaluate on constant-cell books under tests/functions/logic_text/checks. ISNUMBER returns TRUE for Bool arguments (Calc treats booleans as 1/0; clarification).
+
+- **Reuses:** src.eval.evaluate, Range, and registry discovery (i3); src.values to_bool/to_number/to_text/is_error and Error codes (i2); i0 FUNCTIONS package layout.
+- **Removes:** none
+- **Rejected:** Treating non-empty text as true in IF/AND/OR/NOT: Calc and to_bool give #VALUE! (prior plan rejected for this). Short-circuiting AND/OR by skipping argument evaluation in Python before the evaluator builds args: the evaluator already evaluated every argument. Putting these callables in src/eval: out of scope. One WI for all seventeen: over the size budget for parallel review.
 
 ## 4. Work items
 
-No plan yet.
+### `wi-i6-logic-text-1`: Logic and information
+
+Add IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT and ISERROR matching Calc (text conditions are #VALUE!).
+
+Status: accepted
+
+| AC | Covers | Check | Red on base | On product |
+| --- | --- | --- | --- | --- |
+| `ac-b1` | b1 | `tests/functions/logic_text/checks/b1_logic.sh` | red | — |
+
+### `wi-i6-logic-text-2`: Text functions
+
+Add CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER and TRIM with Calc coercion and errors.
+
+Status: accepted
+
+| AC | Covers | Check | Red on base | On product |
+| --- | --- | --- | --- | --- |
+| `ac-b2` | b2 | `tests/functions/logic_text/checks/b2_text.sh` | red | — |
 
 **Acceptance**, against the landed checks:
 
@@ -35,8 +59,12 @@ No plan yet.
 
 | Role | Who |
 | --- | --- |
-| Planned | — |
-| Certified | — |
+| Planned | `plan-1@alebairos` |
+| Certified | `gate-1@alebairos` |
+| Implemented `wi-i6-logic-text-1` | — |
+| Reviewed `wi-i6-logic-text-1` | — |
+| Implemented `wi-i6-logic-text-2` | — |
+| Reviewed `wi-i6-logic-text-2` | — |
 
 Product checks: not recorded yet.
 
@@ -48,4 +76,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-Not started: the metrics start with the first plan.
+- Lead time: 26 h 18 min so far
+- Loops: 3 (D1 spec 1, D2 plan 2)
+- Waste: 10 min
+- Size: nothing landed yet

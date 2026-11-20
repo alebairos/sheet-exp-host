@@ -4,19 +4,53 @@
 
 > The 20 math and statistics functions of SPEC.md compute as in Calc, including ranges, blanks, text in ranges, and ROUND's half-away-from-zero
 
-Kind: Feature · State: parked · 0 work items · 3 bullets
+Kind: Feature · State: in work · 3 work items · 3 bullets
 
 ## 2. What you will see
 
-No design in the plan.
+The twenty math and statistics functions from SPEC.md answer as Calc does. =SUM(A1:A8) skips blanks and text and still adds TRUE as 1; =AVERAGE of an all-text range is #DIV/0!; =ROUND(1.5,0) is 2 and =ROUND(-1.5,0) is -2 (half away from zero); =MOD(-10,3) is 2; =SQRT(-1) is #NUM!; =SUMIF(F1:F8,">4") and =COUNTIF(E1:E8,"apple") follow Calc's criteria, including case-insensitive text and * wildcards. Errors in a summed range surface as that error.
+
+- No media: Library functions with no screen; expected values live in tests/functions/math/checks/b*.sh
 
 ## 3. Approach
 
-No design in the plan.
+Implement the twenty callables in src/functions/math as a FUNCTIONS dict (uppercase name → callable) so i0's discover_functions and i3's registry() pick them up with no shared hand-edited table. Each callable takes the i3 calling convention: a Range for a reference or range argument (values() row by row, blanks included), otherwise a Value with errors left in, and returns a Value. Split the work by bullet: aggregates that walk ranges (SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN, STDEV), scalar/rounding ops (ROUND half-away-from-zero, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER, SQRT), then criteria ops (SUMIF, COUNTIF, AVERAGEIF). Share a small private helper for "numbers in a range, skipping blanks and text" inside the package. Plan checks under tests/functions/math/checks call evaluate on constant-cell books. POWER(0,-1) returns #DIV/0! so it matches src.eval's ^ (certify reject); COUNTIF text criteria "10" and "3" were checked on LibreOffice Calc 26.8 (2 and 1).
+
+- **Reuses:** src.eval.evaluate / Range / registry discovery (i3); src.values Number, Error, to_number, to_json (i2); i0 package layout with FUNCTIONS on src.functions.math.
+- **Removes:** none
+- **Rejected:** Registering each function through src.eval.register in the checks only: production discovery must stay on the package FUNCTIONS dict. Implementing criteria as Python eval of the criteria string: unsafe and not Calc. Putting helpers in src/eval: out of this intent's directories. One giant WI for all twenty: over the size budget and blocks parallel review of independent groups. Expecting #NUM! from POWER(0,-1): disagrees with the landed evaluator's 0^-1.
 
 ## 4. Work items
 
-No plan yet.
+### `wi-i5-math-1`: Range aggregates
+
+Add SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN and sample STDEV on ranges with blanks and text.
+
+Status: attempt 1 built, awaiting review
+
+| AC | Covers | Check | Red on base | On product |
+| --- | --- | --- | --- | --- |
+| `ac-b1` | b1 | `tests/functions/math/checks/b1_aggregates.sh` | red | — |
+
+### `wi-i5-math-2`: Rounding and scalars
+
+Add ROUND (half away from zero), ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER and SQRT with Calc errors.
+
+Status: attempt 1 built, awaiting review
+
+| AC | Covers | Check | Red on base | On product |
+| --- | --- | --- | --- | --- |
+| `ac-b2` | b2 | `tests/functions/math/checks/b2_scalars.sh` | red | — |
+
+### `wi-i5-math-3`: Conditional aggregates
+
+Add SUMIF, COUNTIF and AVERAGEIF matching Calc criteria (comparisons, text, wildcards).
+
+Status: attempt 1 in work by `impl-2@alebairos`
+
+| AC | Covers | Check | Red on base | On product |
+| --- | --- | --- | --- | --- |
+| `ac-b3` | b3 | `tests/functions/math/checks/b3_conditional.sh` | red | — |
 
 **Acceptance**, against the landed checks:
 
@@ -36,8 +70,14 @@ No plan yet.
 
 | Role | Who |
 | --- | --- |
-| Planned | — |
-| Certified | — |
+| Planned | `plan-1@alebairos` |
+| Certified | `gate-1@alebairos` |
+| Implemented `wi-i5-math-1` | `impl-2@alebairos` |
+| Reviewed `wi-i5-math-1` | — |
+| Implemented `wi-i5-math-2` | `impl-1@alebairos` |
+| Reviewed `wi-i5-math-2` | — |
+| Implemented `wi-i5-math-3` | `impl-2@alebairos` |
+| Reviewed `wi-i5-math-3` | — |
 
 Product checks: not recorded yet.
 
@@ -49,4 +89,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-Not started: the metrics start with the first plan.
+- Lead time: 26 h 18 min so far
+- Loops: 1 (D2 plan 1)
+- Waste: 8 min
+- Size: nothing landed yet
