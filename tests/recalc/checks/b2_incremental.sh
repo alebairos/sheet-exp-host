@@ -1,8 +1,8 @@
 #!/bin/sh
 # b2: an edit recomputes only its dependents.
-# Contract: recalculate(book, changed=[(sheet, addr), ...]) re-evaluates only the
-# edited cells' transitive dependents (and the edited cell if it is a formula).
-# Unrelated formulas are not passed to src.eval.evaluate again.
+# Contract: recalculate(book, changed=[(sheet, addr), ...], previous=prior_computed)
+# re-evaluates only the dirty cells' transitive formula dependents. Unrelated
+# formulas are not passed to src.eval.evaluate; their values come from previous.
 set -eu
 cd "$(dirname "$0")/../../.."
 export PYTHONDONTWRITEBYTECODE=1
@@ -20,7 +20,19 @@ def same(got, want):
     return type(got) in (int, float) and not isinstance(got, bool) and abs(got - want) < 1e-9
 
 
-source = {"sheets": {
+source_v1 = {"sheets": {
+    "Sheet1": {
+        "A1": 1,
+        "A2": "=A1+1",
+        "A3": "=A2*10",
+        "B1": 100,
+        "B2": "=B1+1",
+        "B3": "=B2+1",
+    },
+}}
+previous = recalculate(source_v1)
+
+source_v2 = {"sheets": {
     "Sheet1": {
         "A1": 2,
         "A2": "=A1+1",
@@ -42,7 +54,7 @@ def spy(formula, book, sheet):
 
 eval_mod.evaluate = spy
 try:
-    out = recalculate(source, changed=[("Sheet1", "A1")])
+    out = recalculate(source_v2, changed=[("Sheet1", "A1")], previous=previous)
 finally:
     eval_mod.evaluate = real_evaluate
 
