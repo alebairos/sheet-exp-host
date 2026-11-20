@@ -4,7 +4,7 @@
 
 > The 9 logic and information functions and the 8 text functions of SPEC.md compute as in Calc
 
-Kind: Feature · State: awaiting the verdict · 2 work items · 2 bullets
+Kind: Feature · State: Met · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -43,9 +43,9 @@ Status: landed (`e68ed241fd38`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a6-b1-if` | b1 | `tests/functions/logic_text/checks/a6_b1_if.sh` | red | — |
-| `ac-a6-b1-and-or-not` | b1 | `tests/functions/logic_text/checks/a6_b1_and_or_not.sh` | red | — |
-| `ac-a6-b1-is` | b1 | `tests/functions/logic_text/checks/a6_b1_is.sh` | red | — |
+| `ac-a6-b1-if` | b1 | `tests/functions/logic_text/checks/a6_b1_if.sh` | red | pass |
+| `ac-a6-b1-and-or-not` | b1 | `tests/functions/logic_text/checks/a6_b1_and_or_not.sh` | red | pass |
+| `ac-a6-b1-is` | b1 | `tests/functions/logic_text/checks/a6_b1_is.sh` | red | pass |
 
 ### `wi-a-i6-logic-text-2`: Text functions
 
@@ -62,16 +62,16 @@ Status: landed (`3fbaf7a6a2d2`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-a6-b2-concat-len` | b2 | `tests/functions/logic_text/checks/a6_b2_concat_len.sh` | red | — |
-| `ac-a6-b2-left-right-mid` | b2 | `tests/functions/logic_text/checks/a6_b2_left_right_mid.sh` | red | — |
-| `ac-a6-b2-case-trim` | b2 | `tests/functions/logic_text/checks/a6_b2_case_trim.sh` | red | — |
+| `ac-a6-b2-concat-len` | b2 | `tests/functions/logic_text/checks/a6_b2_concat_len.sh` | red | pass |
+| `ac-a6-b2-left-right-mid` | b2 | `tests/functions/logic_text/checks/a6_b2_left_right_mid.sh` | red | pass |
+| `ac-a6-b2-case-trim` | b2 | `tests/functions/logic_text/checks/a6_b2_case_trim.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT, ISERROR match Calc | `tests/functions/logic_text/checks/a6_b1_if.sh` —, `tests/functions/logic_text/checks/a6_b1_and_or_not.sh` —, `tests/functions/logic_text/checks/a6_b1_is.sh` — |
-| not yet | b2 | CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER, TRIM match Calc, coercion and errors included | `tests/functions/logic_text/checks/a6_b2_concat_len.sh` —, `tests/functions/logic_text/checks/a6_b2_left_right_mid.sh` —, `tests/functions/logic_text/checks/a6_b2_case_trim.sh` — |
+| PASS | b1 | IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT, ISERROR match Calc | `tests/functions/logic_text/checks/a6_b1_if.sh` pass, `tests/functions/logic_text/checks/a6_b1_and_or_not.sh` pass, `tests/functions/logic_text/checks/a6_b1_is.sh` pass |
+| PASS | b2 | CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER, TRIM match Calc, coercion and errors included | `tests/functions/logic_text/checks/a6_b2_concat_len.sh` pass, `tests/functions/logic_text/checks/a6_b2_left_right_mid.sh` pass, `tests/functions/logic_text/checks/a6_b2_case_trim.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -89,10 +89,27 @@ Status: landed (`3fbaf7a6a2d2`)
 | Reviewed `wi-a-i6-logic-text-1` | `rev-a@alebairos` (passed attempt 1) |
 | Implemented `wi-a-i6-logic-text-2` | `impl-a1@alebairos` |
 | Reviewed `wi-a-i6-logic-text-2` | `rev-a@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/functions/logic_text/checks/a6_b1_and_or_not.sh`: pass
+- `tests/functions/logic_text/checks/a6_b1_if.sh`: pass
+- `tests/functions/logic_text/checks/a6_b1_is.sh`: pass
+- `tests/functions/logic_text/checks/a6_b2_case_trim.sh`: pass
+- `tests/functions/logic_text/checks/a6_b2_concat_len.sh`: pass
+- `tests/functions/logic_text/checks/a6_b2_left_right_mid.sh`: pass
+
+Outcome report:
+
+- **Built:** Landed on exp-a main (47675ae, PR #16; both work items passed review on their first attempt): src/functions/logic_text/logic.py adds IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT and ISERROR, and src/functions/logic_text/text.py adds CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER and TRIM. Both follow Calc's rules: a TRUE cell counts as a number, AND/OR skip text in ranges, IF can return a cell reference, TRIM collapses inner spaces, and a negative count gives Err:502. I re-ran all six checks on landed main and they pass, 205 formulas in all, each compared with LibreOffice's answer: a6_b1_if 38, a6_b1_and_or_not 38, a6_b1_is 37, a6_b2_concat_len 32, a6_b2_left_right_mid 37 and a6_b2_case_trim 23. ./test.sh passes too (64 tests). I also ran ./engine live on {A1 3, =IF(A1>0,"yes","no"), =IFERROR(A1/0,0), =TRIM("  a  b "), =LEFT("hello",3), =ISBLANK(IF(1,A9)), =AND(A1>1,TRUE), =CONCATENATE(TRUE,"x",A1), =MID("abc",0,1), =UPPER("Straße")}. It gave yes, 0, "a b", hel, true, true, "1x3", Err:502 and STRAẞE, which is what Calc gives. Where the work left the plan: it didn't. As the plan said up front, the checks leave out one known gap: when a very large or very small number becomes text, it doesn't match Calc. That conversion is done by src/values (a-i2), outside this intent's scope. The reviewer measured it against LibreOffice 26.8.1.1: CONCATENATE(1E21) gives 1E+21 where Calc gives 1E+021, and ="x"&1E-7 gives x1E-07 where Calc gives x0.0000001. LEN(123456789012345678) is 21 against Calc's 20.
+- **Advice:** Adopt: both bullets hold on landed code, so Met fits. To try it, run the line above through ./engine in a clone of exp-a and compare the results with the media's calc-answers.md (LibreOffice's answer for each of the 205 check formulas). Follow up: if you want it, file a Defect on src/values number-to-text (format_number at src/values/__init__.py:192): Calc writes a three-digit exponent (1E+021) and writes small numbers out in full (0.0000001). That would fix &, CONCATENATE and LEN for those numbers everywhere at once. Say the word and I will park it. Watch: Err:502 and Err:511 are kept the way Calc displays them, as in a-i4 and a-i5. If the hidden suite expects #VALUE! there, that is a one-constant change per module.
+- [a-i6-logic-text/README.md](https://github.com/alebairos/sheet-exp-host/blob/00204cfcf2c5c0ed69c2ab72aa6ffc4df99e7010/a-i6-logic-text/README.md)
+- [a-i6-logic-text/calc-answers.md](https://github.com/alebairos/sheet-exp-host/blob/00204cfcf2c5c0ed69c2ab72aa6ffc4df99e7010/a-i6-logic-text/calc-answers.md)
+- [a-i6-logic-text/lt.out.json](https://github.com/alebairos/sheet-exp-host/blob/00204cfcf2c5c0ed69c2ab72aa6ffc4df99e7010/a-i6-logic-text/lt.out.json)
+- [a-i6-logic-text/lt.py](https://github.com/alebairos/sheet-exp-host/blob/00204cfcf2c5c0ed69c2ab72aa6ffc4df99e7010/a-i6-logic-text/lt.py)
+- [a-i6-logic-text/probe.py](https://github.com/alebairos/sheet-exp-host/blob/00204cfcf2c5c0ed69c2ab72aa6ffc4df99e7010/a-i6-logic-text/probe.py)
+- [a-i6-logic-text/gencheck.py](https://github.com/alebairos/sheet-exp-host/blob/00204cfcf2c5c0ed69c2ab72aa6ffc4df99e7010/a-i6-logic-text/gencheck.py)
 
 Files landed by `wi-a-i6-logic-text-1`:
 
@@ -119,7 +136,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 22 h 06 min so far
+- Lead time: 22 h 27 min
 - Loops: 4 (D1 spec 1, D2 plan 3)
 - Waste: 13 min
 - Size: 303 lines (+303 −0, 5 files, ≤400; tests 145 lines); plan check files laid over by land, not in the size: +439 −0, 6 files

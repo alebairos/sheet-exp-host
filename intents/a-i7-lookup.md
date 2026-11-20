@@ -4,7 +4,7 @@
 
 > VLOOKUP, INDEX and MATCH compute as in Calc, exact and approximate, with #N/A and #REF! where Calc gives them
 
-Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
+Kind: Feature · State: Met · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -66,6 +66,7 @@ Status: landed (`dcee02bc1209`)
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-i7-lookup-1` | `impl-a1@alebairos`, `impl-a2@alebairos` |
 | Reviewed `wi-a-i7-lookup-1` | `rev-a@alebairos` (passed attempt 2) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
@@ -95,15 +96,11 @@ Landing pull request: [exp-a #14](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 7. The decision
 
-**Verdict:a-i7-lookup**: A decision: show your human its options
-
-- Met: `cooknship decide --answer Verdict:a-i7-lookup --option met`
-- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-i7-lookup --option partially`
-- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-i7-lookup --option not_met`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 22 h 06 min so far
+- Lead time: 22 h 07 min
 - Loops: 1 (D6 landing 1)
 - Waste: 17 min
 - Size: 213 lines (+213 −0, 3 files, ≤400; tests 113 lines); plan check files laid over by land, not in the size: +201 −0, 2 files

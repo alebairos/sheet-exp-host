@@ -66,7 +66,7 @@ Status: landed (`a8ff6a245f5e`)
 
 Add src/functions/math/criteria.py with Calc's criteria matching (comparison prefixes, wildcards, case-insensitive text, blanks) and SUMIF, COUNTIF, AVERAGEIF on top of it, so conditional totals match Calc.
 
-Status: queued to land
+Status: landing (`ab6081615a13`)
 
 **The passing review noted:** > PASS (attempt 2). Reran verify on b1f5ec4 (worktree): a5_b3_criteria.sh "ok b3: 59 cases match Calc"; base red as in attempt 1; ./test.sh OK.
 > - The attempt-1 defect is fixed: src/functions/math/criteria.py now adds SUMIF/AVERAGEIF matches with _calc_sum (Calc's KahanSum: Neumaier with the last term held back and cancelled to 0 when approxEqual to minus the rest), in the criteria range's walk order, instead of math.fsum.
@@ -125,7 +125,7 @@ Files landed by `wi-a-i5-math-2`:
 - `src/functions/math/rounding.py` +151 −0
 - `tests/functions/math/test_rounding.py` +78 −0 (test)
 
-Landing pull request: [exp-a #15](https://github.com/alebairos/sheet-exp-a/pull/15)
+Landing pull request: [exp-a #17](https://github.com/alebairos/sheet-exp-a/pull/17)
 
 ## 7. The decision
 
@@ -133,7 +133,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 22 h 06 min so far
+- Lead time: 22 h 27 min so far
 - Loops: 2 (D5 review 2)
 - Waste: 11 min
 - Size: 356 lines (+356 −0, 5 files, ≤400; tests 150 lines); plan check files laid over by land, not in the size: +372 −0, 3 files
