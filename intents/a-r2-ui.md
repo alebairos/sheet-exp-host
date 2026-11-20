@@ -42,13 +42,13 @@ Status: landed (`fa207f2b6389`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-r2-b1` | b1 | `tests/e2e/ui/checks/a_r2_b1_walkthrough.sh` | red | — |
+| `ac-r2-b1` | b1 | `tests/e2e/ui/checks/a_r2_b1_walkthrough.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | that walk-through runs end to end in a browser test | `tests/e2e/ui/checks/a_r2_b1_walkthrough.sh` — |
+| PASS | b1 | that walk-through runs end to end in a browser test | `tests/e2e/ui/checks/a_r2_b1_walkthrough.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -65,9 +65,19 @@ Status: landed (`fa207f2b6389`)
 | Implemented `wi-a-r2-ui-1` | `impl-a1@alebairos`, `impl-a2@alebairos` |
 | Reviewed `wi-a-r2-ui-1` | `rev-a@alebairos` (passed attempt 2) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/e2e/ui/checks/a_r2_b1_walkthrough.sh`: pass
+
+Outcome report:
+
+- **Built:** You can now work in the spreadsheet in the browser. The app page (python3 web/io/serve.py, then /io/index.html) has a formula bar above the grid: click a cell and it shows the formula as typed, with the error's name in red when the cell computes to one; type a new formula, press Enter, and the grid recomputes. The walk-through works end to end: open walk.json, change B1 to =A1/A3 and see #DIV/0!, fix it to =A1/A2*3 and see 15, Save JSON and get the fixed formula back. A headless Chrome test does exactly that with real clicks and keys and runs in ./test.sh (exp-a PR #19, main b0011f6: the check prints ok, 67 tests pass). It left the plan in one place, as the plan itself said: besides the tests, it changed the page that wires the parts (web/io/index.html, +37 -3, and its README), because a test alone could not edit a formula the page did not show; the grid, bar and engine code were not touched. The first attempt was sent back because typing text like '007 into the bar turned it into the number 7; the second keeps it as text, and the browser test now guards that.
+- **Advice:** Adopt. Follow up: the browser test needs Chrome/Chromium and Node on the machine running ./test.sh (it is skipped without them), so keep them in the land workflow. Watch: only the page wiring was tested in a browser; editing directly inside a grid cell still overwrites a formula with its value, by design here, and may be worth its own intent if you want in-cell editing.
+- [a-r2-ui/README.md](https://github.com/alebairos/sheet-exp-host/blob/9f426e687ab60c244829d7d2e791aa22a081bd41/a-r2-ui/README.md)
+- [a-r2-ui/1-opened.png](https://github.com/alebairos/sheet-exp-host/blob/9f426e687ab60c244829d7d2e791aa22a081bd41/a-r2-ui/1-opened.png)
+- [a-r2-ui/2-error.png](https://github.com/alebairos/sheet-exp-host/blob/9f426e687ab60c244829d7d2e791aa22a081bd41/a-r2-ui/2-error.png)
+- [a-r2-ui/3-fixed.png](https://github.com/alebairos/sheet-exp-host/blob/9f426e687ab60c244829d7d2e791aa22a081bd41/a-r2-ui/3-fixed.png)
+- [a-r2-ui/prototype-index.html.diff](https://github.com/alebairos/sheet-exp-host/blob/9f426e687ab60c244829d7d2e791aa22a081bd41/a-r2-ui/prototype-index.html.diff)
 
 Files landed by `wi-a-r2-ui-1`:
 
@@ -85,11 +95,15 @@ Landing pull request: [exp-a #19](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 7. The decision
 
-Nothing waits on you.
+**Verdict:a-r2-ui**: A decision: show your human its options
+
+- Met: `cooknship decide --answer Verdict:a-r2-ui --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-r2-ui --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-r2-ui --option not_met`
 
 ## 8. Metrics
 
-- Lead time: 25 h 34 min so far
+- Lead time: 25 h 37 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 7 min
 - Size: 45 lines (+42 −3, 6 files, ≤400; tests 231 lines); plan check files laid over by land, not in the size: +205 −0, 3 files
