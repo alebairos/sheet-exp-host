@@ -34,14 +34,16 @@ def recalculate(book, changed=None, previous=None):
     deps = {cell: _cell_deps(formula, sheet) for cell, (sheet, formula) in formulas.items()}
 
     if changed is not None:
-        dirty = _dirty_closure(formulas, deps, changed)
-        working = _seed_previous(book, previous, dirty)
+        changed_keys = {(item[0], item[1]) for item in changed}
+        dirty = _dirty_closure(formulas, deps, changed_keys)
+        working = _seed_previous(book, previous, dirty | changed_keys)
         order_cells = dirty
     else:
         working = copy.deepcopy(book)
         order_cells = set(formulas)
 
-    cyclic = _cyclic_formulas({c: deps[c] for c in order_cells if c in formulas}, formulas)
+    formula_subset = {c: deps[c] for c in order_cells if c in formulas}
+    cyclic = _cyclic_formulas(formula_subset, formulas)
     for cell in cyclic:
         sheet, addr = cell
         working.setdefault("sheets", {}).setdefault(sheet, {})[addr] = to_json(REF)
@@ -145,45 +147,13 @@ def _col_name(n):
 
 
 def _cyclic_formulas(deps, formulas):
-    """SCCs that are self-loops or size > 1 among formula cells."""
+    """Formula cells that do not appear in a dependency topo-order (cycles).
+
+    Iterative (Kahn leftovers) so a long acyclic chain does not blow the stack.
+    """
     nodes = [c for c in deps if c in formulas]
-    index = 0
-    stack = []
-    on_stack = set()
-    indices = {}
-    lowlink = {}
-    cyclic = set()
-
-    def strongconnect(v):
-        nonlocal index
-        indices[v] = index
-        lowlink[v] = index
-        index += 1
-        stack.append(v)
-        on_stack.add(v)
-        for w in deps.get(v, ()):
-            if w not in formulas:
-                continue
-            if w not in indices:
-                strongconnect(w)
-                lowlink[v] = min(lowlink[v], lowlink[w])
-            elif w in on_stack:
-                lowlink[v] = min(lowlink[v], indices[w])
-        if lowlink[v] == indices[v]:
-            scc = []
-            while True:
-                w = stack.pop()
-                on_stack.discard(w)
-                scc.append(w)
-                if w == v:
-                    break
-            if len(scc) > 1 or (len(scc) == 1 and scc[0] in deps.get(scc[0], ())):
-                cyclic.update(scc)
-
-    for v in nodes:
-        if v not in indices:
-            strongconnect(v)
-    return cyclic
+    ordered = set(_topo_order(nodes, deps, formulas))
+    return set(nodes) - ordered
 
 
 def _topo_order(cells, deps, formulas):
