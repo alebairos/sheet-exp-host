@@ -1,0 +1,1 @@
+ok a6_b2_case_trim: 23 cases match Calc
