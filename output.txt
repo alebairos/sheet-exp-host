@@ -1,0 +1,23 @@
+FAIL =SUMIF(F1:F8,">4"): got {"error": "#NAME?"}, want 26
+FAIL =SUMIF(F1:F8,4): got {"error": "#NAME?"}, want 4
+FAIL =SUMIF(F1:F8,"4"): got {"error": "#NAME?"}, want 4
+FAIL =SUMIF(F1:F8,">5"): got {"error": "#NAME?"}, want 21
+FAIL =SUMIF(E1:E8,"apple",F1:F8): got {"error": "#NAME?"}, want 4
+FAIL =SUMIF(E1:E8,"cherry",F1:F8): got {"error": "#NAME?"}, want 4
+FAIL =SUMIF(B1:B6,1): got {"error": "#NAME?"}, want 2
+FAIL =SUMIF(A1:A8,">1"): got {"error": "#NAME?"}, want 6.5
+FAIL =COUNTIF(E1:E8,"apple"): got {"error": "#NAME?"}, want 2
+FAIL =COUNTIF(E1:E8,"APPLE"): got {"error": "#NAME?"}, want 2
+FAIL =COUNTIF(F1:F8,">=3"): got {"error": "#NAME?"}, want 6
+FAIL =COUNTIF(F1:F8,">5"): got {"error": "#NAME?"}, want 3
+FAIL =COUNTIF(E1:E9,10): got {"error": "#NAME?"}, want 1
+FAIL =COUNTIF(E1:E9,"10"): got {"error": "#NAME?"}, want 2
+FAIL =COUNTIF(A1:A8,3): got {"error": "#NAME?"}, want 0
+FAIL =COUNTIF(A1:A8,"3"): got {"error": "#NAME?"}, want 1
+FAIL =COUNTIF(E1:E8,"b*"): got {"error": "#NAME?"}, want 2
+FAIL =AVERAGEIF(F1:F8,">4"): got {"error": "#NAME?"}, want 6.5
+FAIL =AVERAGEIF(F1:F8,">5"): got {"error": "#NAME?"}, want 7
+FAIL =AVERAGEIF(E1:E8,"apple",F1:F8): got {"error": "#NAME?"}, want 2
+FAIL =AVERAGEIF(F1:F8,">100"): got {"error": "#NAME?"}, want {"error": "#DIV/0!"}
+FAIL =AVERAGEIF(E1:E8,"cherry",F1:F8): got {"error": "#NAME?"}, want 4
+FAIL =AVERAGEIF(A1:A8,">0"): got {"error": "#NAME?"}, want 2.125
