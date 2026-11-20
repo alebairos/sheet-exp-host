@@ -1,0 +1,106 @@
+diff --git i/web/grid/grid.js w/web/grid/grid.js
+index b8b5b0a..5d0d3bc 100644
+--- i/web/grid/grid.js
++++ w/web/grid/grid.js
+@@ -132,7 +132,7 @@ const ARROWS = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowR
+  * typing edits; Enter commits, Escape cancels; arrows move. onChange(state) runs on every
+  * selection and edit. Returns {state, setState(state), destroy()}.
+  */
+-export function mount(container, state, { rows = 20, cols = 8, onChange = () => {} } = {}) {
++export function mount(container, state, { rows = 20, cols = 8, onChange = () => {}, textOf = null, onEdit = null } = {}) {
+   let s = state;
+   let editing = null;
+   const doc = container.ownerDocument;
+@@ -155,7 +155,14 @@ export function mount(container, state, { rows = 20, cols = 8, onChange = () =>
+     const td = tdOf(ref);
+     if (!td) return;
+     const input = doc.createElement("input");
+-    input.value = initial ?? inputText(cellsOf(s)[ref]);
++    const before = textOf ? textOf(ref) : inputText(cellsOf(s)[ref]);
++    input.value = initial ?? before;
++    // Closing the editor: nothing typed changes nothing; else the page (onEdit) or the grid takes the text.
++    const finish = (next) => {
++      if (initial === undefined && input.value === before) return update(next(s));
++      if (onEdit) { onEdit(ref, input.value); return update(next(edit(s, ref, input.value))); }
++      update(next(edit(s, ref, input.value)));
++    };
+     td.textContent = "";
+     td.appendChild(input);
+     editing = input;
+@@ -165,8 +172,7 @@ export function mount(container, state, { rows = 20, cols = 8, onChange = () =>
+       e.stopPropagation();
+       if (e.key === "Enter") {
+         e.preventDefault();
+-        const next = edit(s, ref, input.value);
+-        update(inside(move(next, 0, 1).selected) ? move(next, 0, 1) : next);
++        finish((x) => (inside(move(x, 0, 1).selected) ? move(x, 0, 1) : x));
+         container.focus();
+       } else if (e.key === "Escape") {
+         e.preventDefault();
+@@ -175,13 +181,14 @@ export function mount(container, state, { rows = 20, cols = 8, onChange = () =>
+       }
+     });
+     input.addEventListener("blur", () => {
+-      if (editing === input) update(edit(s, ref, input.value));
++      if (editing === input) finish((x) => x);
+     });
+   };
+ 
+   const onClick = (e) => {
+     const td = e.target.closest("td[data-ref]");
+-    if (td && !td.contains(editing)) update(select(s, td.dataset.ref));
++    // A click on the selected cell redraws nothing, so its second click lands on the same cell (double-click).
++    if (td && !td.contains(editing) && td.dataset.ref !== s.selected) update(select(s, td.dataset.ref));
+   };
+   const onDblClick = (e) => {
+     const td = e.target.closest("td[data-ref]");
+@@ -200,6 +207,7 @@ export function mount(container, state, { rows = 20, cols = 8, onChange = () =>
+       startEdit(s.selected);
+       e.preventDefault();
+     } else if (e.key === "Delete" || e.key === "Backspace") {
++      if (onEdit) onEdit(s.selected, "");
+       update(edit(s, s.selected, ""));
+       e.preventDefault();
+     } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+diff --git i/web/io/index.html w/web/io/index.html
+index 14913df..1771cd1 100644
+--- i/web/io/index.html
++++ w/web/io/index.html
+@@ -28,7 +28,7 @@
+   <script type="module">
+     import { createController, download } from "./io.js";
+     import { createState, mount, select, inputText } from "../grid/grid.js";
+-    import { mount as mountBar } from "../formula_bar/formula_bar.js";
++    import { mount as mountBar, barText } from "../formula_bar/formula_bar.js";
+ 
+     // The one engine: serve.py answers POST /compute with ./engine's computed workbook.
+     const compute = async (book) => {
+@@ -80,13 +80,14 @@
+     });
+     const onChange = (s) => {
+       if (s.selected !== selected) { selected = s.selected; bar.update(barState()); }
+-      const typed = s.book.sheets[s.sheet] || {};
+-      const refs = changedRefs(shown, typed);
+-      if (!refs.length) return;
++    };
++    // The in-cell editor opens with the cell as typed (the bar's text: formulas, '007); only changed text is an edit.
++    const textOf = (ref) => barText(controller.state.book, controller.state.sheet, ref);
++    const onEdit = (ref, text) => {
+       busy = busy.then(async () => {
+-        for (const ref of refs) await controller.edit(ref, inputText(typed[ref]));
++        await controller.edit(ref, text);
+         showMessage();
+-        show(s.selected);
++        show(grid ? grid.state.selected : ref);
+       });
+     };
+     const show = (ref) => {
+@@ -96,7 +97,7 @@
+       const state = select(createState(computed, sheet), selected);
+       bar.update(barState());
+       if (grid) grid.setState(state);
+-      else grid = mount(gridEl, state, { onChange });
++      else grid = mount(gridEl, state, { onChange, textOf, onEdit });
+     };
+ 
+     document.getElementById("open").addEventListener("change", async (e) => {
