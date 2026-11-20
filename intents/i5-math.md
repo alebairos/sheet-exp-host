@@ -38,7 +38,7 @@ Status: landed (`93850d3313ee`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b1` | b1 | `tests/functions/math/checks/b1_aggregates.sh` | red | — |
+| `ac-b1` | b1 | `tests/functions/math/checks/b1_aggregates.sh` | red | pass |
 
 ### `wi-i5-math-2`: Rounding and scalars
 
@@ -60,7 +60,7 @@ Status: landed (`2d91c4ead6e9`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b2` | b2 | `tests/functions/math/checks/b2_scalars.sh` | red | — |
+| `ac-b2` | b2 | `tests/functions/math/checks/b2_scalars.sh` | red | pass |
 
 ### `wi-i5-math-3`: Conditional aggregates
 
@@ -82,15 +82,15 @@ Status: landed (`23e1ea1cf65d`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b3` | b3 | `tests/functions/math/checks/b3_conditional.sh` | red | — |
+| `ac-b3` | b3 | `tests/functions/math/checks/b3_conditional.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN, STDEV match Calc on ranges with blanks and text | `tests/functions/math/checks/b1_aggregates.sh` — |
-| not yet | b2 | ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER, SQRT match Calc, errors included | `tests/functions/math/checks/b2_scalars.sh` — |
-| not yet | b3 | SUMIF, COUNTIF, AVERAGEIF match Calc's criteria | `tests/functions/math/checks/b3_conditional.sh` — |
+| PASS | b1 | SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, PRODUCT, MEDIAN, STDEV match Calc on ranges with blanks and text | `tests/functions/math/checks/b1_aggregates.sh` pass |
+| PASS | b2 | ROUND, ROUNDUP, ROUNDDOWN, INT, MOD, ABS, POWER, SQRT match Calc, errors included | `tests/functions/math/checks/b2_scalars.sh` pass |
+| PASS | b3 | SUMIF, COUNTIF, AVERAGEIF match Calc's criteria | `tests/functions/math/checks/b3_conditional.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -111,7 +111,11 @@ Status: landed (`23e1ea1cf65d`)
 | Implemented `wi-i5-math-3` | `impl-1@alebairos`, `impl-2@alebairos` |
 | Reviewed `wi-i5-math-3` | `rev-1@alebairos` (passed attempt 3) |
 
-Product checks: not recorded yet.
+Product checks:
+
+- `tests/functions/math/checks/b1_aggregates.sh`: pass
+- `tests/functions/math/checks/b2_scalars.sh`: pass
+- `tests/functions/math/checks/b3_conditional.sh`: pass
 
 Outcome report: none yet.
 
@@ -139,7 +143,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 53 min so far
+- Lead time: 26 h 55 min so far
 - Loops: 4 (D2 plan 1, D6 landing 3)
 - Waste: 37 min
 - Size: 477 lines (+472 −5, 3 files, 401–1,000; tests 0 lines); plan check files laid over by land, not in the size: +273 −0, 4 files
