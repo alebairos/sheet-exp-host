@@ -4,7 +4,7 @@
 
 > VLOOKUP, INDEX and MATCH compute as in Calc, exact and approximate, with #N/A and #REF! where Calc gives them
 
-Kind: Feature · State: awaiting the verdict · 2 work items · 2 bullets
+Kind: Feature · State: Met · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -87,13 +87,18 @@ Status: landed (`01a3fd67215e`)
 | Reviewed `wi-i7-lookup-1` | `rev-1@alebairos` (passed attempt 1) |
 | Implemented `wi-i7-lookup-2` | `impl-1@alebairos`, `impl-2@alebairos` |
 | Reviewed `wi-i7-lookup-2` | `rev-1@alebairos` (passed attempt 2) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
 - `tests/functions/lookup/checks/b1_vlookup.sh`: pass
 - `tests/functions/lookup/checks/b2_index_match.sh`: pass
 
-Outcome report: none yet.
+Outcome report:
+
+- **Built:** VLOOKUP, INDEX and MATCH landed in src/functions/lookup as a FUNCTIONS dict for i0/i3 discovery. VLOOKUP supports exact (0/FALSE) and sorted approximate (1/TRUE/default); bad column index maps Calc Err:502 to #VALUE!. INDEX returns #REF! for out-of-range positions and #VALUE! for row/col 0; MATCH types 0 and 1 match Calc. Exact text-vs-number keys are #N/A per clarification (no arithmetic coercion in lookup compare). wi-i7-lookup-1 landed attempt 1 (oid d86b3a8); wi-i7-lookup-2 landed attempt 2 (oid 01a3fd6) after a land retry. Product checks b1 and b2 both pass.
+- **Advice:** Adopt. Follow up if Excel parity is ever needed — the plan preferred LibreOffice defaults where they differ. Watch that later lookup helpers stay out of src/eval and keep the #VALUE!/#REF! split for VLOOKUP vs INDEX.
+- No media: Library functions with no screen; expected values live in tests/functions/lookup/checks/b*.sh
 
 Files landed by `wi-i7-lookup-1`:
 
@@ -114,7 +119,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 27 h 06 min so far
+- Lead time: 27 h 07 min
 - Loops: 4 (D1 spec 1, D2 plan 2, D6 landing 1)
 - Waste: 20 min
 - Size: 219 lines (+216 −3, 2 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +182 −0, 3 files

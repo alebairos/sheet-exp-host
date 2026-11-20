@@ -30,7 +30,15 @@ Most value first: the missing piece is on the page, not in the parts. Today web/
 
 Puts the formula bar above the grid on the app page (web/io/index.html) so you can see and edit a cell's formula and its error, and adds a headless-browser test that opens a workbook, edits a formula, sees #DIV/0!, fixes it and saves, so ./test.sh guards the whole UI.
 
-Status: attempt 2 in work by `impl-a1@alebairos`
+Status: landing (`fa207f2b6389`)
+
+**The passing review noted:** > PASS (attempt 2), wi-a-r2-ui-1 @ fd125ae (plan fcfcc8d). It already contains current exp-a main (e2731, which has a-r1-engine).
+> - Attempt 1's blocking finding is fixed (web/io/index.html:61-78). onCommit now puts the bar's committed value into controller.state.book as is, then recomputes through the page's own compute, with a "Could not compute" message on error, the same way io.js does it. It no longer re-enters the value as grid text.
+> - Reproduced again with my attempt-1 probe in Chromium, real clicks and keys: Enter on '007 keeps A1 the text "007" (ISTEXT TRUE), typing '42 stores the text "42", and Save JSON writes {"A1":"007","A2":"42",...}. Attempt 1 gave 7 and 42.
+> - The product test guards it now: tests/e2e/ui/walkthrough.mjs:97-112 (step 6) opens a text workbook, presses Enter on '007, types '42 and checks the saved JSON.
+> - ac-r2-b1 (b1): tests/e2e/ui/checks/a_r2_b1_walkthrough.sh prints "ok walk-through ... ok". ./test.sh runs 67 tests, all OK, and the browser test runs, not skipped. On base (fcfcc8d) the check was red, as reported on attempt 1.
+> - Scope: the diff since attempt 1 touches only web/io/index.html and tests/e2e/ui/walkthrough.mjs, both in scope. The parts are untouched.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -55,11 +63,13 @@ Status: attempt 2 in work by `impl-a1@alebairos`
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-r2-ui-1` | `impl-a1@alebairos`, `impl-a2@alebairos` |
-| Reviewed `wi-a-r2-ui-1` | `rev-a@alebairos` |
+| Reviewed `wi-a-r2-ui-1` | `rev-a@alebairos` (passed attempt 2) |
 
 Product checks: not recorded yet.
 
 Outcome report: none yet.
+
+Landing pull request: [exp-a #19](https://github.com/alebairos/sheet-exp-a/pull/19)
 
 ## 7. The decision
 
@@ -67,7 +77,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 25 h 28 min so far
+- Lead time: 25 h 34 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 7 min
 - Size: nothing landed yet
