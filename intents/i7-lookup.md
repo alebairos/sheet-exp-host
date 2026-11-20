@@ -26,7 +26,7 @@ Implement VLOOKUP, INDEX and MATCH in src/functions/lookup as a FUNCTIONS dict f
 
 Add VLOOKUP with exact and sorted approximate match, #N/A on miss, and #VALUE! for a bad column index as in Calc.
 
-Status: landing (`d86b3a8c556a`)
+Status: landed (`d86b3a8c556a`)
 
 **The passing review noted:** > pass review of wi-i7-lookup-1 @ ec6a1e9 (attempt 1). Covers ac-b1 only.
 > 
@@ -66,7 +66,7 @@ Status: queued to land
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | VLOOKUP exact and sorted approximate match Calc | no landed check |
+| not yet | b1 | VLOOKUP exact and sorted approximate match Calc | `tests/functions/lookup/checks/b1_vlookup.sh` — |
 | not yet | b2 | INDEX and MATCH (types 0 and 1) match Calc, errors included | no landed check |
 
 ## 5. Out of scope and risks
@@ -90,6 +90,13 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-i7-lookup-1`:
+
+- `src/functions/lookup/__init__.py` +118 −0
+- `tests/functions/lookup/checks/b2_index_match.sh` +91 −0 (plan check)
+- `tests/functions/lookup/checks/b1_vlookup.sh` +90 −0 (plan check)
+- `tests/functions/lookup/__init__.py` +1 −0 (plan check)
+
 Landing pull request: [exp-b #15](https://github.com/alebairos/sheet-exp-b/pull/15)
 
 ## 7. The decision
@@ -98,7 +105,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 44 min so far
+- Lead time: 26 h 47 min so far
 - Loops: 3 (D1 spec 1, D2 plan 2)
 - Waste: 9 min
-- Size: nothing landed yet
+- Size: 118 lines (+118 −0, 1 file, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +182 −0, 3 files

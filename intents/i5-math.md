@@ -66,17 +66,17 @@ Status: landed (`2d91c4ead6e9`)
 
 Add SUMIF, COUNTIF and AVERAGEIF matching Calc criteria (comparisons, text, wildcards).
 
-Status: accepted
+Status: queued to land
 
-**The passing review noted:** > pass review of wi-i5-math-3 @ 9ed4796 (attempt 2). Covers ac-b3 only.
+**The passing review noted:** > pass review of wi-i5-math-3 @ f7cdd90 (attempt 3). Covers ac-b3 only.
 > 
-> verify: tests/functions/math/checks/b3_conditional.sh EXIT 0 (ok b3), run against WI tip.
+> verify: tests/functions/math/checks/b3_conditional.sh EXIT 0 (ok b3). Spot-check b1_aggregates.sh and b2_scalars.sh EXIT 0 on tip after rebuild onto landed scalars.
 > 
-> ac-b3 / b3 (SUMIF COUNTIF AVERAGEIF match Calc's criteria): check green. Criteria parse/match in src/functions/math/__init__.py: wildcards (:162-179), parse (:182-211), numeric/text dual-equality (:231-245); COUNTIF via _count_matched (:317-318, :332). SUMIF/AVERAGEIF optional sum_range via _matched/:_conditional (:248-314, :331-333). Empty AVERAGEIF → DIV0 in _average_of (:295-301). FUNCTIONS keeps landed aggregates and adds the three criteria names (:321-333).
+> ac-b3 / b3 (SUMIF COUNTIF AVERAGEIF match Calc's criteria): check green. Criteria helpers and the three callables appended on the landed aggregates+scalars FUNCTIONS table in src/functions/math/__init__.py. Registry exposes all twenty math names plus criteria.
 > 
-> land-retry: attempt 1 was conditionals-only and conflicted after aggregates landed. Attempt 2 merges main and combines FUNCTIONS so aggregates + criteria coexist — addresses the land failure.
+> land-retry: attempt 2 still conflicted with scalars land; attempt 3 rebuilds on main keeping aggregates+scalars while adding criteria — addresses the land failure. last_diff is additive on the shared file.
 > 
-> scope: machine last_diff is src/functions/math/__init__.py (in path_scope). Merge commit also pulls already-landed main paths (logic_text, recalc, checks) as parents of the merge — not new WI authorship; flagged for land awareness only.
+> scope: last_diff src/functions/math/__init__.py in path_scope. No outside-scope paths.
 > 
 > No blocking findings.
 
@@ -108,8 +108,8 @@ Status: accepted
 | Reviewed `wi-i5-math-1` | `rev-1@alebairos` (passed attempt 1) |
 | Implemented `wi-i5-math-2` | `impl-1@alebairos` |
 | Reviewed `wi-i5-math-2` | `rev-1@alebairos` (passed attempt 2) |
-| Implemented `wi-i5-math-3` | `impl-2@alebairos` |
-| Reviewed `wi-i5-math-3` | `rev-1@alebairos` (passed attempt 2) |
+| Implemented `wi-i5-math-3` | `impl-1@alebairos`, `impl-2@alebairos` |
+| Reviewed `wi-i5-math-3` | `rev-1@alebairos` (passed attempt 3) |
 
 Product checks: not recorded yet.
 
@@ -135,7 +135,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 26 h 44 min so far
+- Lead time: 26 h 47 min so far
 - Loops: 4 (D2 plan 1, D6 landing 3)
-- Waste: 36 min
+- Waste: 37 min
 - Size: 274 lines (+271 −3, 2 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +273 −0, 4 files

@@ -40,7 +40,7 @@ Status: landed (`59e3019a2b6b`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b1` | b1 | `tests/functions/logic_text/checks/b1_logic.sh` | red | — |
+| `ac-b1` | b1 | `tests/functions/logic_text/checks/b1_logic.sh` | red | pass |
 
 ### `wi-i6-logic-text-2`: Text functions
 
@@ -62,14 +62,14 @@ Status: landed (`6b84f2c990f5`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-b2` | b2 | `tests/functions/logic_text/checks/b2_text.sh` | red | — |
+| `ac-b2` | b2 | `tests/functions/logic_text/checks/b2_text.sh` | red | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT, ISERROR match Calc | `tests/functions/logic_text/checks/b1_logic.sh` — |
-| not yet | b2 | CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER, TRIM match Calc, coercion and errors included | `tests/functions/logic_text/checks/b2_text.sh` — |
+| PASS | b1 | IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT, ISERROR match Calc | `tests/functions/logic_text/checks/b1_logic.sh` pass |
+| PASS | b2 | CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER, TRIM match Calc, coercion and errors included | `tests/functions/logic_text/checks/b2_text.sh` pass |
 
 ## 5. Out of scope and risks
 
@@ -88,9 +88,16 @@ Status: landed (`6b84f2c990f5`)
 | Implemented `wi-i6-logic-text-2` | `impl-1@alebairos`, `impl-2@alebairos` |
 | Reviewed `wi-i6-logic-text-2` | `rev-1@alebairos` (passed attempt 2) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/functions/logic_text/checks/b1_logic.sh`: pass
+- `tests/functions/logic_text/checks/b2_text.sh`: pass
+
+Outcome report:
+
+- **Built:** Logic and text functions landed on exp-b as planned in src/functions/logic_text. The nine logic/information names (IF, IFERROR, AND, OR, NOT, ISBLANK, ISNUMBER, ISTEXT, ISERROR) and eight text names (CONCATENATE, LEFT, RIGHT, MID, LEN, UPPER, LOWER, TRIM) register in one FUNCTIONS dict for i0/i3 discovery. Conditions go through to_bool so text yields #VALUE!; IFERROR sees Error Values; ISNUMBER accepts Bool per the clarification (Calc treats booleans as 1/0). Text helpers coerce via to_text and TRIM collapses internal ASCII space like Calc. wi-i6-logic-text-1 landed on attempt 1 (oid 59e3019); wi-i6-logic-text-2 needed a land-retry (attempt 2, oid 6b84f2c) after a text-only tip conflicted with the landed logic — rebuild kept both sets. Review verify passed b1 and b2 on the WI tips.
+- **Advice:** Adopt. Follow up if product checks are still unrecorded after this landing finishes its check pass — both bullets were green in review but the board had not yet stamped product_checks. Watch that later function packs merge into the same module without dropping the logic set the way attempt 1 of the text WI did.
+- No media: Library functions with no screen; expected values live in tests/functions/logic_text/checks/b*.sh
 
 Files landed by `wi-i6-logic-text-1`:
 
@@ -108,11 +115,15 @@ Landing pull request: [exp-b #14](https://github.com/alebairos/sheet-exp-b/pull/
 
 ## 7. The decision
 
-Nothing waits on you.
+**Verdict:i6-logic-text**: A decision: show your human its options
+
+- Met: `cooknship decide --answer Verdict:i6-logic-text --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:i6-logic-text --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:i6-logic-text --option not_met`
 
 ## 8. Metrics
 
-- Lead time: 26 h 44 min so far
+- Lead time: 26 h 47 min so far
 - Loops: 4 (D1 spec 1, D2 plan 2, D6 landing 1)
 - Waste: 18 min
 - Size: 222 lines (+220 −2, 2 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +216 −0, 4 files

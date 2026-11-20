@@ -4,7 +4,7 @@
 
 > The engine computes whole workbooks end to end through the CLI: formulas, functions and recalculation together
 
-Kind: Feature · State: awaiting the verdict · 1 work item · 2 bullets
+Kind: Feature · State: Met · 1 work item · 2 bullets
 
 ## 2. What you will see
 
@@ -65,13 +65,24 @@ Status: landed (`19f721db9d31`)
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-r1-engine-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-r1-engine-1` | `rev-a@alebairos` (passed attempt 2) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
 - `tests/e2e/engine/checks/a_r1_b1_workbooks.sh`: pass
 - `tests/e2e/engine/checks/a_r1_b2_chain.sh`: pass
 
-Outcome report: none yet.
+Outcome report:
+
+- **Built:** The engine now has its own end-to-end test suite: two whole workbooks run through ./engine and compared cell by cell with LibreOffice Calc's answers (534 cells, 0 mismatches). One is a three-sheet workbook using all 40 functions with references across sheets both ways; the other has 100-formula chains where a #DIV/0! and a #N/A flow to the end and a bottom-up chain still computes in order. It is in the product (exp-a PR #18, main e2e7731) under tests/e2e/engine, so ./test.sh now guards the engine as a whole: both checks print ok and all 66 tests pass on main. As planned, no engine code changed: the engine already matched Calc. It left the plan in nothing; the work item needed a second attempt only because GitHub failed to write the push on the first, not because of the code.
+- **Advice:** Adopt. Follow up: these two workbooks are the only whole-workbook coverage; adding a few more from the hidden suite's shape (dates, larger ranges) would widen it. Watch: the e2e answers are frozen Calc output, so if Calc-specific error names (Err:502/504) are ever changed to xlsx names, these expected files change with them.
+- [a-r1-engine/README.md](https://github.com/alebairos/sheet-exp-host/blob/dfc9676dcbc1e329eba6382b5dd8cc239fb13049/a-r1-engine/README.md)
+- [a-r1-engine/calc-answers.md](https://github.com/alebairos/sheet-exp-host/blob/dfc9676dcbc1e329eba6382b5dd8cc239fb13049/a-r1-engine/calc-answers.md)
+- [a-r1-engine/books.json](https://github.com/alebairos/sheet-exp-host/blob/dfc9676dcbc1e329eba6382b5dd8cc239fb13049/a-r1-engine/books.json)
+- [a-r1-engine/calc.json](https://github.com/alebairos/sheet-exp-host/blob/dfc9676dcbc1e329eba6382b5dd8cc239fb13049/a-r1-engine/calc.json)
+- [a-r1-engine/books.py](https://github.com/alebairos/sheet-exp-host/blob/dfc9676dcbc1e329eba6382b5dd8cc239fb13049/a-r1-engine/books.py)
+- [a-r1-engine/bookprobe.py](https://github.com/alebairos/sheet-exp-host/blob/dfc9676dcbc1e329eba6382b5dd8cc239fb13049/a-r1-engine/bookprobe.py)
+- [a-r1-engine/gencheck.py](https://github.com/alebairos/sheet-exp-host/blob/dfc9676dcbc1e329eba6382b5dd8cc239fb13049/a-r1-engine/gencheck.py)
 
 Files landed by `wi-a-r1-engine-1`:
 
@@ -99,7 +110,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 25 h 05 min so far
+- Lead time: 25 h 08 min
 - Loops: 5 (D1 spec 1, D2 plan 3, D6 landing 1)
 - Waste: 34 min
 - Size: 0 lines (+0 −0, 7 files, ≤400; tests 99 lines); plan check files laid over by land, not in the size: +219 −0, 8 files
