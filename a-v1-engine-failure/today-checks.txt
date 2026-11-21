@@ -1,0 +1,2 @@
+FAIL ./engine exited 1: ['RecursionError: maximum recursion depth exceeded']
+FAIL a failing compute dropped the request (RemoteDisconnected: Remote end closed connection without response), wanted an HTTP error status with a message

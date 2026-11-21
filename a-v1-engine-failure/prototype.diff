@@ -1,0 +1,71 @@
+diff --git i/src/eval/__init__.py w/src/eval/__init__.py
+index c65fa18..792071e 100644
+--- i/src/eval/__init__.py
++++ w/src/eval/__init__.py
+@@ -225,9 +225,16 @@ def _eval(node, book, sheet):
+         v = to_number(_scalar(_eval(node.operand, book, sheet)))
+         return v if isinstance(v, Error) else _num(v.value / 100.0)
+     if isinstance(node, p.Binary):
+-        left = _scalar(_eval(node.left, book, sheet))
+-        right = _scalar(_eval(node.right, book, sheet))
+-        return _binary(node.op, left, right)
++        # A long chain such as =1+1+...+1 is a left-deep tree: walk its left spine with a loop, then fold
++        # left to right (Calc's order), so its length is not limited by Python's recursion.
++        spine = []
++        while isinstance(node, p.Binary):
++            spine.append(node)
++            node = node.left
++        acc = _scalar(_eval(node, book, sheet))
++        for b in reversed(spine):
++            acc = _binary(b.op, acc, _scalar(_eval(b.right, book, sheet)))
++        return acc
+     return VALUE
+ 
+ 
+diff --git i/src/parser/parse.py w/src/parser/parse.py
+index 9f69e59..d44910b 100644
+--- i/src/parser/parse.py
++++ w/src/parser/parse.py
+@@ -263,6 +263,9 @@ class _Parser:
+             return tuple(args)
+ 
+ 
++MAX_TOKENS = 8192
++
++
+ def parse(formula):
+     """Parse a cell formula such as '=SUM(A1:A3)*2' into a tree.
+ 
+@@ -274,10 +277,14 @@ def parse(formula):
+     if not body.startswith("="):
+         raise ParseError("a formula starts with '='")
+     try:
+-        p = _Parser(tokenize(body[1:]))
++        toks = tokenize(body[1:])
++        p = _Parser(toks)
+         node = p.expr()
+         if p.tok.kind != "end":
+             p.fail()
++        # Calc refuses a formula of more than 8192 tokens with Err:512 (formula overflow).
++        if sum(1 for t in toks if t.kind != "end") > MAX_TOKENS:
++            return Error("Err:512")
+         return node
+     except RecursionError:
+         raise ParseError("formula nested too deeply") from None
+diff --git i/web/io/serve.py w/web/io/serve.py
+index cd76762..ccf38c8 100644
+--- i/web/io/serve.py
++++ w/web/io/serve.py
+@@ -40,7 +40,11 @@ class Handler(http.server.SimpleHTTPRequestHandler):
+         except (ValueError, UnicodeDecodeError) as e:
+             self.send_error(400, "not a JSON workbook: %s" % e)
+             return
+-        body = json.dumps(compute(book)).encode("utf-8")
++        try:
++            body = json.dumps(compute(book)).encode("utf-8")
++        except Exception as e:  # the engine failed: say so, and keep serving
++            self.send_error(500, "could not compute: %s: %s" % (type(e).__name__, e))
++            return
+         self.send_response(200)
+         self.send_header("Content-Type", "application/json")
+         self.send_header("Content-Length", str(len(body)))

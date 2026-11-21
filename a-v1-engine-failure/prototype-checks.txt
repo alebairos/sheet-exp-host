@@ -1,0 +1,3 @@
+ok b1: long formulas give Calc's values or Err:512, every other cell computes
+ok b2 serve: a compute failure answers an HTTP error with its message, and the server keeps computing
+ok b2 page: long formulas compute (1000, Err:512) and later edits keep computing (21, 28)
