@@ -1,0 +1,1 @@
+ok b2: self-references through untaken branches match LibreOffice on 20 formulas
