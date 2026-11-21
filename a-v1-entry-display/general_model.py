@@ -1,16 +1,23 @@
 import json, math
 from decimal import Decimal
-d = json.load(open("tests/e2e/ui/checks/a_v1_ed_calc.json"))
+import sys
+d = json.load(open(sys.argv[1] if len(sys.argv) > 1 else "tests/e2e/ui/checks/a_v1_ed_calc.json"))
 W = {**{c: 5.56 for c in "0123456789"}, ".": 2.78, "-": 3.33, "E": 6.67, "+": 5.84}
 BUDGET = 62.0
 width = lambda s: sum(W[c] for c in s)
 sig = lambda s: len(s.split("E")[0].replace("-", "").replace(".", "").lstrip("0"))
+from decimal import ROUND_HALF_UP, getcontext
+getcontext().prec = 60
+def half_up(x, k):
+    return Decimal(f"{x:.15g}").quantize(Decimal(1).scaleb(-k), rounding=ROUND_HALF_UP)
 def dec(x, k):
-    t = format(Decimal(repr(round(x, k))), "f") if k else str(int(round(x)))
+    t = format(half_up(x, k), "f")
     if "." in t: t = t.rstrip("0").rstrip(".")
     return t
 def sci(x, k, three):
-    m, ex = f"{x:.{k}e}".split("e"); ex = int(ex)
+    q = Decimal(f"{x:.15g}"); ex = q.adjusted(); m = (q.scaleb(-ex)).quantize(Decimal(1).scaleb(-k), rounding=ROUND_HALF_UP)
+    if abs(m) >= 10: m = (m / 10).quantize(Decimal(1).scaleb(-k), rounding=ROUND_HALF_UP); ex += 1
+    m = format(m, "f")
     if "." in m: m = m.rstrip("0").rstrip(".")
     return f"{m}E{'+' if ex >= 0 else '-'}{abs(ex):0{3 if three else 2}d}"
 def fit(x):
