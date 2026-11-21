@@ -1,0 +1,278 @@
+diff --git a/src/eval/__init__.py b/src/eval/__init__.py
+index 1019c14..5bfe989 100644
+--- a/src/eval/__init__.py
++++ b/src/eval/__init__.py
+@@ -42,6 +42,7 @@ from src.values import (
+     Number,
+     Text,
+     Value,
++    TEXT_TIE,
+     compare,
+     from_json,
+     to_number,
+@@ -186,7 +187,7 @@ def _concat_text(v):
+ 
+ 
+ _COMPARE = {
+-    "=": lambda c: c == 0, "<>": lambda c: c != 0,
++    "=": lambda c: c == 0 and c is not TEXT_TIE, "<>": lambda c: c != 0 or c is TEXT_TIE,
+     "<": lambda c: c < 0, ">": lambda c: c > 0,
+     "<=": lambda c: c <= 0, ">=": lambda c: c >= 0,
+ }
+diff --git a/src/values/__init__.py b/src/values/__init__.py
+index 06af60b..0e9c85a 100644
+--- a/src/values/__init__.py
++++ b/src/values/__init__.py
+@@ -8,6 +8,8 @@ and the six errors. ``from_json``/``to_json`` map workbook cells both ways;
+ import math
+ import re
+ 
++from .text_rules import collation_key, parse_number
++
+ __all__ = [
+     "Number", "Text", "Bool", "Blank", "BLANK", "Error", "ERROR_CODES",
+     "DIV0", "VALUE", "REF", "NAME", "NA", "NUM",
+@@ -166,10 +168,6 @@ def to_json(v):
+ 
+ # --- coercion --------------------------------------------------------------
+ 
+-# Calc's default "unambiguous" text-to-number conversion: a signed decimal with
+-# an optional exponent, nothing around it.
+-_NUMBER_TEXT = re.compile(r"[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?")
+-
+ 
+ def to_number(v):
+     """The operand of an arithmetic operator: a Number or an Error."""
+@@ -182,10 +180,8 @@ def to_number(v):
+     if isinstance(v, Error):
+         return v
+     if isinstance(v, Text):
+-        if _NUMBER_TEXT.fullmatch(v.value):
+-            x = float(v.value)
+-            return Number(x) if math.isfinite(x) else NUM
+-        return VALUE
++        x = parse_number(v.value)
++        return VALUE if x is None else Number(x)
+     return VALUE
+ 
+ 
+@@ -245,6 +241,10 @@ def _sign(a, b):
+     return (a > b) - (a < b)
+ 
+ 
++# compare()'s answer for different texts that sort equal (<= and >= hold, = does not).
++TEXT_TIE = 0.0
++
++
+ def compare(a, b):
+     """Compare two values as Calc's = <> < > <= >= do: -1, 0, 1 or an Error."""
+     if isinstance(a, Error):
+@@ -261,7 +261,11 @@ def compare(a, b):
+     if ra != rb:
+         return _sign(ra, rb)
+     if ra == 1:
+-        return _sign(a.value.casefold(), b.value.casefold())
++        if a.value == b.value:
++            return 0
++        # Calc sorts text by its collation, but = and <> compare text exactly: two different
++        # strings that sort equal are neither = nor < nor >; TEXT_TIE marks that for the operators.
++        return _sign(collation_key(a.value), collation_key(b.value)) or TEXT_TIE
+     x = 1.0 if a.value is True else 0.0 if a.value is False else a.value
+     y = 1.0 if b.value is True else 0.0 if b.value is False else b.value
+     return _sign(x, y)
+diff --git a/src/values/text_rules.py b/src/values/text_rules.py
+new file mode 100644
+index 0000000..b722cbb
+--- /dev/null
++++ b/src/values/text_rules.py
+@@ -0,0 +1,100 @@
++"""Calc's text rules (LibreOffice defaults, en-US): how text sorts and how text reads as a number.
++
++``collation_key(s)``: the key = <> < > <= >= order text by: letters first (a..z, then þ), then accents
++(e < é < è < ê < ë < f), then case (lower before upper), as a new Calc document does (case-sensitive,
++locale collation). Control characters (tab) sort first, then punctuation, symbols and digits in Calc's
++order, then letters. Format characters (soft hyphen) are ignored, so two different strings can sort
++equal (é and e + combining acute): = and <> still compare text exactly, as Calc does.
++
++``parse_number(s)``: the number Calc reads from text in arithmetic, or None. Spaces (and no-break spaces)
++around and between the parts; one number (ASCII digits, ',' grouping by threes, '.', an exponent); at most one sign, before
++or after; one '$' before or after; '(' ')' around it for a negative; one '%' at the end; no '$' with
++'%', no '$' or '%' with an exponent; TRUE and FALSE in any case. Dates, times and fractions are not read.
++"""
++import re
++import unicodedata
++
++# Primary order of punctuation, symbols and digits as Calc sorts them, then the letters.
++_SYMBOLS = " _-,;:!¡?¿.·'\"«»()[]{}§@*/\\&#%`´^¯¨¸°©®+±÷×<=>¬|¦~¤¢$£¥€⁄"
++_PRIMARY = {c: i + 1 for i, c in enumerate(_SYMBOLS + "0123456789" + "abcdefghijklmnopqrstuvwxyzþ")}
++# Accent order after "no accent" (1): acute grave breve circumflex caron ring diaeresis
++# double-acute tilde dot-above cedilla ogonek macron.
++_ACCENT = {m: i + 2 for i, m in enumerate("̧̨́̀̆̂̌̊̈̋̃̇̄")}
++_STROKE, _LIG, _ETH, _SZ = 40, 41, 42, 43
++_SPECIAL = {"ø": ("o", _STROKE), "ð": ("d", _ETH), "æ": ("a", _LIG, "e"), "œ": ("o", _LIG, "e"), "ß": ("s", _SZ, "s")}
++_VARIANTS = {"ª": "a", "º": "o", "¹": "1", "²": "2", "³": "3", "½": "1⁄2", "¼": "1⁄4", "¾": "3⁄4", "µ": "μ", " ": " "}
++
++
++def _elements(s, variant=False):
++    """(primary, secondary, tertiary) per collation element; tertiary 1 lower, 2 upper, 3 a variant."""
++    out = []
++    for ch in s:
++        cat = unicodedata.category(ch)
++        if cat == "Cf":
++            continue
++        if cat == "Cc":
++            out.append((ord(ch) - 1000, 1, 1))  # before the space
++            continue
++        if cat == "Mn":  # a combining accent: on the letter before it
++            out.append((0, _ACCENT.get(ch, 30 + ord(ch) % 1000), 1))
++            continue
++        if ch in _VARIANTS:
++            out += _elements(_VARIANTS[ch], True)
++            continue
++        low = ch.lower()
++        t = 3 if variant else 2 if ch != low else 1
++        if low in _SPECIAL:
++            out += [(0, p, 1) if isinstance(p, int) else (_PRIMARY[p], 1, t) for p in _SPECIAL[low]]
++            continue
++        d = unicodedata.normalize("NFD", low)
++        out.append((_PRIMARY.get(d[0], 1000 + ord(d[0])), 1, t))  # other scripts: after Latin
++        out += [(0, _ACCENT.get(m, 30 + ord(m) % 1000), 1) for m in d[1:]]
++    return out
++
++
++def collation_key(s):
++    e = _elements(s)
++    return ([x[0] for x in e if x[0]], [x[1] for x in e], [x[2] for x in e])
++
++
++_TOKEN = re.compile(r" *(?:(?P<num>[0-9]{1,3}(?:,[0-9]{3})+(?:\.[0-9]*)?|[0-9]+(?:\.[0-9]*)?|\.[0-9]+)"
++                    r"(?: *[eE] *(?P<exp>[-+]?[0-9]+))?|(?P<sym>[-+$()%]))")
++_LARGEST = 1.7976931348623157e308
++
++
++def parse_number(s):
++    b = s.strip(" ")
++    if b.upper() in ("TRUE", "FALSE"):
++        return 1.0 if b.upper() == "TRUE" else 0.0
++    t = s.replace("\u00a0", " ").strip(" ")  # a no-break space separates parts like a space
++    toks, pos, num = [], 0, None
++    while pos < len(t):
++        m = _TOKEN.match(t, pos)
++        if not m or m.end() == pos:
++            return None
++        pos = m.end()
++        if m["num"] is not None:
++            if num is not None:
++                return None
++            num = m
++            toks.append("N")
++        else:
++            toks.append(m["sym"])
++    if num is None:
++        return None
++    if any(toks.count(c) > 1 for c in "$%()") or toks.count("+") + toks.count("-") > 1:
++        return None
++    if "%" in toks and (toks[-1] != "%" or "$" in toks):
++        return None
++    if num["exp"] and ("%" in toks or "$" in toks):
++        return None
++    n = toks.index("N")
++    if "(" in toks or ")" in toks:
++        if "(" not in toks[:n] or ")" not in toks[n:] or "+" in toks or "-" in toks:
++            return None
++    x = float(num["num"].replace(",", "") + ("e" + num["exp"] if num["exp"] else ""))
++    if x > _LARGEST:
++        return _LARGEST  # Calc gives its largest number, without the sign
++    if "-" in toks or "(" in toks:
++        x = -x
++    return x / 100 if "%" in toks else x
+diff --git a/tests/values/test_text_rules.py b/tests/values/test_text_rules.py
+new file mode 100644
+index 0000000..ce276fa
+--- /dev/null
++++ b/tests/values/test_text_rules.py
+@@ -0,0 +1,60 @@
++"""Calc's text rules through the evaluator: text order (case, accents, punctuation) and text read as a number.
++
++Expected values from LibreOffice Calc 26.8.1.1 (plan a-v1-text-rules' probe), including the gate review's corners.
++"""
++import unittest
++
++from src.eval import evaluate
++from src.values import Bool, Error, Number
++
++BOOK = {"sheets": {"Sheet1": {}}}
++
++
++def ev(f):
++    return evaluate(f, BOOK, "Sheet1")
++
++
++class TextOrderTest(unittest.TestCase):
++    def test_case_sensitive_lower_first(self):
++        for f, want in [('="a"="A"', False), ('="a"<"A"', True), ('="A"<"b"', True), ('="abc"<"ABC"', True),
++                        ('="Ab"<"aB"', False), ('="aB"<"Ab"', True), ('="a"<>"A"', True)]:
++            self.assertEqual(ev(f), Bool(want), f)
++
++    def test_accents_after_letters(self):
++        for f, want in [('="é">"f"', False), ('="e"<"é"', True), ('="E"<"é"', True), ('="é"<"É"', True),
++                        ('="Zürich"<"Zuse"', True), ('="ñ"<"o"', True), ('="ä"<"b"', True)]:
++            self.assertEqual(ev(f), Bool(want), f)
++
++    def test_punctuation_digits_and_specials(self):
++        for f, want in [('="a-b"<"ab"', True), ('="-"<"a"', True), ('="10"<"9"', True), ('="!"<"1"', True),
++                        ('="ß">"ss"', True), ('="Strasse"<"straße"', True), ('="æ">"ae"', True), ('="æ"<"af"', True),
++                        ('="þ">"z"', True), ('="a"<"a "', True)]:
++            self.assertEqual(ev(f), Bool(want), f)
++
++    def test_equal_is_exact(self):
++        e_acute = "é"
++        self.assertEqual(ev('="%s"="é"' % e_acute), Bool(False))
++        self.assertEqual(ev('="%s"<="é"' % e_acute), Bool(True))
++        self.assertEqual(ev('="%s">="é"' % e_acute), Bool(True))
++
++
++class TextNumberTest(unittest.TestCase):
++    def test_read_as_numbers(self):
++        for t, x in [(" 5 ", 5), ("TRUE", 1), ("false", 0), ("$5", 5), ("5$", 5), ("-$5", -5), ("($5)", -5),
++                     ("(5)", -5), ("5-", -5), ("1,000", 1000), ("1,234.5", 1234.5), ("$1,000.50", 1000.5),
++                     ("50%", 0.5), ("5 %", 0.05), ("(5)%", -0.05), ("1,000e3", 1e6), ("1 e3", 1000), ("00,123", 123),
++                     ("1E400", 1.7976931348623157e308), ("-1e309", 1.7976931348623157e308), ("5 %", 0.05)]:
++            self.assertEqual(ev('="%s"+0' % t), Number(x), t)
++
++    def test_stay_value_errors(self):
++        for t in ["1 000", "1,00", "12,34", "1.000,5", "€5", "--5", "5%%", "%5", "1.5e2%", "1e3%", "$5%", "2e3$",
++                  "(-5)", "-(5)", "(50%)", "-5-", "$$5", "TRUE1", "-TRUE", "\t5", " TRUE", "yes", ""]:
++            self.assertEqual(ev('="%s"+0' % t), Error("#VALUE!"), repr(t))
++
++    def test_functions_read_numbers_the_same_way(self):
++        for f, x in [('=ROUND("(5)",0)', -5), ('=ABS("$5")', 5), ('=COUNT("1,000")', 1), ('=INT("50%")', 0)]:
++            self.assertEqual(ev(f), Number(x), f)
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/tests/values/test_values.py b/tests/values/test_values.py
+index 37c1fa7..1e72646 100644
+--- a/tests/values/test_values.py
++++ b/tests/values/test_values.py
+@@ -45,7 +45,9 @@ class ToNumberTest(unittest.TestCase):
+         for s, x in [("12", 12), ("-2.5", -2.5), ("+4", 4), ("1E3", 1000), (".5", 0.5),
+                      ("5.", 5), ("1e-2", 0.01)]:
+             self.assertEqual(to_number(Text(s)), Number(x), s)
+-        for s in ["abc", "", " 12", "12 ", "TRUE", "inf", "nan", "1_000", "1,5", "0x10"]:
++        for s, x in [(" 12", 12), ("12 ", 12), ("TRUE", 1), ("$5", 5), ("1,000", 1000), ("50%", 0.5)]:
++            self.assertEqual(to_number(Text(s)), Number(x), s)  # as Calc reads them
++        for s in ["abc", "", "inf", "nan", "1_000", "1,5", "0x10"]:
+             self.assertEqual(to_number(Text(s)), VALUE, s)
+ 
+     def test_error_passes(self):
+@@ -81,7 +83,7 @@ class CompareTest(unittest.TestCase):
+         self.assertEqual(compare(Number(1), Number(2)), -1)
+         self.assertEqual(compare(Number(1), Text("1")), -1)
+         self.assertEqual(compare(Text("1"), Number(1)), 1)
+-        self.assertEqual(compare(Text("a"), Text("A")), 0)
++        self.assertEqual(compare(Text("a"), Text("A")), -1)  # Calc: case-sensitive, lower first
+         self.assertEqual(compare(Text("B"), Text("a")), 1)
+ 
+     def test_bools_are_numbers(self):
