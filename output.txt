@@ -1,0 +1,1 @@
+ok b2: text reads as a number as in Calc
