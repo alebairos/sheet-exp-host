@@ -1,0 +1,1 @@
+FAIL double-click then Enter on A3 ("=A1+A2") without typing: the in-cell editor opens: wanted true, the page shows false
