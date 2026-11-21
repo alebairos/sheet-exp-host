@@ -1,0 +1,1 @@
+ok the product's approximate-arithmetic tests run and pass (8)
