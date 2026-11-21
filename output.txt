@@ -1,0 +1,174 @@
+FAIL text ' 5 ': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [5.0, -5.0, 10.0]
+FAIL text 'TRUE': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1.0, -1.0, 2.0]
+FAIL text '$5': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [5.0, -5.0, 10.0]
+FAIL text '1,000': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1000.0, -1000.0, 2000.0]
+FAIL text '50%': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.5, -0.5, 1.0]
+FAIL text 'true': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1.0, -1.0, 2.0]
+FAIL text 'False': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.0, -0.0, 0.0]
+FAIL text 'FALSE': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.0, -0.0, 0.0]
+FAIL text '$ 5': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [5.0, -5.0, 10.0]
+FAIL text '5$': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [5.0, -5.0, 10.0]
+FAIL text '-$5': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-5.0, 5.0, -10.0]
+FAIL text '($5)': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-5.0, 5.0, -10.0]
+FAIL text '(5)': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-5.0, 5.0, -10.0]
+FAIL text 'TRUE ': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1.0, -1.0, 2.0]
+FAIL text '1,234.5': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1234.5, -1234.5, 2469.0]
+FAIL text '50 %': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.5, -0.5, 1.0]
+FAIL text '-5%': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-0.05, 0.05, -0.1]
+FAIL text '$1,000.50': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1000.5, -1000.5, 2001.0]
+FAIL text '5 ': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [5.0, -5.0, 10.0]
+FAIL text '  -5  ': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-5.0, 5.0, -10.0]
+FAIL text '$-5': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-5.0, 5.0, -10.0]
+FAIL text '10%': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.1, -0.1, 0.2]
+FAIL text '+$5': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [5.0, -5.0, 10.0]
+FAIL text '$+5': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [5.0, -5.0, 10.0]
+FAIL text '5-': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-5.0, 5.0, -10.0]
+FAIL text '5+': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [5.0, -5.0, 10.0]
+FAIL text '5 $': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [5.0, -5.0, 10.0]
+FAIL text '1,234,567': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1234567.0, -1234567.0, 2469134.0]
+FAIL text '1,000e3': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1000000.0, -1000000.0, 2000000.0]
+FAIL text '1,000.5%': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [10.005, -10.005, 20.01]
+FAIL text '(5)%': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-0.05, 0.05, -0.1]
+FAIL text ' TRUE': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1.0, -1.0, 2.0]
+FAIL text 'tRuE': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1.0, -1.0, 2.0]
+FAIL text '1E400': +0, -x, *2 give [{'error': '#NUM!'}, {'error': '#NUM!'}, {'error': '#NUM!'}], Calc gives [1.7976931348623157e+308, -1.7976931348623157e+308, {'error': '#NUM!'}]
+FAIL text '0.5%': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.005, -0.005, 0.01]
+FAIL text '$.5': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.5, -0.5, 1.0]
+FAIL text '$1,000': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1000.0, -1000.0, 2000.0]
+FAIL text '5 %': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.05, -0.05, 0.1]
+FAIL text '5 -': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-5.0, 5.0, -10.0]
+FAIL text '- 5': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-5.0, 5.0, -10.0]
+FAIL text '+ 5': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [5.0, -5.0, 10.0]
+FAIL text '$ -5': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-5.0, 5.0, -10.0]
+FAIL text '- $5': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-5.0, 5.0, -10.0]
+FAIL text '( 5 )': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-5.0, 5.0, -10.0]
+FAIL text '(5 )': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-5.0, 5.0, -10.0]
+FAIL text '1,000,000.25': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1000000.25, -1000000.25, 2000000.5]
+FAIL text '00,123': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [123.0, -123.0, 246.0]
+FAIL text '1 e3': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1000.0, -1000.0, 2000.0]
+FAIL text '1e 3': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1000.0, -1000.0, 2000.0]
+FAIL text '$(5)': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-5.0, 5.0, -10.0]
+FAIL text '1,000 ': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1000.0, -1000.0, 2000.0]
+FAIL text '1,234e2': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [123400.0, -123400.0, 246800.0]
+FAIL text '٥': +0, -x, *2 give [5, -5, 10], Calc gives [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}]
+FAIL text '５': +0, -x, *2 give [5, -5, 10], Calc gives [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}]
+FAIL text ' \xa05': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [5.0, -5.0, 10.0]
+FAIL text '5\xa0': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [5.0, -5.0, 10.0]
+FAIL text '\xa05': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [5.0, -5.0, 10.0]
+FAIL text '1,000\xa0': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1000.0, -1000.0, 2000.0]
+FAIL text '$\xa05': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [5.0, -5.0, 10.0]
+FAIL text '5\xa0%': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.05, -0.05, 0.1]
+FAIL text '7%': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.07, -0.07, 0.14]
+FAIL text '-7%': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-0.07, 0.07, -0.14]
+FAIL text '+7%': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.07, -0.07, 0.14]
+FAIL text '7 %': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.07, -0.07, 0.14]
+FAIL text ' 7% ': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.07, -0.07, 0.14]
+FAIL text '$7': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [7.0, -7.0, 14.0]
+FAIL text '7$': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [7.0, -7.0, 14.0]
+FAIL text '-7$': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-7.0, 7.0, -14.0]
+FAIL text '$7-': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-7.0, 7.0, -14.0]
+FAIL text '(7$)': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-7.0, 7.0, -14.0]
+FAIL text '$7 -': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-7.0, 7.0, -14.0]
+FAIL text '- $ 7': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-7.0, 7.0, -14.0]
+FAIL text '$ (7)': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-7.0, 7.0, -14.0]
+FAIL text '( $7 )': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-7.0, 7.0, -14.0]
+FAIL text '7.25$': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [7.25, -7.25, 14.5]
+FAIL text '$0.5': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.5, -0.5, 1.0]
+FAIL text '123,456.789': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [123456.789, -123456.789, 246913.578]
+FAIL text '1,234,567,890': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1234567890.0, -1234567890.0, 2469135780.0]
+FAIL text '9,999e-2': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [99.99, -99.99, 199.98]
+FAIL text '+.5%': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.005, -0.005, 0.01]
+FAIL text '(.5)': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-0.5, 0.5, -1.0]
+FAIL text '(1,000)': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-1000.0, 1000.0, -2000.0]
+FAIL text '(1,000.5)%': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-10.005, 10.005, -20.01]
+FAIL text '1,000-': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-1000.0, 1000.0, -2000.0]
+FAIL text '1,000.-': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-1000.0, 1000.0, -2000.0]
+FAIL text '5.-': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [-5.0, 5.0, -10.0]
+FAIL text '+0%': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.0, -0.0, 0.0]
+FAIL text '0,001': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1.0, -1.0, 2.0]
+FAIL text '2 $': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [2.0, -2.0, 4.0]
+FAIL text '2  $': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [2.0, -2.0, 4.0]
+FAIL text 'true ': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [1.0, -1.0, 2.0]
+FAIL text '  FALSE': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.0, -0.0, 0.0]
+FAIL text 'fAlSe': +0, -x, *2 give [{'error': '#VALUE!'}, {'error': '#VALUE!'}, {'error': '#VALUE!'}], Calc gives [0.0, -0.0, 0.0]
+FAIL text '1e309': +0, -x, *2 give [{'error': '#NUM!'}, {'error': '#NUM!'}, {'error': '#NUM!'}], Calc gives [1.7976931348623157e+308, -1.7976931348623157e+308, {'error': '#NUM!'}]
+FAIL text '-1e309': +0, -x, *2 give [{'error': '#NUM!'}, {'error': '#NUM!'}, {'error': '#NUM!'}], Calc gives [1.7976931348623157e+308, -1.7976931348623157e+308, {'error': '#NUM!'}]
+FAIL =" 5 "+0 gives {"error": "#VALUE!"}, Calc gives 5.0
+FAIL ="TRUE"+0 gives {"error": "#VALUE!"}, Calc gives 1.0
+FAIL ="$5"+0 gives {"error": "#VALUE!"}, Calc gives 5.0
+FAIL ="1,000"+0 gives {"error": "#VALUE!"}, Calc gives 1000.0
+FAIL ="50%"+0 gives {"error": "#VALUE!"}, Calc gives 0.5
+FAIL =COUNT(" 5 ") gives 0, Calc gives 1.0
+FAIL =ROUND(" 5 ",0) gives {"error": "#VALUE!"}, Calc gives 5.0
+FAIL =ABS(" 5 ") gives {"error": "#VALUE!"}, Calc gives 5.0
+FAIL =MOD(" 5 ",3) gives {"error": "#VALUE!"}, Calc gives 2.0
+FAIL =LEFT("hello"," 5 ") gives {"error": "#VALUE!"}, Calc gives "hello"
+FAIL =MID("hello world"," 5 ",3) gives {"error": "#VALUE!"}, Calc gives "o w"
+FAIL =SQRT(" 5 ") gives {"error": "#VALUE!"}, Calc gives 2.23606797749979
+FAIL =POWER(" 5 ",2) gives {"error": "#VALUE!"}, Calc gives 25.0
+FAIL =INT(" 5 ") gives {"error": "#VALUE!"}, Calc gives 5.0
+FAIL =COUNT("$5") gives 0, Calc gives 1.0
+FAIL =ROUND("$5",0) gives {"error": "#VALUE!"}, Calc gives 5.0
+FAIL =ABS("$5") gives {"error": "#VALUE!"}, Calc gives 5.0
+FAIL =MOD("$5",3) gives {"error": "#VALUE!"}, Calc gives 2.0
+FAIL =LEFT("hello","$5") gives {"error": "#VALUE!"}, Calc gives "hello"
+FAIL =MID("hello world","$5",3) gives {"error": "#VALUE!"}, Calc gives "o w"
+FAIL =IF("$5",1,0) gives {"error": "#VALUE!"}, Calc gives 1.0
+FAIL =NOT("$5") gives {"error": "#VALUE!"}, Calc gives false
+FAIL =SQRT("$5") gives {"error": "#VALUE!"}, Calc gives 2.23606797749979
+FAIL =POWER("$5",2) gives {"error": "#VALUE!"}, Calc gives 25.0
+FAIL =INT("$5") gives {"error": "#VALUE!"}, Calc gives 5.0
+FAIL =COUNT("1,000") gives 0, Calc gives 1.0
+FAIL =ROUND("1,000",0) gives {"error": "#VALUE!"}, Calc gives 1000.0
+FAIL =ABS("1,000") gives {"error": "#VALUE!"}, Calc gives 1000.0
+FAIL =MOD("1,000",3) gives {"error": "#VALUE!"}, Calc gives 1.0
+FAIL =LEFT("hello","1,000") gives {"error": "#VALUE!"}, Calc gives "hello"
+FAIL =MID("hello world","1,000",3) gives {"error": "#VALUE!"}, Calc gives ""
+FAIL =IF("1,000",1,0) gives {"error": "#VALUE!"}, Calc gives 1.0
+FAIL =NOT("1,000") gives {"error": "#VALUE!"}, Calc gives false
+FAIL =SQRT("1,000") gives {"error": "#VALUE!"}, Calc gives 31.622776601683793
+FAIL =POWER("1,000",2) gives {"error": "#VALUE!"}, Calc gives 1000000.0
+FAIL =INT("1,000") gives {"error": "#VALUE!"}, Calc gives 1000.0
+FAIL =COUNT("50%") gives 0, Calc gives 1.0
+FAIL =ROUND("50%",0) gives {"error": "#VALUE!"}, Calc gives 1.0
+FAIL =ABS("50%") gives {"error": "#VALUE!"}, Calc gives 0.5
+FAIL =MOD("50%",3) gives {"error": "#VALUE!"}, Calc gives 0.5
+FAIL =LEFT("hello","50%") gives {"error": "#VALUE!"}, Calc gives ""
+FAIL =MID("hello world","50%",3) gives {"error": "#VALUE!"}, Calc gives {"error": "Err:502"}
+FAIL =IF("50%",1,0) gives {"error": "#VALUE!"}, Calc gives 1.0
+FAIL =NOT("50%") gives {"error": "#VALUE!"}, Calc gives false
+FAIL =SQRT("50%") gives {"error": "#VALUE!"}, Calc gives 0.7071067811865476
+FAIL =POWER("50%",2) gives {"error": "#VALUE!"}, Calc gives 0.25
+FAIL =INT("50%") gives {"error": "#VALUE!"}, Calc gives 0.0
+FAIL =COUNT("TRUE") gives 0, Calc gives 1.0
+FAIL =ROUND("TRUE",0) gives {"error": "#VALUE!"}, Calc gives 1.0
+FAIL =ABS("TRUE") gives {"error": "#VALUE!"}, Calc gives 1.0
+FAIL =MOD("TRUE",3) gives {"error": "#VALUE!"}, Calc gives 1.0
+FAIL =LEFT("hello","TRUE") gives {"error": "#VALUE!"}, Calc gives "h"
+FAIL =MID("hello world","TRUE",3) gives {"error": "#VALUE!"}, Calc gives "hel"
+FAIL =SQRT("TRUE") gives {"error": "#VALUE!"}, Calc gives 1.0
+FAIL =POWER("TRUE",2) gives {"error": "#VALUE!"}, Calc gives 1.0
+FAIL =INT("TRUE") gives {"error": "#VALUE!"}, Calc gives 1.0
+FAIL =COUNT("(5)") gives 0, Calc gives 1.0
+FAIL =ROUND("(5)",0) gives {"error": "#VALUE!"}, Calc gives -5.0
+FAIL =ABS("(5)") gives {"error": "#VALUE!"}, Calc gives 5.0
+FAIL =MOD("(5)",3) gives {"error": "#VALUE!"}, Calc gives 1.0
+FAIL =LEFT("hello","(5)") gives {"error": "#VALUE!"}, Calc gives {"error": "Err:502"}
+FAIL =MID("hello world","(5)",3) gives {"error": "#VALUE!"}, Calc gives {"error": "Err:502"}
+FAIL =IF("(5)",1,0) gives {"error": "#VALUE!"}, Calc gives 1.0
+FAIL =NOT("(5)") gives {"error": "#VALUE!"}, Calc gives false
+FAIL =SQRT("(5)") gives {"error": "#VALUE!"}, Calc gives {"error": "Err:502"}
+FAIL =POWER("(5)",2) gives {"error": "#VALUE!"}, Calc gives 25.0
+FAIL =INT("(5)") gives {"error": "#VALUE!"}, Calc gives -5.0
+FAIL =COUNT("5-") gives 0, Calc gives 1.0
+FAIL =ROUND("5-",0) gives {"error": "#VALUE!"}, Calc gives -5.0
+FAIL =ABS("5-") gives {"error": "#VALUE!"}, Calc gives 5.0
+FAIL =MOD("5-",3) gives {"error": "#VALUE!"}, Calc gives 1.0
+FAIL =LEFT("hello","5-") gives {"error": "#VALUE!"}, Calc gives {"error": "Err:502"}
+FAIL =MID("hello world","5-",3) gives {"error": "#VALUE!"}, Calc gives {"error": "Err:502"}
+FAIL =IF("5-",1,0) gives {"error": "#VALUE!"}, Calc gives 1.0
+FAIL =NOT("5-") gives {"error": "#VALUE!"}, Calc gives false
+FAIL =SQRT("5-") gives {"error": "#VALUE!"}, Calc gives {"error": "Err:502"}
+FAIL =POWER("5-",2) gives {"error": "#VALUE!"}, Calc gives 25.0
+FAIL =INT("5-") gives {"error": "#VALUE!"}, Calc gives -5.0
+b2: text reads as a number as in Calc: 173 cases differ from Calc
