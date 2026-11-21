@@ -4,7 +4,7 @@
 
 > Two Calc evaluation rules are missing. Observed vs LibreOffice: =C2:C3 in row 2 gives #VALUE! (Calc 3, implicit intersection); =IF(TRUE,1,A16) in A16 gives Err:522 (Calc 1), =IF(FALSE,B7,2) in B7 Err:522 (Calc 2), and B8 =IFERROR(B9,0) with B9 =B8 gives Err:522 for B8 (Calc 0) (G20, G22). (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: in work · 3 work items · 2 bullets
+Kind: Defect · State: awaiting the verdict · 3 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -88,7 +88,7 @@ Status: landed (`24bf5780a006`) · depends on `wi-a-v1-eval-edges-1`
 
 Adds tests/eval/test_eval_edges.py, run by ./test.sh, covering implicit intersection and the untaken-branch and cycle-order cases, so the product keeps this behaviour.
 
-Status: landing (`85df36ac019e`) · depends on `wi-a-v1-eval-edges-2`
+Status: landed (`85df36ac019e`) · depends on `wi-a-v1-eval-edges-2`
 
 **The passing review noted:** > PASS. Reviewed 2004ee4 (tests/eval/test_eval_edges.py) on main 1969234, which already has WI-1 and WI-2. I used the plan's checks (327bfff).
 > 
@@ -109,8 +109,8 @@ Status: landing (`85df36ac019e`) · depends on `wi-a-v1-eval-edges-2`
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | a range used where one value is expected takes the cell in the formula's row or column, as LibreOffice does, on cases computed by LibreOffice | `tests/eval/checks/a_v1_ee_b1_intersect.sh` — |
-| not yet | b2 | a self-reference through a branch IF or IFERROR does not take gives LibreOffice's value, not Err:522, on cases computed by LibreOffice | `tests/eval/checks/a_v1_ee_b2_branch.sh` — |
+| not yet | b1 | a range used where one value is expected takes the cell in the formula's row or column, as LibreOffice does, on cases computed by LibreOffice | `tests/eval/checks/a_v1_ee_b1_intersect.sh` —, `tests/eval/checks/a_v1_ee_suite.sh` —, `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, does a user who writes =C2:C3-style formulas next to their data, or guards a self-reference with IF/IFERROR (e.g. =IF(A1="",0,B1+B1) patterns), get the numbers they would expect from a spreadsheet instead of #VALUE! or Err:522? Answer yes or no with what you tried.` — |
+| not yet | b2 | a self-reference through a branch IF or IFERROR does not take gives LibreOffice's value, not Err:522, on cases computed by LibreOffice | `tests/eval/checks/a_v1_ee_b2_branch.sh` —, `tests/eval/checks/a_v1_ee_suite.sh` —, `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, does a user who writes =C2:C3-style formulas next to their data, or guards a self-reference with IF/IFERROR (e.g. =IF(A1="",0,B1+B1) patterns), get the numbers they would expect from a spreadsheet instead of #VALUE! or Err:522? Answer yes or no with what you tried.` — |
 
 ## 5. Out of scope and risks
 
@@ -153,15 +153,22 @@ Files landed by `wi-a-v1-eval-edges-2`:
 - `tests/recalc/test_recalc.py` +46 −0 (test)
 - `src/eval/__init__.py` +31 −7
 
+Files landed by `wi-a-v1-eval-edges-3`:
+
+- `tests/eval/test_eval_edges.py` +166 −0 (test)
+
 Landing pull request: [exp-a #29](https://github.com/alebairos/sheet-exp-a/pull/29)
 
 ## 7. The decision
 
-Nothing waits on you.
+**Judge:a-v1-eval-edges:judge:Usefulness only (not Calc fidelity): through ./engine as shipped, does a user who writes =C2:C3-style formulas next to their data, or guards a self-reference with IF/IFERROR (e.g. =IF(A1="",0,B1+B1) patterns), get the numbers they would expect from a spreadsheet instead of #VALUE! or Err:522? Answer yes or no with what you tried.**: A decision: show your human its options. The question: Usefulness only (not Calc fidelity): through ./engine as shipped, does a user who writes =C2:C3-style formulas next to their data, or guards a self-reference with IF/IFERROR (e.g. =IF(A1="",0,B1+B1) patterns), get the numbers they would expect from a spreadsheet instead of #VALUE! or Err:522? Answer yes or no with what you tried.
+
+- Pass: `cooknship decide --answer Judge:a-v1-eval-edges:judge:Usefulness only (not Calc fidelity): through ./engine as shipped, does a user who writes =C2:C3-style formulas next to their data, or guards a self-reference with IF/IFERROR (e.g. =IF(A1="",0,B1+B1) patterns), get the numbers they would expect from a spreadsheet instead of #VALUE! or Err:522? Answer yes or no with what you tried. --option pass`
+- Fail, with the reason: `cooknship decide --answer Judge:a-v1-eval-edges:judge:Usefulness only (not Calc fidelity): through ./engine as shipped, does a user who writes =C2:C3-style formulas next to their data, or guards a self-reference with IF/IFERROR (e.g. =IF(A1="",0,B1+B1) patterns), get the numbers they would expect from a spreadsheet instead of #VALUE! or Err:522? Answer yes or no with what you tried. --option fail --text "<reason>"`
 
 ## 8. Metrics
 
-- Lead time: 2 h 50 min so far
+- Lead time: 3 h 10 min so far
 - Loops: 0
 - Waste: 0 min
-- Size: 211 lines (+174 −37, 6 files, ≤400; tests 54 lines); plan check files laid over by land, not in the size: +129 −0, 6 files
+- Size: 211 lines (+174 −37, 7 files, ≤400; tests 220 lines); plan check files laid over by land, not in the size: +129 −0, 6 files

@@ -144,7 +144,7 @@ Landing pull request: [exp-a #26](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 8. Metrics
 
-- Lead time: 2 h 50 min so far
+- Lead time: 3 h 10 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 14 min
 - Size: 160 lines (+147 −13, 3 files, ≤400; tests 162 lines); plan check files laid over by land, not in the size: +165 −0, 6 files

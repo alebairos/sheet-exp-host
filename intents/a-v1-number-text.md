@@ -51,7 +51,7 @@ Status: landed (`1f715b03add3`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-nt-b1` | b1 | `tests/values/checks/a_v1_nt_b1_text.sh` | red | — |
+| `ac-nt-b1` | b1 | `tests/values/checks/a_v1_nt_b1_text.sh` | red | pass |
 
 ### `wi-a-v1-number-text-2`: Product tests for number-to-text
 
@@ -70,14 +70,14 @@ Status: landed (`a1ae24c7a556`) · depends on `wi-a-v1-number-text-1`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-nt-suite` | b1 | `tests/values/checks/a_v1_nt_suite.sh` | red | — |
+| `ac-nt-suite` | b1 | `tests/values/checks/a_v1_nt_suite.sh` | red | pass |
 | `ac-nt-judge` | b1 | `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried.` | judged | — |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | number-to-text conversion in &, CONCATENATE, LEN and the text functions matches LibreOffice over a set of small, large and fractional numbers, with expected values from running LibreOffice | `tests/values/checks/a_v1_nt_b1_text.sh` —, `tests/values/checks/a_v1_nt_suite.sh` —, `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried.` — |
+| PASS | b1 | number-to-text conversion in &, CONCATENATE, LEN and the text functions matches LibreOffice over a set of small, large and fractional numbers, with expected values from running LibreOffice | `tests/values/checks/a_v1_nt_b1_text.sh` pass, `tests/values/checks/a_v1_nt_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried.` — |
 
 ## 5. Out of scope and risks
 
@@ -96,9 +96,16 @@ Status: landed (`a1ae24c7a556`) · depends on `wi-a-v1-number-text-1`
 | Implemented `wi-a-v1-number-text-2` | `impl-a2@alebairos` |
 | Reviewed `wi-a-v1-number-text-2` | `rev-a@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/values/checks/a_v1_nt_b1_text.sh`: pass
+- `tests/values/checks/a_v1_nt_suite.sh`: pass
+
+Outcome report:
+
+- **Built:** Numbers that become text now read as LibreOffice Calc writes them. In src/values, format_number writes decimals from 1E-14 up to below 1E15, writes integers below 2^53 exactly, rounds to 15 digits half away from zero, and otherwise uses E with a 3-digit exponent. Every text use goes through it: &, CONCATENATE, LEN, LEFT and the other text functions. On the landed product (exp-a main 36e13b4): ="Rate: "&0.0000001 gives Rate: 0.0000001 (was 1E-07), ="Count: "&1E15 gives Count: 1000000000000000, CONCATENATE(1E21) gives 1E+021, and LEN(123456789012345678) is 21. The b1 check matches LibreOffice on all 220 results, and ./test.sh passes with 110 tests. WI 1 needed a second attempt: attempt 1 chose decimal or E after rounding, so 999999999999999.5 and 9.999999999999995E-15 took the wrong form. The fix chooses from the unrounded exponent, and those carry cases are pinned in tests/values/test_values.py. WI 2 added tests/values/test_number_text.py (7 tests). Its expected values equal the LibreOffice probe file. Nothing left the plan, and only 28 product lines changed.
+- **Advice:** Adopt: this fixes the Defect a-i6 measured. The usefulness judge is still open for you to answer. Follow up: plain numbers printed by the CLI's JSON (1e-07, 1e+21) and shown in the grid did not change, by design: they belong to a-v1-decimal-noise and a-v1-entry-display. Watch: the largest doubles (1.7976931348623157E308) get 15 digits where Calc writes 17. The reviewer left this as a note. Also, the rounding-carry cases are pinned in test_values.py, not in the new test_number_text.py.
+- [a-v1-number-text/outcome.md](https://github.com/alebairos/sheet-exp-host/blob/9b94b37ebbbe0d63384a90b9a9ad4eb71e64128c/a-v1-number-text/outcome.md)
 
 Files landed by `wi-a-v1-number-text-1`:
 
@@ -124,7 +131,7 @@ Landing pull request: [exp-a #28](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 8. Metrics
 
-- Lead time: 2 h 50 min so far
+- Lead time: 3 h 10 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 6 min
 - Size: 28 lines (+16 −12, 3 files, ≤400; tests 154 lines); plan check files laid over by land, not in the size: +104 −0, 4 files

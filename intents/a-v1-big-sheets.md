@@ -70,7 +70,7 @@ Status: landed (`11fa25c61ed9`)
 
 Adds tests/e2e/ui/test_big_sheets.py, run by ./test.sh in headless Chrome, which opens a 2001-row CSV, scrolls to its last cell, moves with the arrows and PageDown/PageUp and edits row 2001, so the product keeps this behaviour.
 
-Status: stuck · depends on `wi-a-v1-big-sheets-1`
+Status: attempt 4 in work by `impl-a2@alebairos` · depends on `wi-a-v1-big-sheets-1`
 
 **The passing review noted:** > PASS. Reviewed attempt 3 (4ea210b, on attempt 2 5c56524, base main 2070717, which already has WI-1) with the plan's checks (b9932e3). Runs used CHROME=/usr/bin/chromium.
 > 
@@ -133,15 +133,11 @@ Landing pull request: [exp-a #22](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 7. The decision
 
-**Unstick:wi-a-v1-big-sheets-2**: A decision: show your human its options
-
-- Reset its attempt budget: `cooknship decide --answer Unstick:wi-a-v1-big-sheets-2 --option unstick`
-- The plan is wrong: shelve the intent's open WIs and send it back to planning, same id and deps: `cooknship decide --answer Unstick:wi-a-v1-big-sheets-2 --option replan --text "<reason>"`
-- Shelve it; when another intent takes its place, the reason is replaced:<that intent's id>, and what waits on this one waits for it instead: `cooknship decide --answer Unstick:wi-a-v1-big-sheets-2 --option shelve --text "<reason>"`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 2 h 51 min so far
+- Lead time: 3 h 11 min so far
 - Loops: 3 (D4 build 1, D5 review 1, D6 landing 1)
-- Waste: 1 h 12 min
+- Waste: 1 h 22 min
 - Size: 171 lines (+142 −29, 4 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +307 −0, 8 files
