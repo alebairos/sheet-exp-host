@@ -1,0 +1,8 @@
+FAIL 3.141592653589793 typed in A2: after typing, the workbook holds 3.14159265358979, Calc keeps 3.141592653589793
+FAIL '123 typed in A3: after typing, the workbook holds "'123", Calc keeps "123"
+FAIL 'TRUE typed in A4: after typing, the workbook holds "'TRUE", Calc keeps "TRUE"
+FAIL F2 on A2 (3.141592653589793) opens the editor with "3.14159265358979"
+FAIL 3.141592653589793 typed in A2: after F2 and Enter on each cell, the workbook holds 3.14159265358979, Calc keeps 3.141592653589793
+FAIL '123 typed in A3: after F2 and Enter on each cell, the workbook holds "'123", Calc keeps "123"
+FAIL 'TRUE typed in A4: after F2 and Enter on each cell, the workbook holds "'TRUE", Calc keeps "TRUE"
+FAIL Save CSV writes "3.14159265358979" for 3.141592653589793 in A2, not the number in full (3.141592653589793)
