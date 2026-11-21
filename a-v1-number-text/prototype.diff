@@ -1,0 +1,49 @@
+diff --git i/src/values/__init__.py w/src/values/__init__.py
+index 06af60b..f82212b 100644
+--- i/src/values/__init__.py
++++ w/src/values/__init__.py
+@@ -5,6 +5,7 @@ and the six errors. ``from_json``/``to_json`` map workbook cells both ways;
+ ``to_number``, ``to_text`` and ``compare`` apply Calc's default coercion rules.
+ """
+ 
++import decimal
+ import math
+ import re
+ 
+@@ -190,22 +191,24 @@ def to_number(v):
+ 
+ 
+ def format_number(x):
+-    """Calc's general format: up to 15 significant digits, no trailing zeros."""
++    """A number as Calc turns it into text (&, CONCATENATE, LEN): an integer below 2**53 exactly; otherwise 15
++    significant digits rounded half away from zero, as a decimal from 1E-14 up to below 1E15 and else as
++    mantissa E sign and a 3-digit exponent (1E+021, 1E-020); no trailing zeros."""
+     if not math.isfinite(x):
+         return "#NUM!"
+     if x == 0:
+         return "0"
+-    s = "%.15g" % x
+-    if "e" in s:
+-        mant, exp = s.split("e")
+-        if "." in mant:
+-            mant = mant.rstrip("0").rstrip(".")
+-        sign = exp[0]
+-        digits = exp[1:].lstrip("0").rjust(2, "0")
+-        return "%sE%s%s" % (mant, sign, digits)
+-    if "." in s:
+-        s = s.rstrip("0").rstrip(".")
+-    return s
++    if x == int(x) and abs(x) < 2.0 ** 53:
++        return str(int(x))
++    d = decimal.Decimal(repr(x))
++    q = d.quantize(decimal.Decimal(1).scaleb(d.adjusted() - 14), rounding=decimal.ROUND_HALF_UP)
++    e = q.adjusted()
++    if -14 <= e < 15:
++        t = format(q, "f")
++        return t.rstrip("0").rstrip(".") if "." in t else t
++    m = format(q.scaleb(-e), "f")
++    m = m.rstrip("0").rstrip(".") if "." in m else m
++    return "%sE%s%03d" % (m, "-" if e < 0 else "+", abs(e))
+ 
+ 
+ def to_text(v):
