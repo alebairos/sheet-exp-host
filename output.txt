@@ -1,0 +1,1 @@
+FAIL caret: before the recompute came back the editor was {"ref":"A3","value":"=A1+B","caret":[4,4],"focused":true}; after it, null, focus in BODY
