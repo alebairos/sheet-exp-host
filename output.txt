@@ -1,0 +1,24 @@
+FAIL =0.1+0.2=0.3 gives False, Calc gives TRUE
+FAIL =0.1+0.2<>0.3 gives True, Calc gives FALSE
+FAIL =0.1+0.2>0.3 gives True, Calc gives FALSE
+FAIL =0.1+0.2<=0.3 gives False, Calc gives TRUE
+FAIL =0.3=0.1+0.2 gives False, Calc gives TRUE
+FAIL =(0.1+0.2)-0.3 gives 5.551115123125783e-17, Calc gives 0.0 (shown 0)
+FAIL =0.3-(0.1+0.2) gives -5.551115123125783e-17, Calc gives 0.0 (shown 0)
+FAIL =1.1*3-3.3 gives 4.440892098500626e-16, Calc gives 0.0 (shown 0)
+FAIL =1.1*3=3.3 gives False, Calc gives TRUE
+FAIL =1-0.9-0.1 gives -2.7755575615628914e-17, Calc gives 0.0 (shown 0)
+FAIL =0.7+0.1-0.8 gives -1.1102230246251565e-16, Calc gives 0.0 (shown 0)
+FAIL =(0.1+0.2)+(-0.3) gives 5.551115123125783e-17, Calc gives 0.0 (shown 0)
+FAIL =-0.3+(0.1+0.2) gives 5.551115123125783e-17, Calc gives 0.0 (shown 0)
+FAIL =1=1+1E-15 gives False, Calc gives TRUE
+FAIL =(1+1E-15)-1 gives 1.1102230246251565e-15, Calc gives 0.0 (shown 0)
+FAIL =IF(0.1+0.2=0.3,"same","different") gives 'different', Calc gives 'same'
+FAIL =B1-B2 gives 5.551115123125783e-17, Calc gives 0.0 (shown 0)
+FAIL =B1=B2 gives False, Calc gives TRUE
+FAIL =B1>B2 gives True, Calc gives FALSE
+FAIL =0.1*3=0.3 gives False, Calc gives TRUE
+FAIL =0.1*3-0.3 gives 5.551115123125783e-17, Calc gives 0.0 (shown 0)
+FAIL =(0.1+0.7)*10-8 gives -8.881784197001252e-16, Calc gives 0.0 (shown 0)
+FAIL =-(0.1+0.2)+0.3 gives -5.551115123125783e-17, Calc gives 0.0 (shown 0)
+FAIL =5-4.999999999999999 gives 8.881784197001252e-16, Calc gives 0.0 (shown 0)
