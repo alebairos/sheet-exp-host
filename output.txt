@@ -1,0 +1,27 @@
+FAIL malformed JSON: 25 lines on stderr, wanted one: 'n_once(s, idx)\n               ~~~~~~~~~~~~~~^^^^^^^^\njson.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 13 (char 12)'
+FAIL empty input: 24 lines on stderr, wanted one: ' 363, in raw_decode\n    raise JSONDecodeError("Expecting value", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)'
+FAIL a NaN constant: exit 0, wanted non-zero
+FAIL a NaN constant: printed on stdout '{"sheets": {"S": {"A1": NaN}}}', wanted nothing
+FAIL a NaN constant: 0 lines on stderr, wanted one: ''
+FAIL an Infinity constant: exit 0, wanted non-zero
+FAIL an Infinity constant: printed on stdout '{"sheets": {"S": {"A1": Infinity}}}', wanted nothing
+FAIL an Infinity constant: 0 lines on stderr, wanted one: ''
+FAIL a 1e999 constant: exit 0, wanted non-zero
+FAIL a 1e999 constant: printed on stdout '{"sheets": {"S": {"A1": Infinity}}}', wanted nothing
+FAIL a 1e999 constant: 0 lines on stderr, wanted one: ''
+FAIL a list: exit 0, wanted non-zero
+FAIL a list: printed on stdout '{"sheets": {}}', wanted nothing
+FAIL a list: 0 lines on stderr, wanted one: ''
+FAIL no sheets: exit 0, wanted non-zero
+FAIL no sheets: printed on stdout '{"sheets": {}}', wanted nothing
+FAIL no sheets: 0 lines on stderr, wanted one: ''
+FAIL sheets as a list: 15 lines on stderr, wanted one: "r name, cells in sheets.items()}\n                                                            ^^^^^^^^^^^^\nAttributeError: 'list' object has no attribute 'items'"
+FAIL a sheet as a list: exit 0, wanted non-zero
+FAIL a sheet as a list: printed on stdout '{"sheets": {"S": {}}}', wanted nothing
+FAIL a sheet as a list: 0 lines on stderr, wanted one: ''
+FAIL a cell as a list: exit 0, wanted non-zero
+FAIL a cell as a list: printed on stdout '{"sheets": {"S": {"A1": [1]}}}', wanted nothing
+FAIL a cell as a list: 0 lines on stderr, wanted one: ''
+FAIL a missing file: 11 lines on stderr, wanted one: 'open(path, encoding="utf-8") as f:\n         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: \'/tmp/tmpg20397z_/missing.json\''
+FAIL a directory: 11 lines on stderr, wanted one: 'e 12, in load\n    with open(path, encoding="utf-8") as f:\n         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^\nIsADirectoryError: [Errno 21] Is a directory: \'/tmp/tmpg20397z_\''
+FAIL a malformed file: 25 lines on stderr, wanted one: 'n_once(s, idx)\n               ~~~~~~~~~~~~~~^^^^^^^^\njson.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 13 (char 12)'
