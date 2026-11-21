@@ -149,7 +149,7 @@ tests/values/checks/a_v1_tr_suite.sh: the same as tests/eval/checks/a_v1_ee_suit
 
 Text comparisons become case-sensitive and follow Calc's language order (letters, then accents, then case), with = still exact, so ="a"="A" is FALSE and é sorts between e and f as in Calc.
 
-Status: landing (`d45620825e46`)
+Status: landed (`d45620825e46`)
 
 **The passing review noted:** > PASS. wi-a-v1-text-rules-1 attempt 2 (1b7d8f5) reviewed against b1 / ac-tr-b1.
 > 
@@ -197,7 +197,7 @@ Status: accepted · depends on `wi-a-v1-text-rules-2`
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | text comparison with = <> < > matches LibreOffice's default (case-sensitive, locale collation) on a set of cases computed by LibreOffice | no landed check |
+| not yet | b1 | text comparison with = <> < > matches LibreOffice's default (case-sensitive, locale collation) on a set of cases computed by LibreOffice | `tests/values/checks/a_v1_tr_b1_compare.sh` — |
 | not yet | b2 | text-to-number coercion in arithmetic matches LibreOffice for padded, boolean, currency, thousands-separated and percent text, computed by LibreOffice | no landed check |
 
 ## 5. Out of scope and risks
@@ -223,6 +223,23 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-v1-text-rules-1`:
+
+- `src/values/text_rules.py` +133 −0
+- `src/values/collation_data.py` +127 −0
+- `tests/values/calc_collation_probe.py` +127 −0 (test)
+- `tests/values/checks/a_v1_tr_b2.json` +114 −0 (plan check)
+- `tests/values/checks/a_v1_tr_probe.py` +83 −0 (plan check)
+- `tests/values/checks/a_v1_tr_b1.json` +79 −0 (plan check)
+- `tests/values/checks/a_v1_tr_common.py` +73 −0 (plan check)
+- `tests/values/test_collation.py` +71 −0 (test)
+- `tests/values/checks/a_v1_tr_suite.sh` +26 −0 (plan check)
+- `src/values/__init__.py` +18 −2
+- `tests/values/checks/a_v1_tr_b1_compare.sh` +10 −0 (plan check)
+- `tests/values/checks/a_v1_tr_b2_numbers.sh` +10 −0 (plan check)
+- `src/eval/__init__.py` +3 −1
+- `tests/values/test_values.py` +1 −1 (test)
+
 Landing pull request: [exp-a #37](https://github.com/alebairos/sheet-exp-a/pull/37)
 
 ## 7. The decision
@@ -231,7 +248,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 8 h 14 min so far
+- Lead time: 9 h 34 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 18 min
-- Size: nothing landed yet
+- Size: 284 lines (+281 −3, 7 files, ≤400; tests 200 lines); plan check files laid over by land, not in the size: +395 −0, 7 files
