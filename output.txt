@@ -1,0 +1,6 @@
+FAIL =A2+1 with the key a2 = 5 gives 1, Calc shows 6
+FAIL the constant 1e3 prints as 1000.0, Calc shows 1000
+FAIL --cell sheet1!a2 prints '{"error": "#REF!"}', Calc shows 5
+FAIL --cell SHEET1!$A$3 prints '{"error": "#REF!"}', Calc shows 6
+FAIL --cell $A$3 prints '1', Calc shows 6
+FAIL --cell 'my sheet'!a1 prints '{"error": "#REF!"}', Calc shows 7
