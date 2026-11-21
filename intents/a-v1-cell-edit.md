@@ -4,7 +4,7 @@
 
 > In the browser, editing a formula inside its cell destroys it. Observed: A3 =A1+A2 showing 30, F2, End, type +1, Enter: the editor opens with 30 and A3 becomes the text "30+1"; F2 then Enter with no typing turns =0.1+0.2 into the constant 0.3, '007 into the number 7 and =1/0 into nothing; double-click never opens the editor. Expected, as in Calc: the in-cell editor shows what was typed (the formula), and opening and closing it unchanged changes nothing (G1, G2, G3; prior S12, scored T9 = 0). (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: accepted · 2 work items · 3 bullets
+Kind: Defect · State: in work · 2 work items · 3 bullets
 
 ## 2. What you will see
 
@@ -42,7 +42,7 @@ Learned from RECORD.md and the overlapping pages: G1/S12 had been carried as 'by
 
 The grid's in-cell editor opens with the cell as typed (the formula, '007) and only commits text the user changed, through the controller, and a click on the selected cell no longer redraws, so F2 and double-click edit formulas instead of destroying them.
 
-Status: accepted
+Status: attempt 2 in work by `impl-a2@alebairos`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -80,8 +80,8 @@ Status: accepted · depends on `wi-a-v1-cell-edit-1`
 | --- | --- |
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
-| Implemented `wi-a-v1-cell-edit-1` | — |
-| Reviewed `wi-a-v1-cell-edit-1` | — |
+| Implemented `wi-a-v1-cell-edit-1` | `impl-a1@alebairos`, `impl-a2@alebairos` |
+| Reviewed `wi-a-v1-cell-edit-1` | `rev-a@alebairos` |
 | Implemented `wi-a-v1-cell-edit-2` | — |
 | Reviewed `wi-a-v1-cell-edit-2` | — |
 
@@ -95,7 +95,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 4 h 19 min so far
-- Loops: 0
-- Waste: 0 min
+- Lead time: 4 h 40 min so far
+- Loops: 1 (D5 review 1)
+- Waste: 18 min
 - Size: nothing landed yet
