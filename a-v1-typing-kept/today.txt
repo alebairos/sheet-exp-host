@@ -1,0 +1,17 @@
+# main 2070717 (after a-v1-number-text), the plan's checks:
+$ tests/e2e/ui/checks/a_v1_tk_b1_kept.sh
+FAIL held, back mid-formula: after typing "=SUM(A1:" into A3 the editor is null (focus BODY)
+$ tests/e2e/ui/checks/a_v1_tk_b2_open.sh
+FAIL caret: before the recompute came back the editor was {"ref":"A3","value":"=A1+B","caret":[4,4],"focused":true}; after it, null, focus in BODY
+
+# The first repro (typing =SUM(A1:A2)+B1 into A3 while A2's recompute is held, released after "+"):
+before release: {"ref":"A3","value":"=SUM(A1:A2)+","caret":[12,12],"focused":true} grid
+after release:  null BODY            <- the redraw removed the editor; keys typed next go nowhere
+after more typing: null BODY
+A3: (empty)  A2: 5
+
+# The prototype (prototype.diff), same steps:
+before release: {"ref":"A3","value":"=SUM(A1:A2)+","caret":[12,12],"focused":true} grid
+after release:  {"ref":"A3","value":"=SUM(A1:A2)+","caret":[12,12],"focused":true} grid
+after more typing: {"ref":"A3","value":"=SUM(A1:A2)+B1","caret":[14,14],"focused":true} grid
+A3: 8  (one recompute for A2, one for Enter)

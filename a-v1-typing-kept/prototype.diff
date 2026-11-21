@@ -1,0 +1,137 @@
+diff --git a/tests/e2e/ui/test_typing_kept.py b/tests/e2e/ui/test_typing_kept.py
+new file mode 100644
+index 0000000..147bf8e
+--- /dev/null
++++ b/tests/e2e/ui/test_typing_kept.py
+@@ -0,0 +1,31 @@
++"""Typing while the workbook recomputes, in a real browser: every key kept, committed only on Enter.
++
++typing_kept.mjs drives headless Chrome/Chromium ($CHROME first, then google-chrome or chromium on PATH) over
++the DevTools pipe, Node's standard library only, against web/io/serve.py. Skipped only without node or a browser.
++"""
++import os
++import shutil
++import subprocess
++import unittest
++
++HERE = os.path.dirname(os.path.abspath(__file__))
++ROOT = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
++NO_BROWSER = 2
++
++
++class TypingKeptTest(unittest.TestCase):
++    def test_typing_kept_through_a_recompute(self):
++        node = shutil.which("node")
++        if not node:
++            self.skipTest("node is not installed")
++        env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
++        p = subprocess.run([node, os.path.join(HERE, "typing_kept.mjs")], cwd=ROOT, env=env,
++                           capture_output=True, text=True, timeout=180)
++        if p.returncode == NO_BROWSER:
++            self.skipTest(p.stdout.strip())
++        self.assertEqual(p.returncode, 0, (p.stdout + p.stderr).strip()[-2000:])
++        self.assertIn("ok", p.stdout)
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/tests/e2e/ui/typing_kept.mjs b/tests/e2e/ui/typing_kept.mjs
+new file mode 100644
+index 0000000..efd9d93
+--- /dev/null
++++ b/tests/e2e/ui/typing_kept.mjs
+@@ -0,0 +1,56 @@
++// Typing while the workbook recomputes, in a real browser: the page's POST /compute is held (DevTools Fetch) so
++// the recompute returns while the user is typing a formula, then the edit goes on and is committed with Enter.
++// Exit 0: every key kept, editor and caret kept through the recompute, one recompute for Enter. Exit 2: no browser.
++import { fileURLToPath } from "node:url";
++import { dirname, join } from "node:path";
++import { mkdtempSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { findBrowser, serve, launch, sleep } from "./browser.mjs";
++
++const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
++const browser = findBrowser();
++if (!browser) { console.log("no browser: set CHROME or put google-chrome or chromium on PATH"); process.exit(2); }
++const fail = (m) => { console.log("FAIL " + m); process.exit(1); };
++const file = join(mkdtempSync(join(tmpdir(), "typing-kept-")), "book.json");
++writeFileSync(file, JSON.stringify({ sheets: { Sheet1: { A1: 1, B1: "=A1*2", C1: "=A2*10" } } }));
++const server = await serve(root), b = await launch(browser);
++const held = [];
++let holding = false, computes = 0;
++b.on("Fetch.requestPaused", (p) => { computes++; if (holding) held.push(p.requestId); else b.send("Fetch.continueRequest", { requestId: p.requestId }); });
++await b.send("Fetch.enable", { patterns: [{ urlPattern: "*/compute*" }] });
++const js = async (e) => (await b.send("Runtime.evaluate", { expression: e, returnByValue: true, awaitPromise: true })).result.value;
++const until = async (what, e, want) => { for (let t = 0; t < 100; t++) { if ((await js(e)) === want) return; await sleep(100); } fail(what + ": " + JSON.stringify(await js(e))); };
++const cell = (r) => `document.querySelector('#grid td[data-ref="${r}"]')?.textContent.trim()`;
++const ed = `(() => { const i = document.querySelector('#grid td input'); return i ? [i.closest('td').dataset.ref, i.value, i.selectionStart, document.activeElement === i].join("|") : "none"; })()`;
++const key = async (k) => {
++  const named = { Enter: 13, ArrowDown: 40, ArrowLeft: 37, End: 35 }[k];
++  await b.send("Input.dispatchKeyEvent", named ? { type: "rawKeyDown", key: k, windowsVirtualKeyCode: named } : { type: "keyDown", key: k, text: k });
++  await b.send("Input.dispatchKeyEvent", { type: "keyUp", key: k, windowsVirtualKeyCode: named || 0 });
++  await sleep(60);
++};
++try {
++  await b.send("Page.navigate", { url: server.url + "/io/index.html" });
++  await until("the page loads", `!!document.querySelector('#grid td[data-ref="A1"]')`, true);
++  if ((await js("document.visibilityState")) !== "visible") await b.send("Page.bringToFront");
++  const doc = await b.send("DOM.getDocument");
++  const input = await b.send("DOM.querySelector", { nodeId: doc.root.nodeId, selector: "#open" });
++  await b.send("DOM.setFileInputFiles", { nodeId: input.nodeId, files: [file] });
++  await until("the workbook opens", cell("B1"), "2");
++  await js(`document.querySelector('#grid').focus()`);
++  await key("ArrowDown");
++  holding = true;
++  for (const k of ["5", "Enter", ..."=A1+B", "ArrowLeft"]) await key(k);
++  if (!held.length) fail("A2's recompute was not sent");
++  const before = await js(ed);
++  holding = false; for (const id of held.splice(0)) await b.send("Fetch.continueRequest", { requestId: id });
++  await until("A2's recompute comes back", cell("C1"), "50");
++  if ((await js(ed)) !== before || before !== "A3|=A1+B|4|true") fail(`the editor was ${before}, after the recompute ${await js(ed)}`);
++  const n = computes;
++  for (const k of ["2", "*", "End", "1"]) await key(k);
++  if ((await js(ed)) !== "A3|=A1+2*B1|8|true" || computes !== n) fail("typing after the recompute: " + (await js(ed)));
++  await key("Enter");
++  await until("A3 after Enter", cell("A3"), "5");
++  if (computes !== n + 1) fail(`${computes - n} recomputes for one Enter`);
++  console.log("ok typing kept through a recompute");
++} finally { b.close(); server.close(); }
++process.exit(0);
+diff --git a/web/grid/grid.js b/web/grid/grid.js
+index a502b7a..00c4573 100644
+--- a/web/grid/grid.js
++++ b/web/grid/grid.js
+@@ -257,6 +257,17 @@ export function mount(container, state, { rows = 20, cols = 8, onChange = () =>
+     });
+   };
+ 
++  const reopen = ({ input, ref, focused, caret }) => {
++    if (!tdOf(ref)) show(true);
++    const td = tdOf(ref);
++    if (!td) return;
++    td.textContent = "";
++    td.appendChild(input);
++    editing = input;
++    if (focused) input.focus();
++    input.setSelectionRange(...caret);
++  };
++
+   const onClick = (e) => {
+     const td = e.target.closest("td[data-ref]");
+     if (td && !td.contains(editing)) update(select(s, td.dataset.ref));
+@@ -306,8 +317,15 @@ export function mount(container, state, { rows = 20, cols = 8, onChange = () =>
+     get state() { return s; },
+     setState(next, { reveal = false } = {}) {
+       const moved = next.selected !== s.selected || next.sheet !== s.sheet;
++      // An edit in progress outlives a redraw from outside (a recompute returning while the user types):
++      // the same input goes back into its cell with its text, caret and focus, and commits only on Enter.
++      const open = editing && editing.isConnected ? {
++        input: editing, ref: editing.closest("td[data-ref]").dataset.ref, focused: doc.activeElement === editing,
++        caret: [editing.selectionStart, editing.selectionEnd, editing.selectionDirection],
++      } : null;
+       s = next;
+       show(reveal || moved);
++      if (open) reopen(open);
+     },
+     destroy() {
+       container.removeEventListener("click", onClick);
