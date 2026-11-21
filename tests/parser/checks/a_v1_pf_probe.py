@@ -14,7 +14,12 @@ CASES = ["= SUM( A1 : A2 )", "=SUM( 'My Sheet'!A1 : A2 )", "=SUM(S2!A1:S2!A2)", 
          "=SUM(1,,2)", "=IF(A1=1,\"one\",\"other\"", "=(1+", "=1+*2", "=1E400", "=1+", "=*2", "=1 2", "=SUM(", "=)",
          "=(1+2))", "=SUM(1,2))", "=A1 A2", "=1++2", "=1E-400", "=MAX()", "=MEDIAN()", "=SUM()", "=MIN()", "=AVERAGE()",
          "=COUNT()", "=CONCATENATE()", "=AND()", "=IF()", "=LEN()", "=ROUND()", "=ABS()", "=VLOOKUP()", "=COUNTA()",
-         "=OR()", "=NOT()", "=PRODUCT()", "=UPPER()"]
+         "=OR()", "=NOT()", "=PRODUCT()", "=UPPER()",
+         # replan: held-out malformed forms (the gate review's 27 and more), to pin the rule, not a list
+         "=SUM(1,", "=MAX(1,)", "=((1", "=(1*", "=2*(3+", "=1+(", "=SUM(1+", "=SUM(A1:", "=IF(1,2,", "=ABS(-", "=()",
+         "=1-", "=A1+", "=-", "=1^", "=A1:", "=1&", "=(1+2)+", "=1*/2", "=/2", "=1 (2)", "=2 3+4", "=SUM(1 2)",
+         "=1)(2", "=1+2)", "=(1", "=SUM(1,2,", "=((1+2)", "=1+2*", "=(2)3", "=1<>", "=A1 1", "=SUM())", "=+", "=1+-",
+         "=MIN(1,", "=(((", "=1/(2-", "=&1", "=SUM(A1:A2"]
 def api(f):
     f = re.sub(r"'([^']+)'!", lambda m: "$'%s'." % m.group(1), f)
     f = re.sub(r"\b([A-Za-z_][A-Za-z0-9_]*)!", r"$\1.", f)
