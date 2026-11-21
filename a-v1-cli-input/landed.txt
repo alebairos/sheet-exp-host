@@ -1,0 +1,48 @@
+$ echo '{"sheets": {' | ./engine -
+engine: the input is not valid JSON: Expecting property name enclosed in double quotes at line 2 column 1
+(exit 1)
+
+$ ./engine /nonexistent.json
+engine: no such file: /nonexistent.json
+(exit 1)
+
+$ ./engine /tmp
+engine: is a directory, not a workbook file: /tmp
+(exit 1)
+
+$ echo '[]' | ./engine -
+engine: the input is not a workbook: expected an object with "sheets", got a list
+(exit 1)
+
+$ echo '{"foo":1}' | ./engine -
+engine: the input is not a workbook: it has no "sheets"
+(exit 1)
+
+$ echo '{"sheets":[]}' | ./engine -
+engine: the input is not a workbook: "sheets" should be an object of sheets, got a list
+(exit 1)
+
+$ echo '{"sheets":{"S":{"A1":NaN}}}' | ./engine -
+engine: the input is not valid JSON: NaN is not a JSON number
+(exit 1)
+
+$ echo '{"sheets":{"S":{"A1":1e999}}}' | ./engine -
+engine: the input is not valid JSON: 1e999 is too large for a number
+(exit 1)
+
+$ ./engine /tmp/x/ok.json
+{"sheets": {"Sheet1": {"A2": 5, "A3": 6, "A4": 1000}, "my sheet": {"A1": 7}}}
+(exit 0)
+
+$ ./engine /tmp/x/ok.json --cell sheet1!a3
+6
+(exit 0)
+
+$ ./engine /tmp/x/ok.json --cell '$A$4'
+1000
+(exit 0)
+
+$ ./engine /tmp/x/ok.json --cell "'my sheet'!a1"
+7
+(exit 0)
+
