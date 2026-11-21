@@ -1,0 +1,9 @@
+$ echo '{"sheets": {' | ./engine -
+               ~~~~~~~~~~~~~~^^^^^^^^
+json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 2 column 1 (char 13)
+
+$ ./engine /nonexistent.json
+FileNotFoundError: [Errno 2] No such file or directory: '/nonexistent.json'
+
+$ echo '{"sheets":{"Sheet1":{"a2":5,"A3":"=A2+1","A4":1e3}}}' | ./engine -
+{"sheets": {"Sheet1": {"a2": 5, "A3": 1, "A4": 1000.0}}}

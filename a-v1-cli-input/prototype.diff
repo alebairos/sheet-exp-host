@@ -1,0 +1,120 @@
+diff --git i/src/cli.py w/src/cli.py
+index ae875d4..5482d4f 100644
+--- i/src/cli.py
++++ w/src/cli.py
+@@ -1,16 +1,74 @@
+ """The engine CLI: ``engine <file|-> [--cell Sheet!A1]`` (SPEC.md)."""
+ 
+ import json
++import math
++import re
+ import sys
+ 
+ from src.recalc import compute as recalc
+ 
++CELL = re.compile(r"^\$?([A-Za-z]+)\$?([1-9][0-9]*)$")
++
++
++class BadInput(Exception):
++    """Input the engine refuses, with a message for the user."""
++
++
++def _no_constant(name):
++    raise BadInput(f"not a JSON number: {name}")
++
++
++def _number(text):
++    x = float(text)
++    if not math.isfinite(x):
++        raise BadInput(f"number out of range: {text}")
++    return int(x) if x.is_integer() and abs(x) < 2 ** 53 else x
++
++
++def _read(f, name):
++    try:
++        return json.load(f, parse_constant=_no_constant, parse_float=_number)
++    except json.JSONDecodeError as e:
++        raise BadInput(f"{name} is not valid JSON: {e.msg} at line {e.lineno} column {e.colno}") from None
++
+ 
+ def load(path):
+     if path == "-":
+-        return json.load(sys.stdin)
+-    with open(path, encoding="utf-8") as f:
+-        return json.load(f)
++        return _read(sys.stdin, "the input")
++    try:
++        with open(path, encoding="utf-8") as f:
++            return _read(f, path)
++    except FileNotFoundError:
++        raise BadInput(f"no such file: {path}") from None
++    except IsADirectoryError:
++        raise BadInput(f"is a directory, not a file: {path}") from None
++    except (OSError, UnicodeDecodeError) as e:
++        raise BadInput(f"cannot read {path}: {getattr(e, 'strerror', None) or e}") from None
++
++
++def _cell_key(key):
++    m = CELL.match(key)
++    return (m.group(1).upper() + m.group(2)) if m else key
++
++
++def check(book):
++    """The workbook with cell keys upper-cased; BadInput if it is not SPEC's shape."""
++    if not isinstance(book, dict) or not isinstance(book.get("sheets"), dict):
++        raise BadInput('not a workbook: expected {"sheets": {"Sheet1": {...}}}')
++    sheets = {}
++    for name, cells in book["sheets"].items():
++        if not isinstance(cells, dict):
++            raise BadInput(f"not a workbook: sheet {name!r} is not an object of cells")
++        out = {}
++        for key, v in cells.items():
++            if isinstance(v, list) or (isinstance(v, dict) and set(v) != {"error"}):
++                raise BadInput(f"not a workbook: cell {name}!{key} holds {json.dumps(v)[:40]}")
++            k = _cell_key(key)
++            if k in out:
++                raise BadInput(f"not a workbook: cell {name}!{k} is given twice")
++            out[k] = v
++        sheets[name] = out
++    return {**book, "sheets": sheets}
+ 
+ 
+ def compute(book):
+@@ -20,14 +78,14 @@ def compute(book):
+ 
+ def cell_value(book, ref):
+     sheet, sep, addr = ref.rpartition("!")
++    names = list(book["sheets"])
+     if not sep:
+-        sheet = next(iter(book["sheets"]), "Sheet1")
+-    sheet = sheet.strip("'")
+-    cells = book["sheets"].get(sheet)
+-    if cells is None:
++        sheet = names[0] if names else "Sheet1"
++    sheet = sheet.strip("'").strip("$")
++    match = [n for n in names if n.lower() == sheet.lower()]
++    if not match:
+         return {"error": "#REF!"}
+-    addr = addr.replace("$", "").upper()
+-    return cells.get(addr, None)
++    return book["sheets"][match[0]].get(_cell_key(addr), None)
+ 
+ 
+ def usage():
+@@ -46,10 +104,14 @@ def main(argv=None):
+         del args[i:i + 2]
+     if len(args) != 1:
+         return usage()
+-    out = compute(load(args[0]))
++    try:
++        out = compute(check(load(args[0])))
++    except BadInput as e:
++        sys.stderr.write(f"engine: {e}\n")
++        return 1
+     if cell is not None:
+         out = cell_value(out, cell)
+-    json.dump(out, sys.stdout, ensure_ascii=False)
++    json.dump(out, sys.stdout, ensure_ascii=False, allow_nan=False)
+     sys.stdout.write("\n")
+     return 0
+ 

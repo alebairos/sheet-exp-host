@@ -1,0 +1,9 @@
+$ echo '{"sheets": {' | ./engine -
+engine: the input is not valid JSON: Expecting property name enclosed in double quotes at line 2 column 1
+(exit 1)
+
+$ ./engine /nonexistent.json
+engine: no such file: /nonexistent.json
+
+$ echo '{"sheets":{"Sheet1":{"a2":5,"A3":"=A2+1","A4":1e3}}}' | ./engine -
+{"sheets": {"Sheet1": {"A2": 5, "A3": 6, "A4": 1000}}}
