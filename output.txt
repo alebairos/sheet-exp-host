@@ -1,0 +1,1 @@
+FAIL Ctrl+Z once undoes the bar edit: B1: wanted "", the page shows "x"
