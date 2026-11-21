@@ -1,0 +1,70 @@
+diff --git i/web/io/index.html w/web/io/index.html
+index 14913df..b21c41f 100644
+--- i/web/io/index.html
++++ w/web/io/index.html
+@@ -19,6 +19,7 @@
+ <body>
+   <div class="bar">
+     <label>Open <input type="file" id="open" accept=".json,.csv"></label>
++    <label>File name <input id="save-name" size="16"></label>
+     <button id="save-json">Save JSON</button>
+     <button id="save-csv">Save CSV</button>
+   </div>
+@@ -37,6 +38,24 @@
+       return res.json();
+     };
+     const controller = createController({ compute });
++    // Undo/redo: the workbook as typed before each edit; dirty: edits since the last open or save.
++    const past = [], future = [];
++    let dirty = false;
++    const remember = () => { past.push(controller.state.book); future.length = 0; dirty = true; };
++    const restore = async (book) => {
++      controller.state.book = book;
++      dirty = true;
++      try { controller.state.computed = await compute(book); } catch (e) { controller.state.message = "Could not compute: " + e.message; }
++      showMessage();
++      show(grid ? grid.state.selected : "A1");
++    };
++    document.addEventListener("keydown", (e) => {
++      if (!(e.ctrlKey || e.metaKey) || e.target.closest("input")) return;
++      const k = e.key.toLowerCase();
++      if (k === "z" && !e.shiftKey && past.length) { e.preventDefault(); future.push(controller.state.book); busy = busy.then(() => restore(past.pop())); }
++      else if ((k === "y" || (k === "z" && e.shiftKey)) && future.length) { e.preventDefault(); past.push(controller.state.book); busy = busy.then(() => restore(future.pop())); }
++    });
++    window.addEventListener("beforeunload", (e) => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+     const gridEl = document.getElementById("grid");
+     const messageEl = document.getElementById("message");
+ 
+@@ -63,6 +82,7 @@
+       onCommit: (raw, ref, sheet) => {
+         const typed = raw.sheets[sheet]?.[ref];
+         busy = busy.then(async () => {
++          remember();
+           const { book } = controller.state;
+           const cells = { ...(book.sheets[sheet] || {}) };
+           if (typed === undefined) delete cells[ref];
+@@ -84,6 +104,7 @@
+       const refs = changedRefs(shown, typed);
+       if (!refs.length) return;
+       busy = busy.then(async () => {
++        remember();
+         for (const ref of refs) await controller.edit(ref, inputText(typed[ref]));
+         showMessage();
+         show(s.selected);
+@@ -104,12 +125,16 @@
+       if (!file) return;
+       await controller.openFile(file);
+       e.target.value = "";
++      document.getElementById("save-name").value = controller.state.name;
++      past.length = 0; future.length = 0; dirty = false;
+       showMessage();
+       show();
+     });
+     for (const [id, save] of [["save-json", () => controller.saveJSON()], ["save-csv", () => controller.saveCSV()]]) {
+       document.getElementById(id).addEventListener("click", () => {
++        controller.state.name = document.getElementById("save-name").value.trim().replace(/\.(json|csv)$/i, "") || controller.state.name;
+         const s = save();
++        dirty = false;
+         download(s.name, s.text, s.type);
+       });
+     }
