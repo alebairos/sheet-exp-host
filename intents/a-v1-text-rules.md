@@ -202,7 +202,18 @@ Status: landed (`7f45bdc1d17a`) · depends on `wi-a-v1-text-rules-1`
 
 Adds tests/values/test_text_rules.py, run by ./test.sh, for the text order and text-to-number rules, so the product keeps Calc's behaviour.
 
-Status: accepted · depends on `wi-a-v1-text-rules-2`
+Status: landing (`c7551f3fb394`) · depends on `wi-a-v1-text-rules-2`
+
+**The passing review noted:** > PASS. WI e185114 adds only tests/values/test_text_rules.py (+78), inside scope tests/values. Verify rerun in a worktree of the WI and of main 36266b0 (check files identical to plan 86f21e8 for tr_*):
+> - ac-tr-suite (tests/values/checks/a_v1_tr_suite.sh): WI "ok ... (4)"; main FAIL "no tests in tests/values/test_text_rules.py" (base red). ./test.sh on WI: Ran 152, OK (main 148).
+> - b1/b2 (a_v1_tr_b1_compare.sh, a_v1_tr_b2_numbers.sh): still ok on WI (no product code changed).
+> - Fidelity: all 88 expected values (ORDER 32 test_text_rules.py:18-30, NUMBERS 29 :34-40, OVERFLOW 2 :41, VALUE_ERRORS 25 :44-45) re-derived by a fresh LibreOffice 26.8 run through the plan's UNO probe: 88/88 match. Overflow tolerance (1.79769313486231E+308 vs 1.7976931348623157E+308, :63) is documented in the docstring and is the 15-digit print, acceptable.
+> - Guarding: test file run on aa2fd48 (before WI-1) fails 3/4 (="a"="A", =" 5 "+0, ="1E400"+0); on ad46068 (WI-1 only) fails the 2 number tests. So it pins both rules.
+> - a2_b2_coercion.sh fails on TRUE and compare('a','A') identically on main and WI: the conflict accepted at SpecAccept, not this WI.
+> Findings for the Gm/judge (ac-tr-judge, usefulness; outside this WI's scope, not failing it):
+> 1. web/grid/grid.js:74 NUMBER_TEXT/parseInput keeps "$5", "1,000", "50%", "(5)" typed in a cell as text. Arithmetic now reads them (=B1+..+B5 gives 1005.5) but =SUM(B1:B5) gives 0, as in Calc for text cells; Calc's input, though, would store 5/1000/0.5/-5 as numbers, so in the UI a user's column of $ amounts totals 0. Candidate intent: cell input recognition (web/grid, formula bar) as Calc's.
+> 2. conflict (usefulness vs fidelity): =IF(A4="yes",...) with A4 "Yes" gives "no" (case-sensitive, Calc-faithful) while COUNTIF(A1:A5,"yes") gives 1; an ordinary user may find that surprising. For the human.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -232,8 +243,8 @@ Status: accepted · depends on `wi-a-v1-text-rules-2`
 | Reviewed `wi-a-v1-text-rules-1` | `rev-a@alebairos` (passed attempt 2) |
 | Implemented `wi-a-v1-text-rules-2` | `impl-a1@alebairos` |
 | Reviewed `wi-a-v1-text-rules-2` | `rev-a@alebairos` (passed attempt 1) |
-| Implemented `wi-a-v1-text-rules-3` | — |
-| Reviewed `wi-a-v1-text-rules-3` | — |
+| Implemented `wi-a-v1-text-rules-3` | `impl-a1@alebairos` |
+| Reviewed `wi-a-v1-text-rules-3` | `rev-a@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
@@ -262,7 +273,7 @@ Files landed by `wi-a-v1-text-rules-2`:
 - `src/values/__init__.py` +3 −10
 - `tests/values/test_values.py` +3 −1 (test)
 
-Landing pull request: [exp-a #39](https://github.com/alebairos/sheet-exp-a/pull/39)
+Landing pull request: [exp-a #41](https://github.com/alebairos/sheet-exp-a/pull/41)
 
 ## 7. The decision
 
@@ -270,7 +281,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 10 h 44 min so far
+- Lead time: 11 h 01 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 18 min
 - Size: 358 lines (+343 −15, 10 files, ≤400; tests 204 lines); plan check files laid over by land, not in the size: +395 −0, 7 files
