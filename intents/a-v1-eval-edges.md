@@ -66,7 +66,7 @@ Status: landed (`03bcf7aa5657`)
 
 IF and IFERROR evaluate only the argument they use, and cells in a cycle are computed on demand in Calc's column-major order, a read of a cell still in progress being Err:522, so self-references through untaken branches give Calc's values.
 
-Status: landing (`24bf5780a006`) · depends on `wi-a-v1-eval-edges-1`
+Status: landed (`24bf5780a006`) · depends on `wi-a-v1-eval-edges-1`
 
 **The passing review noted:** > PASS. Reviewed 8dff1d3 (src/eval, src/recalc, tests/recalc/test_recalc.py; +165 -14) on main 2070717, which already has WI-1. I used the plan's checks (327bfff).
 > 
@@ -100,7 +100,7 @@ Status: accepted · depends on `wi-a-v1-eval-edges-2`
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
 | not yet | b1 | a range used where one value is expected takes the cell in the formula's row or column, as LibreOffice does, on cases computed by LibreOffice | `tests/eval/checks/a_v1_ee_b1_intersect.sh` — |
-| not yet | b2 | a self-reference through a branch IF or IFERROR does not take gives LibreOffice's value, not Err:522, on cases computed by LibreOffice | no landed check |
+| not yet | b2 | a self-reference through a branch IF or IFERROR does not take gives LibreOffice's value, not Err:522, on cases computed by LibreOffice | `tests/eval/checks/a_v1_ee_b2_branch.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -137,6 +137,12 @@ Files landed by `wi-a-v1-eval-edges-1`:
 - `src/recalc/__init__.py` +1 −1
 - `tests/eval/checks/a_v1_ee_calc.json` +1 −0 (plan check)
 
+Files landed by `wi-a-v1-eval-edges-2`:
+
+- `src/recalc/__init__.py` +88 −7
+- `tests/recalc/test_recalc.py` +46 −0 (test)
+- `src/eval/__init__.py` +31 −7
+
 Landing pull request: [exp-a #27](https://github.com/alebairos/sheet-exp-a/pull/27)
 
 ## 7. The decision
@@ -145,7 +151,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 2 h 18 min so far
+- Lead time: 2 h 29 min so far
 - Loops: 0
 - Waste: 0 min
-- Size: 78 lines (+55 −23, 3 files, ≤400; tests 8 lines); plan check files laid over by land, not in the size: +129 −0, 6 files
+- Size: 211 lines (+174 −37, 6 files, ≤400; tests 54 lines); plan check files laid over by land, not in the size: +129 −0, 6 files

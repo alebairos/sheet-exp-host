@@ -70,7 +70,7 @@ Status: landed (`11fa25c61ed9`)
 
 Adds tests/e2e/ui/test_big_sheets.py, run by ./test.sh in headless Chrome, which opens a 2001-row CSV, scrolls to its last cell, moves with the arrows and PageDown/PageUp and edits row 2001, so the product keeps this behaviour.
 
-Status: attempt 2 in work by `impl-a1@alebairos` · depends on `wi-a-v1-big-sheets-1`
+Status: in review by `rev-a@alebairos` · depends on `wi-a-v1-big-sheets-1`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -99,7 +99,7 @@ Status: attempt 2 in work by `impl-a1@alebairos` · depends on `wi-a-v1-big-shee
 | Implemented `wi-a-v1-big-sheets-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-v1-big-sheets-1` | `rev-a@alebairos` (passed attempt 1) |
 | Implemented `wi-a-v1-big-sheets-2` | `impl-a1@alebairos`, `impl-a2@alebairos` |
-| Reviewed `wi-a-v1-big-sheets-2` | — |
+| Reviewed `wi-a-v1-big-sheets-2` | `rev-a@alebairos` |
 
 Product checks: not recorded yet.
 
@@ -128,7 +128,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 2 h 19 min so far
+- Lead time: 2 h 29 min so far
 - Loops: 1 (D4 build 1)
 - Waste: 39 min
 - Size: 171 lines (+142 −29, 4 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +307 −0, 8 files

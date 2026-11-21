@@ -57,7 +57,16 @@ Status: landed (`1f715b03add3`)
 
 Adds tests/values/test_number_text.py, run by ./test.sh, covering the decimal/E edges, exact integers, halves and the 3-digit exponent, so the product keeps Calc's form.
 
-Status: accepted · depends on `wi-a-v1-number-text-1`
+Status: landing (`a1ae24c7a556`) · depends on `wi-a-v1-number-text-1`
+
+**The passing review noted:** > PASS. Reviewed ce485f3 (tests/values/test_number_text.py, +141) on main 1f715b0, which already has WI-1. I used the plan's checks (d4364ad).
+> 
+> - ac-nt-suite (tests/values/checks/a_v1_nt_suite.sh): "ok the product's number-to-text tests run and pass (7)". Red on base: "no tests in tests/values/test_number_text.py". ac-nt-b1 still gives 220/220. ./test.sh: 83 tests OK.
+> - The expected values are not hand-written. I compared CALC (test_number_text.py:17-73) programmatically with tests/values/checks/a_v1_nt_calc.json: all 55 rows equal (n, concat, len). The JSON's amp and left forms equal "x"+text and text.
+> - The tests pin the rule. With src/values from before WI-1 (f101426): FAILED (failures=7), every test fails. With the current code: OK. They cover format_number, to_text, and &, CONCATENATE, LEFT and LEN through src.cli.compute (:91-101). The edges are tested at :104-129.
+> - Note: the rounding-carry cases from my WI-1 review (999999999999999.5, 9.999999999999995E-15) are not in this file. With WI-1 attempt 1's code this suite still passes. They are pinned in tests/values/test_values.py:63-72 (landed with WI-1), so ./test.sh keeps them. Adding them here would make this file the complete statement of the rule, but that is optional.
+> - Scope: tests/values only, inside the intent's scope. The judge ac-nt-judge is answered elsewhere.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -84,8 +93,8 @@ Status: accepted · depends on `wi-a-v1-number-text-1`
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-v1-number-text-1` | `impl-a1@alebairos` |
 | Reviewed `wi-a-v1-number-text-1` | `rev-a@alebairos` (passed attempt 2) |
-| Implemented `wi-a-v1-number-text-2` | — |
-| Reviewed `wi-a-v1-number-text-2` | — |
+| Implemented `wi-a-v1-number-text-2` | `impl-a2@alebairos` |
+| Reviewed `wi-a-v1-number-text-2` | `rev-a@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
@@ -100,7 +109,7 @@ Files landed by `wi-a-v1-number-text-1`:
 - `tests/values/test_values.py` +12 −1 (test)
 - `tests/values/checks/a_v1_nt_calc.json` +1 −0 (plan check)
 
-Landing pull request: [exp-a #25](https://github.com/alebairos/sheet-exp-a/pull/25)
+Landing pull request: [exp-a #28](https://github.com/alebairos/sheet-exp-a/pull/28)
 
 ## 7. The decision
 
@@ -108,7 +117,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 2 h 18 min so far
+- Lead time: 2 h 29 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 6 min
 - Size: 28 lines (+16 −12, 2 files, ≤400; tests 13 lines); plan check files laid over by land, not in the size: +104 −0, 4 files

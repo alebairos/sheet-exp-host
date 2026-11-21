@@ -4,7 +4,7 @@
 
 > The CLI fails badly on bad input. Observed: malformed or empty JSON, {"sheets":[]}, a missing file and a directory print Python tracebacks; [] and {"foo":1} silently give an empty workbook with exit 0; NaN and 1e999 print as NaN and Infinity (invalid JSON); a lowercase key "a2" is echoed but =A2 reads it blank; --cell sheet1!a1 gives #REF! and --cell Sheet1!$A$1 null; a constant 1e3 echoes as 1000.0 (G28, G29; prior S6, T7). (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: in work · 2 work items · 2 bullets
+Kind: Defect · State: awaiting the verdict · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -63,7 +63,7 @@ Status: landed (`f55be7543b50`)
 
 Adds tests/cli/test_cli_input.py (and tests/cli/__init__.py), run by ./test.sh, covering bad input and lower-case and $ references, so the product keeps this behaviour.
 
-Status: landing (`eaab2bf659df`) · depends on `wi-a-v1-cli-input-1`
+Status: landed (`eaab2bf659df`) · depends on `wi-a-v1-cli-input-1`
 
 **The passing review noted:** > PASS. Reviewed 05ccb6f (tests/cli/__init__.py, tests/cli/test_cli_input.py, +162) on main 2070717, which already has WI-1 (f55be75). I used the plan's checks (2ec3d06).
 > 
@@ -85,8 +85,8 @@ Status: landing (`eaab2bf659df`) · depends on `wi-a-v1-cli-input-1`
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | bad input (malformed JSON, wrong shape, missing file, directory) prints one plain error line on stderr and exits non-zero, with no traceback | `tests/cli/checks/a_v1_ci_b1_bad_input.sh` — |
-| not yet | b2 | every output is valid JSON numbers; --cell accepts lower-case and $ references; lower-case cell keys are read as their cell | `tests/cli/checks/a_v1_ci_b2_refs.sh` — |
+| not yet | b1 | bad input (malformed JSON, wrong shape, missing file, directory) prints one plain error line on stderr and exits non-zero, with no traceback | `tests/cli/checks/a_v1_ci_b1_bad_input.sh` —, `tests/cli/checks/a_v1_ci_suite.sh` —, `judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.` — |
+| not yet | b2 | every output is valid JSON numbers; --cell accepts lower-case and $ references; lower-case cell keys are read as their cell | `tests/cli/checks/a_v1_ci_b2_refs.sh` —, `tests/cli/checks/a_v1_ci_suite.sh` —, `judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.` — |
 
 ## 5. Out of scope and risks
 
@@ -119,15 +119,23 @@ Files landed by `wi-a-v1-cli-input-1`:
 - `tests/cli/checks/a_v1_ci_suite.sh` +27 −0 (plan check)
 - `tests/cli/checks/a_v1_ci_calc.json` +1 −0 (plan check)
 
+Files landed by `wi-a-v1-cli-input-2`:
+
+- `tests/cli/test_cli_input.py` +162 −0 (test)
+- `tests/cli/__init__.py` +0 −0 (test)
+
 Landing pull request: [exp-a #26](https://github.com/alebairos/sheet-exp-a/pull/26)
 
 ## 7. The decision
 
-Nothing waits on you.
+**Judge:a-v1-cli-input:judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.**: A decision: show your human its options. The question: Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.
+
+- Pass: `cooknship decide --answer Judge:a-v1-cli-input:judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried. --option pass`
+- Fail, with the reason: `cooknship decide --answer Judge:a-v1-cli-input:judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried. --option fail --text "<reason>"`
 
 ## 8. Metrics
 
-- Lead time: 2 h 18 min so far
+- Lead time: 2 h 29 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 14 min
-- Size: 160 lines (+147 −13, 1 file, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +165 −0, 6 files
+- Size: 160 lines (+147 −13, 3 files, ≤400; tests 162 lines); plan check files laid over by land, not in the size: +165 −0, 6 files
