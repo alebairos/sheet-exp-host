@@ -1,0 +1,1 @@
+FAIL the 1000-term sum in D1 shows Calc's value: wanted "1000", the page shows ""
