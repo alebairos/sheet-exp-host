@@ -1,0 +1,1 @@
+ok b2: keys reach A2001 and M2001, the view follows; B2001 := 5 gives M2001 10, M1 200101904 as in Calc
