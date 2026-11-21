@@ -4,7 +4,7 @@
 
 > Decimal arithmetic looks and compares wrong. Observed: =0.1+0.2=0.3 gives FALSE where LibreOffice gives TRUE; =(0.1+0.2)-0.3 gives 5.55E-17 where Calc gives 0; the CLI prints 0.30000000000000004, 3.3000000000000003, and the budget's D5 as -34.51999999999998 (G19, G17; prior S2, S8). Expected: Calc's approximate equality and subtraction, and CLI numbers as Calc reports them. (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: accepted · 2 work items · 2 bullets
+Kind: Defect · State: in work · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -40,7 +40,16 @@ Learned from RECORD.md and the overlapping pages: a-i5 already chose Calc's Kaha
 
 Formulas' + and - and their comparisons use LibreOffice's 2**-48 approximate equality, so =0.1+0.2=0.3 is TRUE and =(0.1+0.2)-0.3 is 0, and ./engine prints numbers to Calc's 15 significant digits (0.3, 3.3, -34.52) instead of binary noise.
 
-Status: accepted
+Status: landing (`e082958b9e7b`)
+
+**The passing review noted:** > PASS. Reviewed attempt 2 (a1f1b90, on attempt 1 47bb658, base main b55e9e2) with the plan's checks (faa82a9).
+> 
+> - My attempt-1 findings are fixed. approx_equal (src/values/__init__.py:297-311) now has a 2^-44 bound, the integer guard (a, b and d all whole and <= 2^53-1 are never equal) and the 15-digit test. The fitted form is "within 2^-48, or equal at 15 digits". That OR is right: Calc says =1.0000000000000049<1.0000000000000051 is FALSE, which pure 15-digit rounding would get wrong. =1E15+1-1E15 is now 1, =2^52=2^52+1 is FALSE and =1.000000000000004=1 is TRUE, as in Calc. test_approx_arith.py now pins these (+115 lines).
+> - Checks: ac b1 gives "ok 35 comparisons and subtractions match LibreOffice Calc". ac b2 gives "ok 22 numbers print as LibreOffice reports them". Every other check script in tests/*/checks passes. ./test.sh: 124 OK.
+> - Held-out fidelity, LibreOffice 26.8.1.1 over UNO, 85 formulas of my own in three runs. The third run (30 new formulas) came after this attempt, so the rule was not fitted to it. The WI matches 82 of 85, and main gets 23 of the 30 new ones wrong. The new run covers 1E-10 and 1E20 magnitudes, negatives, <, > and >=, d whole with a and b not ((1E15+0.5)-(1E15-0.5) = 1), (2^53-1)-(2^53-3) = 2, denormals, 1E300, and 33.33*3=99.99.
+> - Remaining misses, all where a typed 16th digit sits at a 15-digit half: =123.4567890123455=123.456789012345, =1.0000000000000049E-10=1E-10 and =1.000000000000005E-10=1E-10. Calc gives TRUE, the WI FALSE. _digits15 rounds the shortest repr half-up. I tried rounding the exact binary value (Decimal(x)) in scratch: that fixes these 3 but breaks =123.456789012346-123.4567890123455 (Calc 0). Calc treats 123.4567890123455 as equal to both ...345 and ...346, so its approxValue is not a plain rounding, and neither model fits every case. Real users rarely hit this (it needs 16 significant digits at a half). I leave it as a follow-up if 16th-digit fidelity matters. A test in WI-2 that records these 4 Calc results as known would make the limit visible.
+> - Scope: src/values, src/eval, src/cli.py and tests/values are all in scope. The CLI part is unchanged since attempt 1 and is good.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -77,8 +86,8 @@ Status: accepted · depends on `wi-a-v1-decimal-noise-1`
 | --- | --- |
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
-| Implemented `wi-a-v1-decimal-noise-1` | — |
-| Reviewed `wi-a-v1-decimal-noise-1` | — |
+| Implemented `wi-a-v1-decimal-noise-1` | `impl-a1@alebairos`, `impl-a2@alebairos` |
+| Reviewed `wi-a-v1-decimal-noise-1` | `rev-a@alebairos` (passed attempt 2) |
 | Implemented `wi-a-v1-decimal-noise-2` | — |
 | Reviewed `wi-a-v1-decimal-noise-2` | — |
 
@@ -86,13 +95,15 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Landing pull request: [exp-a #31](https://github.com/alebairos/sheet-exp-a/pull/31)
+
 ## 7. The decision
 
 Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 3 h 31 min so far
-- Loops: 0
-- Waste: 0 min
+- Lead time: 3 h 58 min so far
+- Loops: 1 (D5 review 1)
+- Waste: 10 min
 - Size: nothing landed yet

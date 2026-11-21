@@ -4,7 +4,7 @@
 
 > The same input gives different results depending on where I type it, and the grid shows numbers unlike Calc. Observed: 50% typed in the grid is stored as text (=A1*2 gives #VALUE!), in the formula bar it is 0.5, in a CSV it is text; =10^15+1 shows as 1E+15 in the grid (the CLI gives 1000000000000001), 1E-7 shows 1E-07 (G12, G16; prior S23, S25). Expected, as in Calc: one entry rule for grid, bar and CSV (50% is the number 0.5, shown 50%), and numbers shown as Calc's General format shows them. (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: planned · 3 work items · 2 bullets
+Kind: Defect · State: accepted · 3 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -401,7 +401,7 @@ finally:
 
 The grid's parseInput, which parseCSV also uses, follows the formula bar's rule: 50% is 0.5, a leading apostrophe makes text and is dropped, 1e3 is 1000. So typing in a cell, in the bar or opening a CSV stores the same values, as Calc enters them. A text that would read back as a number or TRUE/FALSE comes back with its apostrophe in the editor ('123), so it stays text.
 
-Status: planned
+Status: accepted
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -411,18 +411,18 @@ Status: planned
 
 The grid's number display fits each number to a standard column the way Calc's General format does (fewer decimals or a shorter E-mantissa, decimal when exact), so 1E-7 shows 0.0000001, 1234567890123456 shows 1.23457E+15 and halves round away from zero, as LibreOffice draws them. Only the drawn cell uses that fitted text: the editor, the page's commits and typed numbers in Save CSV use the full text, so no typed digit is lost.
 
-Status: planned · depends on `wi-a-v1-entry-display-1`
+Status: accepted · depends on `wi-a-v1-entry-display-1`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
 | `ac-ed-b2` | b2 | `tests/e2e/ui/checks/a_v1_ed_b2_display.sh` | red | — |
-| `ac-ed-keep` | b1 | `tests/e2e/ui/checks/a_v1_ed_b1_keep.sh` | — | — |
+| `ac-ed-keep` | b1 | `tests/e2e/ui/checks/a_v1_ed_b1_keep.sh` | red | — |
 
 ### `wi-a-v1-entry-display-3`: Product tests for entry and display
 
 Adds tests/e2e/ui/test_entry_display.py, run by ./test.sh in headless Chrome, covering the three entry paths and Calc's General display, so the product keeps this behaviour.
 
-Status: planned · depends on `wi-a-v1-entry-display-1`, `wi-a-v1-entry-display-2`
+Status: accepted · depends on `wi-a-v1-entry-display-1`, `wi-a-v1-entry-display-2`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -447,7 +447,7 @@ Status: planned · depends on `wi-a-v1-entry-display-1`, `wi-a-v1-entry-display-
 | Role | Who |
 | --- | --- |
 | Planned | `plan-a@alebairos` |
-| Certified | — |
+| Certified | `gate-a@alebairos` |
 | Implemented `wi-a-v1-entry-display-1` | — |
 | Reviewed `wi-a-v1-entry-display-1` | — |
 | Implemented `wi-a-v1-entry-display-2` | — |
@@ -465,7 +465,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 3 h 32 min so far
+- Lead time: 3 h 58 min so far
 - Loops: 6 (D1 spec 2, D2 plan 4)
 - Waste: 2 h 03 min
 - Size: nothing landed yet

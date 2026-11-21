@@ -4,7 +4,7 @@
 
 > I can see and edit every row and column of a large workbook in the browser. Observed: the grid always shows rows 1-20 and columns A-H; opening a 2001-row bank CSV, scrolling and ArrowDown/PageDown from A20 do nothing, so rows 21-2001 can't be seen or edited, though the data is intact (G5; prior S17, T11). (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Feature · State: in work · 2 work items · 2 bullets
+Kind: Feature · State: awaiting the verdict · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -70,7 +70,7 @@ Status: landed (`11fa25c61ed9`)
 
 Adds tests/e2e/ui/test_big_sheets.py, run by ./test.sh in headless Chrome, which opens a 2001-row CSV, scrolls to its last cell, moves with the arrows and PageDown/PageUp and edits row 2001, so the product keeps this behaviour.
 
-Status: landing (`7db2dd26f2a0`) · depends on `wi-a-v1-big-sheets-1`
+Status: landed (`7db2dd26f2a0`) · depends on `wi-a-v1-big-sheets-1`
 
 **The passing review noted:** > PASS. Reviewed attempt 4 (b488404, on attempt 3 4ea210b, base main 2070717) with the plan's checks (b9932e3). Runs used CHROME=/usr/bin/chromium.
 > 
@@ -91,8 +91,8 @@ Status: landing (`7db2dd26f2a0`) · depends on `wi-a-v1-big-sheets-1`
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | opening a CSV of 2001 rows and 12 columns, the user can scroll to and see row 2001 and column L | `tests/e2e/ui/checks/a_v1_bs_b1_scroll.sh` — |
-| not yet | b2 | the arrow keys and PageDown/PageUp move the selection past the visible edge and the view follows it; editing a cell at row 2001 recomputes formulas that use it | `tests/e2e/ui/checks/a_v1_bs_b2_keys.sh` — |
+| not yet | b1 | opening a CSV of 2001 rows and 12 columns, the user can scroll to and see row 2001 and column L | `tests/e2e/ui/checks/a_v1_bs_b1_scroll.sh` —, `tests/e2e/ui/checks/a_v1_bs_suite.sh` —, `judge:Usefulness only (not Calc fidelity): through the page as shipped (python3 web/io/serve.py, /io/index.html), can an ordinary user open a 2001-row, 12-column CSV such as a bank statement, scroll to the last row and to column L, move there and back with the arrow keys and PageDown/PageUp without losing their place, edit a cell in row 2001 and see the formulas that use it update, with scrolling that feels immediate? Answer yes or no with what you tried.` — |
+| not yet | b2 | the arrow keys and PageDown/PageUp move the selection past the visible edge and the view follows it; editing a cell at row 2001 recomputes formulas that use it | `tests/e2e/ui/checks/a_v1_bs_b2_keys.sh` —, `tests/e2e/ui/checks/a_v1_bs_suite.sh` —, `judge:Usefulness only (not Calc fidelity): through the page as shipped (python3 web/io/serve.py, /io/index.html), can an ordinary user open a 2001-row, 12-column CSV such as a bank statement, scroll to the last row and to column L, move there and back with the arrow keys and PageDown/PageUp without losing their place, edit a cell in row 2001 and see the formulas that use it update, with scrolling that feels immediate? Answer yes or no with what you tried.` — |
 
 ## 5. Out of scope and risks
 
@@ -130,15 +130,27 @@ Files landed by `wi-a-v1-big-sheets-1`:
 - `web/grid/grid.css` +9 −0
 - `tests/e2e/ui/checks/a_v1_bs_calc.json` +1 −0 (plan check)
 
+Files landed by `wi-a-v1-big-sheets-2`:
+
+- `tests/e2e/ui/big_sheets.mjs` +191 −0 (test)
+- `tests/e2e/ui/test_big_sheets.py` +33 −0 (test)
+- `tests/e2e/ui/browser.mjs` +26 −6 (test)
+- `web/grid/grid.js` +6 −1
+- `web/grid/grid.css` +2 −1
+- `tests/e2e/ui/walkthrough.mjs` +1 −1 (test)
+
 Landing pull request: [exp-a #30](https://github.com/alebairos/sheet-exp-a/pull/30)
 
 ## 7. The decision
 
-Nothing waits on you.
+**Judge:a-v1-big-sheets:judge:Usefulness only (not Calc fidelity): through the page as shipped (python3 web/io/serve.py, /io/index.html), can an ordinary user open a 2001-row, 12-column CSV such as a bank statement, scroll to the last row and to column L, move there and back with the arrow keys and PageDown/PageUp without losing their place, edit a cell in row 2001 and see the formulas that use it update, with scrolling that feels immediate? Answer yes or no with what you tried.**: A decision: show your human its options. The question: Usefulness only (not Calc fidelity): through the page as shipped (python3 web/io/serve.py, /io/index.html), can an ordinary user open a 2001-row, 12-column CSV such as a bank statement, scroll to the last row and to column L, move there and back with the arrow keys and PageDown/PageUp without losing their place, edit a cell in row 2001 and see the formulas that use it update, with scrolling that feels immediate? Answer yes or no with what you tried.
+
+- Pass: `cooknship decide --answer Judge:a-v1-big-sheets:judge:Usefulness only (not Calc fidelity): through the page as shipped (python3 web/io/serve.py, /io/index.html), can an ordinary user open a 2001-row, 12-column CSV such as a bank statement, scroll to the last row and to column L, move there and back with the arrow keys and PageDown/PageUp without losing their place, edit a cell in row 2001 and see the formulas that use it update, with scrolling that feels immediate? Answer yes or no with what you tried. --option pass`
+- Fail, with the reason: `cooknship decide --answer Judge:a-v1-big-sheets:judge:Usefulness only (not Calc fidelity): through the page as shipped (python3 web/io/serve.py, /io/index.html), can an ordinary user open a 2001-row, 12-column CSV such as a bank statement, scroll to the last row and to column L, move there and back with the arrow keys and PageDown/PageUp without losing their place, edit a cell in row 2001 and see the formulas that use it update, with scrolling that feels immediate? Answer yes or no with what you tried. --option fail --text "<reason>"`
 
 ## 8. Metrics
 
-- Lead time: 3 h 32 min so far
+- Lead time: 3 h 58 min so far
 - Loops: 3 (D4 build 1, D5 review 1, D6 landing 1)
 - Waste: 1 h 22 min
-- Size: 171 lines (+142 −29, 4 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +307 −0, 8 files
+- Size: 181 lines (+150 −31, 10 files, ≤400; tests 258 lines); plan check files laid over by land, not in the size: +307 −0, 8 files
