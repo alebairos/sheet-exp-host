@@ -4,7 +4,7 @@
 
 > Formulas Calc accepts fail here, and malformed ones give the wrong error. Observed vs LibreOffice: = SUM( A1 : A2 ) gives #VALUE! (Calc 3); =SUM( 'My Sheet'!A1 : A2 ) #VALUE! (Calc 11); =SUM(S2!A1:S2!A2) #VALUE! (Calc 7); =SUM(1,2 #VALUE! (Calc 3); =(1+ and =1+*2 give #VALUE! (Calc Err:511, Err:510); =1E400 #VALUE! (Calc Err:502); =MAX() 0 and =MEDIAN() #VALUE! (Calc Err:511) (G24, G25; prior S15, S24). (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: in work · 3 work items · 2 bullets
+Kind: Defect · State: awaiting the verdict · 3 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -128,7 +128,7 @@ Status: landed (`60659f1ea40a`) · depends on `wi-a-v1-parse-fidelity-1`
 
 Adds tests/parser/test_parse_fidelity.py, run by ./test.sh, covering the accepted forms, the parse error codes and empty calls, so the product keeps Calc's behaviour.
 
-Status: landing (`1ca6a2287c7b`) · depends on `wi-a-v1-parse-fidelity-2`
+Status: landed (`1ca6a2287c7b`) · depends on `wi-a-v1-parse-fidelity-2`
 
 **The passing review noted:** > PASS (166fa9d, attempt 1). Only test files, both in scope: tests/parser/test_parse_fidelity.py (+74) and tests/parser/parse_fidelity_calc.json (+1055). No product code changed.
 > 
@@ -160,8 +160,8 @@ Status: landing (`1ca6a2287c7b`) · depends on `wi-a-v1-parse-fidelity-2`
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | formulas with spaces around tokens, ranges with a sheet on both ends, and a missing final parenthesis compute as LibreOffice computes them | `tests/parser/checks/a_v1_pf_b1_accept.sh` — |
-| not yet | b2 | malformed formulas, =1E400 and empty-argument calls give LibreOffice's error codes, with expected values from running LibreOffice | `tests/parser/checks/a_v1_pf_b2_errors.sh` — |
+| not yet | b1 | formulas with spaces around tokens, ranges with a sheet on both ends, and a missing final parenthesis compute as LibreOffice computes them | `tests/parser/checks/a_v1_pf_b1_accept.sh` —, `tests/parser/checks/a_v1_pf_suite.sh` —, `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, can an ordinary user type formulas the way people do (spaces around operators and ranges, a forgotten closing parenthesis, sheet names on both ends of a range) and get results, and when a formula is really broken, get a specific error rather than a generic #VALUE! or a crash? Answer yes or no with what you tried.` — |
+| not yet | b2 | malformed formulas, =1E400 and empty-argument calls give LibreOffice's error codes, with expected values from running LibreOffice | `tests/parser/checks/a_v1_pf_b2_errors.sh` —, `tests/parser/checks/a_v1_pf_suite.sh` —, `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, can an ordinary user type formulas the way people do (spaces around operators and ranges, a forgotten closing parenthesis, sheet names on both ends of a range) and get results, and when a formula is really broken, get a specific error rather than a generic #VALUE! or a crash? Answer yes or no with what you tried.` — |
 
 ## 5. Out of scope and risks
 
@@ -206,15 +206,23 @@ Files landed by `wi-a-v1-parse-fidelity-2`:
 - `tests/recalc/test_recalc.py` +3 −2 (test)
 - `src/recalc/__init__.py` +2 −2
 
+Files landed by `wi-a-v1-parse-fidelity-3`:
+
+- `tests/parser/parse_fidelity_calc.json` +1055 −0 (test)
+- `tests/parser/test_parse_fidelity.py` +74 −0 (test)
+
 Landing pull request: [exp-a #36](https://github.com/alebairos/sheet-exp-a/pull/36)
 
 ## 7. The decision
 
-Nothing waits on you.
+**Judge:a-v1-parse-fidelity:judge:Usefulness only (not Calc fidelity): through ./engine as shipped, can an ordinary user type formulas the way people do (spaces around operators and ranges, a forgotten closing parenthesis, sheet names on both ends of a range) and get results, and when a formula is really broken, get a specific error rather than a generic #VALUE! or a crash? Answer yes or no with what you tried.**: A decision: show your human its options. The question: Usefulness only (not Calc fidelity): through ./engine as shipped, can an ordinary user type formulas the way people do (spaces around operators and ranges, a forgotten closing parenthesis, sheet names on both ends of a range) and get results, and when a formula is really broken, get a specific error rather than a generic #VALUE! or a crash? Answer yes or no with what you tried.
+
+- Pass: `cooknship decide --answer Judge:a-v1-parse-fidelity:judge:Usefulness only (not Calc fidelity): through ./engine as shipped, can an ordinary user type formulas the way people do (spaces around operators and ranges, a forgotten closing parenthesis, sheet names on both ends of a range) and get results, and when a formula is really broken, get a specific error rather than a generic #VALUE! or a crash? Answer yes or no with what you tried. --option pass`
+- Fail, with the reason: `cooknship decide --answer Judge:a-v1-parse-fidelity:judge:Usefulness only (not Calc fidelity): through ./engine as shipped, can an ordinary user type formulas the way people do (spaces around operators and ranges, a forgotten closing parenthesis, sheet names on both ends of a range) and get results, and when a formula is really broken, get a specific error rather than a generic #VALUE! or a crash? Answer yes or no with what you tried. --option fail --text "<reason>"`
 
 ## 8. Metrics
 
-- Lead time: 6 h 54 min so far
+- Lead time: 7 h 07 min so far
 - Loops: 5 (D1 spec 1, D2 plan 2, D5 review 2)
 - Waste: 32 min
-- Size: 202 lines (+169 −33, 8 files, ≤400; tests 89 lines); plan check files laid over by land, not in the size: +139 −0, 6 files
+- Size: 202 lines (+169 −33, 10 files, ≤400; tests 1218 lines); plan check files laid over by land, not in the size: +139 −0, 6 files
