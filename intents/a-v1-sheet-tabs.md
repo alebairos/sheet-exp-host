@@ -89,7 +89,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 9 h 50 min so far
+- Lead time: 10 h 45 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: nothing landed yet

@@ -176,7 +176,7 @@ Status: landed (`d45620825e46`)
 
 Text such as " 5 ", TRUE, $5, (5), 1,000 and 50% reads as a number in arithmetic and in the functions that read numbers, exactly where Calc reads it, so it no longer gives #VALUE!.
 
-Status: landing (`7f45bdc1d17a`) · depends on `wi-a-v1-text-rules-1`
+Status: landed (`7f45bdc1d17a`) · depends on `wi-a-v1-text-rules-1`
 
 **The passing review noted:** > PASS. wi-a-v1-text-rules-2 attempt 1 (f03f26f, on main ad46068) reviewed against b2 / ac-tr-b2.
 > 
@@ -214,7 +214,7 @@ Status: accepted · depends on `wi-a-v1-text-rules-2`
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
 | not yet | b1 | text comparison with = <> < > matches LibreOffice's default (case-sensitive, locale collation) on a set of cases computed by LibreOffice | `tests/values/checks/a_v1_tr_b1_compare.sh` — |
-| not yet | b2 | text-to-number coercion in arithmetic matches LibreOffice for padded, boolean, currency, thousands-separated and percent text, computed by LibreOffice | no landed check |
+| not yet | b2 | text-to-number coercion in arithmetic matches LibreOffice for padded, boolean, currency, thousands-separated and percent text, computed by LibreOffice | `tests/values/checks/a_v1_tr_b2_numbers.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -256,6 +256,12 @@ Files landed by `wi-a-v1-text-rules-1`:
 - `src/eval/__init__.py` +3 −1
 - `tests/values/test_values.py` +1 −1 (test)
 
+Files landed by `wi-a-v1-text-rules-2`:
+
+- `src/values/text_rules.py` +59 −2
+- `src/values/__init__.py` +3 −10
+- `tests/values/test_values.py` +3 −1 (test)
+
 Landing pull request: [exp-a #39](https://github.com/alebairos/sheet-exp-a/pull/39)
 
 ## 7. The decision
@@ -264,7 +270,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 9 h 50 min so far
+- Lead time: 10 h 44 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 18 min
-- Size: 284 lines (+281 −3, 7 files, ≤400; tests 200 lines); plan check files laid over by land, not in the size: +395 −0, 7 files
+- Size: 358 lines (+343 −15, 10 files, ≤400; tests 204 lines); plan check files laid over by land, not in the size: +395 −0, 7 files
