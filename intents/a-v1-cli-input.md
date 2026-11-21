@@ -63,7 +63,18 @@ Status: landed (`f55be7543b50`)
 
 Adds tests/cli/test_cli_input.py (and tests/cli/__init__.py), run by ./test.sh, covering bad input and lower-case and $ references, so the product keeps this behaviour.
 
-Status: accepted · depends on `wi-a-v1-cli-input-1`
+Status: landing (`eaab2bf659df`) · depends on `wi-a-v1-cli-input-1`
+
+**The passing review noted:** > PASS. Reviewed 05ccb6f (tests/cli/__init__.py, tests/cli/test_cli_input.py, +162) on main 2070717, which already has WI-1 (f55be75). I used the plan's checks (2ec3d06).
+> 
+> - ac-ci-suite (tests/cli/checks/a_v1_ci_suite.sh): "ok the product's CLI input tests run and pass (10)". Red on base: "no tests in tests/cli/test_cli_input.py". ./test.sh: 86 tests OK.
+> - The tests pin the fix. I put back src/cli.py from before WI-1 (f55be75^) and ran tests.cli.test_cli_input: FAILED (failures=29, errors=1). With WI-1's cli.py they pass.
+> - b1 is covered at test_cli_input.py:41-60 and :68-110. Each bad stdin input (malformed, empty, NaN/Infinity/1e999/huge int, list, no sheets, wrong shapes, a duplicate cell), a missing file, a directory, a malformed file, a non-workbook file and a non-UTF-8 file each get exactly one `engine: ` line on stderr, empty stdout, a non-zero exit and no Traceback or *Error name. Usage errors keep exit 2 (:93).
+> - b2 is covered at :62-64 and :123-152. Output is parsed strictly (NaN refused): a2 is read as A2 and =b1*a2 is read too, 1e3 prints as the int 1000, and overflow is an error value. --cell takes sheet1!a2, $A$3, 'my sheet'!a1 and similar refs. Expected values cite the plan's Calc probe (a_v1_ci_calc.json).
+> - My own probes on the shipped engine, outside the tests: an unreadable file gives "engine: cannot read (permission denied)" with exit 1. \xff\xfe on stdin gives "not UTF-8 text". A NaN inside a list cell gives one line. -0.0 prints as 0. A 20-digit int is echoed and its formula result prints as valid JSON (1.2345678901234567e+19). --cell S!A1:B2 gives #REF!. --cell s!a1 with A1 and a1 both given reports the duplicate. All correct.
+> - Note, not this WI's: {"error":"#FOO"} is still accepted and echoed, as the record's a-i2 note says. It is not in b1/b2.
+> - Scope: tests/cli only, inside the intent's scope. The judge ac-ci-judge is answered elsewhere.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -91,8 +102,8 @@ Status: accepted · depends on `wi-a-v1-cli-input-1`
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-v1-cli-input-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-v1-cli-input-1` | `rev-a@alebairos` (passed attempt 2) |
-| Implemented `wi-a-v1-cli-input-2` | — |
-| Reviewed `wi-a-v1-cli-input-2` | — |
+| Implemented `wi-a-v1-cli-input-2` | `impl-a1@alebairos` |
+| Reviewed `wi-a-v1-cli-input-2` | `rev-a@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
@@ -108,7 +119,7 @@ Files landed by `wi-a-v1-cli-input-1`:
 - `tests/cli/checks/a_v1_ci_suite.sh` +27 −0 (plan check)
 - `tests/cli/checks/a_v1_ci_calc.json` +1 −0 (plan check)
 
-Landing pull request: [exp-a #23](https://github.com/alebairos/sheet-exp-a/pull/23)
+Landing pull request: [exp-a #26](https://github.com/alebairos/sheet-exp-a/pull/26)
 
 ## 7. The decision
 
@@ -116,7 +127,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 1 h 57 min so far
+- Lead time: 2 h 18 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 14 min
 - Size: 160 lines (+147 −13, 1 file, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +165 −0, 6 files

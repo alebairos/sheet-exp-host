@@ -37,7 +37,7 @@ Learned from RECORD.md and the overlapping pages: a-i6 measured these difference
 
 src/values' format_number writes numbers as Calc turns them into text: decimals from 1E-14 to below 1E15, exact integers below 2^53, 15 digits rounded half away from zero, and E with a 3-digit exponent otherwise, so &, CONCATENATE, LEN and the text functions match LibreOffice.
 
-Status: landing (`1f715b03add3`)
+Status: landed (`1f715b03add3`)
 
 **The passing review noted:** > PASS. Reviewed attempt 2 (7f5df85, on attempt 1 1300f55, base main f101426) with the plan's checks (d4364ad).
 > 
@@ -68,7 +68,7 @@ Status: accepted · depends on `wi-a-v1-number-text-1`
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | number-to-text conversion in &, CONCATENATE, LEN and the text functions matches LibreOffice over a set of small, large and fractional numbers, with expected values from running LibreOffice | no landed check |
+| not yet | b1 | number-to-text conversion in &, CONCATENATE, LEN and the text functions matches LibreOffice over a set of small, large and fractional numbers, with expected values from running LibreOffice | `tests/values/checks/a_v1_nt_b1_text.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -91,6 +91,15 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-v1-number-text-1`:
+
+- `tests/values/checks/a_v1_nt_probe.py` +47 −0 (plan check)
+- `tests/values/checks/a_v1_nt_b1_text.sh` +29 −0 (plan check)
+- `src/values/__init__.py` +16 −12
+- `tests/values/checks/a_v1_nt_suite.sh` +27 −0 (plan check)
+- `tests/values/test_values.py` +12 −1 (test)
+- `tests/values/checks/a_v1_nt_calc.json` +1 −0 (plan check)
+
 Landing pull request: [exp-a #25](https://github.com/alebairos/sheet-exp-a/pull/25)
 
 ## 7. The decision
@@ -99,7 +108,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 1 h 57 min so far
+- Lead time: 2 h 18 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 6 min
-- Size: nothing landed yet
+- Size: 28 lines (+16 −12, 2 files, ≤400; tests 13 lines); plan check files laid over by land, not in the size: +104 −0, 4 files

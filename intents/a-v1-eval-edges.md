@@ -66,7 +66,19 @@ Status: landed (`03bcf7aa5657`)
 
 IF and IFERROR evaluate only the argument they use, and cells in a cycle are computed on demand in Calc's column-major order, a read of a cell still in progress being Err:522, so self-references through untaken branches give Calc's values.
 
-Status: accepted · depends on `wi-a-v1-eval-edges-1`
+Status: landing (`24bf5780a006`) · depends on `wi-a-v1-eval-edges-1`
+
+**The passing review noted:** > PASS. Reviewed 8dff1d3 (src/eval, src/recalc, tests/recalc/test_recalc.py; +165 -14) on main 2070717, which already has WI-1. I used the plan's checks (327bfff).
+> 
+> - ac-ee-b2 (tests/eval/checks/a_v1_ee_b2_branch.sh): "ok b2: self-references through untaken branches match LibreOffice on 20 formulas". Red on main: Cyc!M2 =N1 gives Err:522, Calc 0.
+> - WI-1's b1 check still passes: "ok b1: implicit intersection ... 16 formulas". So do a3_b1/b2/b3 and every other check script in tests/*/checks (20 scripts; the a-i4 10,000-cell checks among them). ./test.sh: 82 tests OK.
+> - Code. src/eval/__init__.py:233-252: IF and IFERROR get their branches as _Unevaluated and evaluate only the one the registered function returns. This matches logic.py:69-89, which returns args[1], args[2] or the fallback as is; a missing branch still gives BLANK. src/recalc/__init__.py:286-321: a cyclic component is evaluated in (sheet tab, column, row) order. A pending read raises _Pending (a BaseException, so no function swallows it) and the reader restarts on an explicit stack, with no Python recursion. A read of a BUSY cell gives Err:522.
+> - Held-out fidelity: 36 formulas on two sheets, computed in LibreOffice 26.8 through the plan's UNO probe with my own BOOK. All 36 match on the WI; main gets 22 wrong. They include: a 3-cell cycle with IFERROR in the middle (C1/C2 9, C3 Err:522); nested IF(TRUE,IF(FALSE,D1,2),D1) = 2; IF(TRUE,0,SUM(E1:E3)) with E2 =E1+1; a cycle across sheets (P!F1 =Q!A1, Q!A1 =IFERROR(P!F1,0): both 0); a non-cycle reader of a cycle (G1 =C1+1 is 10); IFERROR(1/0,J1) taking the self branch (Err:522); IF(FALSE,K1) is FALSE; AND(FALSE,M1) is Err:522 (not lazy, as in Calc); a 5-cell chain through IFERROR (all 1); IF(ISERROR(R2),3,R2) is 3; SUM(S2:S3) over two IFERROR readers is 3; IF(TRUE,5,C1)*2 is 10.
+> - Incremental: Workbook.set making, breaking and remaking a cycle (B1 =A1, then 5, then =A1, then A1 =IF(TRUE,7,B1)) gives the right values each time.
+> - Speed. A 10,000-cell cycle through IFERROR takes 0.26 s (base 0.17 s), in both directions.
+> - Note, not a fail (nfr: none beyond Calc and the existing tests): one formula that reads k cells of its own component which are still pending restarts k times, so it is quadratic. A1 =IFERROR(SUM(B1:Bk),0) with every B =A1+1 takes 0.58 s at k=1000 and 3.2 s at k=3000 (base 0.06 s and 0.10 s). The values are right (A1 0, Bs Err:522). Such books are rare. If it matters, evaluate the pending precedents of a range before restarting the reader. Worth a test in WI-3 or a follow-up.
+> - Scope: src/eval, src/recalc and tests/recalc are all in the intent's scope.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -104,8 +116,8 @@ Status: accepted · depends on `wi-a-v1-eval-edges-2`
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-v1-eval-edges-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-v1-eval-edges-1` | `rev-a@alebairos` (passed attempt 1) |
-| Implemented `wi-a-v1-eval-edges-2` | — |
-| Reviewed `wi-a-v1-eval-edges-2` | — |
+| Implemented `wi-a-v1-eval-edges-2` | `impl-a1@alebairos` |
+| Reviewed `wi-a-v1-eval-edges-2` | `rev-a@alebairos` (passed attempt 1) |
 | Implemented `wi-a-v1-eval-edges-3` | — |
 | Reviewed `wi-a-v1-eval-edges-3` | — |
 
@@ -125,7 +137,7 @@ Files landed by `wi-a-v1-eval-edges-1`:
 - `src/recalc/__init__.py` +1 −1
 - `tests/eval/checks/a_v1_ee_calc.json` +1 −0 (plan check)
 
-Landing pull request: [exp-a #24](https://github.com/alebairos/sheet-exp-a/pull/24)
+Landing pull request: [exp-a #27](https://github.com/alebairos/sheet-exp-a/pull/27)
 
 ## 7. The decision
 
@@ -133,7 +145,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 1 h 57 min so far
+- Lead time: 2 h 18 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: 78 lines (+55 −23, 3 files, ≤400; tests 8 lines); plan check files laid over by land, not in the size: +129 −0, 6 files
