@@ -4,7 +4,7 @@
 
 > Text is compared and converted unlike Calc. Observed vs LibreOffice: ="a"="A" gives TRUE (Calc FALSE, case-sensitive by default); ="é">"f" TRUE (Calc FALSE, locale order); " 5 "+0, "TRUE"+0, "$5"+0, "1,000"+0, "50%"+0 give #VALUE! (Calc 5, 1, 5, 1000, 0.5) (G21, G26, G27). (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: in work · 3 work items · 2 bullets
+Kind: Defect · State: awaiting the verdict · 3 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -202,7 +202,7 @@ Status: landed (`7f45bdc1d17a`) · depends on `wi-a-v1-text-rules-1`
 
 Adds tests/values/test_text_rules.py, run by ./test.sh, for the text order and text-to-number rules, so the product keeps Calc's behaviour.
 
-Status: landing (`c7551f3fb394`) · depends on `wi-a-v1-text-rules-2`
+Status: landed (`c7551f3fb394`) · depends on `wi-a-v1-text-rules-2`
 
 **The passing review noted:** > PASS. WI e185114 adds only tests/values/test_text_rules.py (+78), inside scope tests/values. Verify rerun in a worktree of the WI and of main 36266b0 (check files identical to plan 86f21e8 for tr_*):
 > - ac-tr-suite (tests/values/checks/a_v1_tr_suite.sh): WI "ok ... (4)"; main FAIL "no tests in tests/values/test_text_rules.py" (base red). ./test.sh on WI: Ran 152, OK (main 148).
@@ -224,8 +224,8 @@ Status: landing (`c7551f3fb394`) · depends on `wi-a-v1-text-rules-2`
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | text comparison with = <> < > matches LibreOffice's default (case-sensitive, locale collation) on a set of cases computed by LibreOffice | `tests/values/checks/a_v1_tr_b1_compare.sh` — |
-| not yet | b2 | text-to-number coercion in arithmetic matches LibreOffice for padded, boolean, currency, thousands-separated and percent text, computed by LibreOffice | `tests/values/checks/a_v1_tr_b2_numbers.sh` — |
+| not yet | b1 | text comparison with = <> < > matches LibreOffice's default (case-sensitive, locale collation) on a set of cases computed by LibreOffice | `tests/values/checks/a_v1_tr_b1_compare.sh` —, `tests/values/checks/a_v1_tr_suite.sh` —, `judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried.` — |
+| not yet | b2 | text-to-number coercion in arithmetic matches LibreOffice for padded, boolean, currency, thousands-separated and percent text, computed by LibreOffice | `tests/values/checks/a_v1_tr_b2_numbers.sh` —, `tests/values/checks/a_v1_tr_suite.sh` —, `judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried.` — |
 
 ## 5. Out of scope and risks
 
@@ -273,15 +273,22 @@ Files landed by `wi-a-v1-text-rules-2`:
 - `src/values/__init__.py` +3 −10
 - `tests/values/test_values.py` +3 −1 (test)
 
+Files landed by `wi-a-v1-text-rules-3`:
+
+- `tests/values/test_text_rules.py` +78 −0 (test)
+
 Landing pull request: [exp-a #41](https://github.com/alebairos/sheet-exp-a/pull/41)
 
 ## 7. The decision
 
-Nothing waits on you.
+**Judge:a-v1-text-rules:judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried.**: A decision: show your human its options. The question: Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried.
+
+- Pass: `cooknship decide --answer Judge:a-v1-text-rules:judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried. --option pass`
+- Fail, with the reason: `cooknship decide --answer Judge:a-v1-text-rules:judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried. --option fail --text "<reason>"`
 
 ## 8. Metrics
 
-- Lead time: 11 h 01 min so far
+- Lead time: 11 h 15 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 18 min
-- Size: 358 lines (+343 −15, 10 files, ≤400; tests 204 lines); plan check files laid over by land, not in the size: +395 −0, 7 files
+- Size: 358 lines (+343 −15, 11 files, ≤400; tests 282 lines); plan check files laid over by land, not in the size: +395 −0, 7 files
