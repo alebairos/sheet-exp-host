@@ -37,7 +37,7 @@ Learned from RECORD.md and the overlapping pages: a-i3 rejected implicit interse
 
 The evaluator knows each formula's cell and, where one value is expected, takes from a range the cell in the formula's row or column as Calc does (#VALUE! outside it or for a 2-D range), so =C2:C3 in row 2 gives C2.
 
-Status: landing (`03bcf7aa5657`)
+Status: landed (`03bcf7aa5657`)
 
 **The passing review noted:** > PASS. Reviewed commit 31fc901 (wi/wi-a-v1-eval-edges-1) against plan 327bfff (base 5ed792b). Diff: src/eval/__init__.py, src/recalc/__init__.py (one line) and tests/recalc/test_recalc.py, all inside the path scope.
 > Verify, rerun: ac-ee-b1 tests/eval/checks/a_v1_ee_b1_intersect.sh passes on the WI ("16 formulas") and fails on base (T!A1/A3/B5 #VALUE!, Calc 3/4/10). ./test.sh: OK.
@@ -87,7 +87,7 @@ Status: accepted · depends on `wi-a-v1-eval-edges-2`
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | a range used where one value is expected takes the cell in the formula's row or column, as LibreOffice does, on cases computed by LibreOffice | no landed check |
+| not yet | b1 | a range used where one value is expected takes the cell in the formula's row or column, as LibreOffice does, on cases computed by LibreOffice | `tests/eval/checks/a_v1_ee_b1_intersect.sh` — |
 | not yet | b2 | a self-reference through a branch IF or IFERROR does not take gives LibreOffice's value, not Err:522, on cases computed by LibreOffice | no landed check |
 
 ## 5. Out of scope and risks
@@ -113,6 +113,18 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-v1-eval-edges-1`:
+
+- `src/eval/__init__.py` +54 −22
+- `tests/eval/checks/a_v1_ee_probe.py` +53 −0 (plan check)
+- `tests/eval/checks/a_v1_ee_suite.sh` +27 −0 (plan check)
+- `tests/eval/checks/a_v1_ee_common.py` +26 −0 (plan check)
+- `tests/eval/checks/a_v1_ee_b1_intersect.sh` +11 −0 (plan check)
+- `tests/eval/checks/a_v1_ee_b2_branch.sh` +11 −0 (plan check)
+- `tests/recalc/test_recalc.py` +6 −2 (test)
+- `src/recalc/__init__.py` +1 −1
+- `tests/eval/checks/a_v1_ee_calc.json` +1 −0 (plan check)
+
 Landing pull request: [exp-a #24](https://github.com/alebairos/sheet-exp-a/pull/24)
 
 ## 7. The decision
@@ -121,7 +133,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 1 h 37 min so far
+- Lead time: 1 h 57 min so far
 - Loops: 0
 - Waste: 0 min
-- Size: nothing landed yet
+- Size: 78 lines (+55 −23, 3 files, ≤400; tests 8 lines); plan check files laid over by land, not in the size: +129 −0, 6 files

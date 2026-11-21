@@ -40,7 +40,7 @@ Learned from RECORD.md and the overlapping pages: S6/T7 lost a point only for tr
 
 src/cli.py refuses bad input (malformed JSON, NaN/Infinity, wrong shape, missing file, directory) with one plain stderr line and exit 1, writes only strict JSON, and reads cell keys and --cell sheet and cell names case-insensitively with $, as Calc does.
 
-Status: landing (`f55be7543b50`)
+Status: landed (`f55be7543b50`)
 
 **The passing review noted:** > PASS. Reviewed commit db38593 (attempt 2; wi/wi-a-v1-cli-input-1) against plan 2ec3d06. Attempt 1 failed on one point: a JSON integer too large for a float gave a traceback. Attempt 2 adds _integer as parse_int (src/cli.py:37-46, wired at src/cli.py:52). It catches OverflowError, and also ValueError from Python's 4300-digit int limit.
 > Verify, rerun: ac-ci-b1 a_v1_ci_b1_bad_input.sh ok (13 kinds); ac-ci-b2 a_v1_ci_b2_refs.sh ok. Both were red on base (see attempt-1 review). ./test.sh: OK (75 tests).
@@ -74,8 +74,8 @@ Status: accepted · depends on `wi-a-v1-cli-input-1`
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | bad input (malformed JSON, wrong shape, missing file, directory) prints one plain error line on stderr and exits non-zero, with no traceback | no landed check |
-| not yet | b2 | every output is valid JSON numbers; --cell accepts lower-case and $ references; lower-case cell keys are read as their cell | no landed check |
+| not yet | b1 | bad input (malformed JSON, wrong shape, missing file, directory) prints one plain error line on stderr and exits non-zero, with no traceback | `tests/cli/checks/a_v1_ci_b1_bad_input.sh` — |
+| not yet | b2 | every output is valid JSON numbers; --cell accepts lower-case and $ references; lower-case cell keys are read as their cell | `tests/cli/checks/a_v1_ci_b2_refs.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -98,6 +98,16 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-v1-cli-input-1`:
+
+- `src/cli.py` +147 −13
+- `tests/cli/checks/a_v1_ci_probe.py` +37 −0 (plan check)
+- `tests/cli/checks/a_v1_ci_common.py` +34 −0 (plan check)
+- `tests/cli/checks/a_v1_ci_b1_bad_input.sh` +33 −0 (plan check)
+- `tests/cli/checks/a_v1_ci_b2_refs.sh` +33 −0 (plan check)
+- `tests/cli/checks/a_v1_ci_suite.sh` +27 −0 (plan check)
+- `tests/cli/checks/a_v1_ci_calc.json` +1 −0 (plan check)
+
 Landing pull request: [exp-a #23](https://github.com/alebairos/sheet-exp-a/pull/23)
 
 ## 7. The decision
@@ -106,7 +116,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 1 h 37 min so far
+- Lead time: 1 h 57 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 14 min
-- Size: nothing landed yet
+- Size: 160 lines (+147 −13, 1 file, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +165 −0, 6 files

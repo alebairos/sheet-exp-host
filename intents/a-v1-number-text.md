@@ -4,7 +4,7 @@
 
 > Numbers turned into text differ from Calc. Observed vs LibreOffice 26.8.1.1: "x"&1E-7 gives x1E-07 (Calc x0.0000001); "x"&1E15 x1E+15 (Calc x1000000000000000); CONCATENATE(1E21) 1E+21 (Calc 1E+021); LEN(123456789012345678) 20 and LEN(1E-20) 5 (Calc 21 and 6). Suggested by a-i6 and never parked (G23). (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: planned · 2 work items · 1 bullet
+Kind: Defect · State: in work · 2 work items · 1 bullet
 
 ## 2. What you will see
 
@@ -37,21 +37,31 @@ Learned from RECORD.md and the overlapping pages: a-i6 measured these difference
 
 src/values' format_number writes numbers as Calc turns them into text: decimals from 1E-14 to below 1E15, exact integers below 2^53, 15 digits rounded half away from zero, and E with a 3-digit exponent otherwise, so &, CONCATENATE, LEN and the text functions match LibreOffice.
 
-Status: planned
+Status: landing (`1f715b03add3`)
+
+**The passing review noted:** > PASS. Reviewed attempt 2 (7f5df85, on attempt 1 1300f55, base main f101426) with the plan's checks (d4364ad).
+> 
+> - ac-nt-b1 (tests/values/checks/a_v1_nt_b1_text.sh): "ok b1: 220 number-to-text results match LibreOffice". Red on main (135 FAIL), as checked on attempt 1.
+> - ./test.sh: 76 tests OK. That is the 75 before plus the new test_rounding_carry_keeps_the_form.
+> - Attempt-1 finding fixed. src/values/__init__.py:207 chooses decimal or E from d.adjusted() (the number before rounding). The E exponent still comes from the rounded q (line 206), so 9.999999999999995E20 stays 1E+021.
+> - The carry cases are pinned in tests/values/test_values.py:63-72. Their expected values come from my LibreOffice 26.8 runs.
+> - Held-out probe, rerun now against LibreOffice 26.8 (the plan's UNO probe on my own numbers): 57 numbers, 228 results. All match except the DBL_MAX pair (1.7976931348623157E308 and ...155E308): Calc writes 17 digits, the engine 15. That was optional in my attempt-1 review and I leave it as a note.
+> - Scope: src/values/__init__.py and tests/values/test_values.py, both in scope. ac-nt-suite (tests/values/test_number_text.py) and the judge belong to WI-2.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-nt-b1` | b1 | `tests/values/checks/a_v1_nt_b1_text.sh` | — | — |
+| `ac-nt-b1` | b1 | `tests/values/checks/a_v1_nt_b1_text.sh` | red | — |
 
 ### `wi-a-v1-number-text-2`: Product tests for number-to-text
 
 Adds tests/values/test_number_text.py, run by ./test.sh, covering the decimal/E edges, exact integers, halves and the 3-digit exponent, so the product keeps Calc's form.
 
-Status: planned · depends on `wi-a-v1-number-text-1`
+Status: accepted · depends on `wi-a-v1-number-text-1`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-nt-suite` | b1 | `tests/values/checks/a_v1_nt_suite.sh` | — | — |
+| `ac-nt-suite` | b1 | `tests/values/checks/a_v1_nt_suite.sh` | red | — |
 | `ac-nt-judge` | b1 | `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried.` | judged | — |
 
 **Acceptance**, against the landed checks:
@@ -71,9 +81,9 @@ Status: planned · depends on `wi-a-v1-number-text-1`
 | Role | Who |
 | --- | --- |
 | Planned | `plan-a@alebairos` |
-| Certified | — |
-| Implemented `wi-a-v1-number-text-1` | — |
-| Reviewed `wi-a-v1-number-text-1` | — |
+| Certified | `gate-a@alebairos` |
+| Implemented `wi-a-v1-number-text-1` | `impl-a1@alebairos` |
+| Reviewed `wi-a-v1-number-text-1` | `rev-a@alebairos` (passed attempt 2) |
 | Implemented `wi-a-v1-number-text-2` | — |
 | Reviewed `wi-a-v1-number-text-2` | — |
 
@@ -81,13 +91,15 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Landing pull request: [exp-a #25](https://github.com/alebairos/sheet-exp-a/pull/25)
+
 ## 7. The decision
 
 Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 1 h 37 min so far
-- Loops: 0
-- Waste: 0 min
+- Lead time: 1 h 57 min so far
+- Loops: 1 (D5 review 1)
+- Waste: 6 min
 - Size: nothing landed yet
