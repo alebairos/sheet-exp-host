@@ -1,0 +1,1 @@
+ok the product's text-rule tests run and pass (4)
