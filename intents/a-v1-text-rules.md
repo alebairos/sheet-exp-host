@@ -170,7 +170,7 @@ Status: landed (`d45620825e46`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-tr-b1` | b1 | `tests/values/checks/a_v1_tr_b1_compare.sh` | red | — |
+| `ac-tr-b1` | b1 | `tests/values/checks/a_v1_tr_b1_compare.sh` | red | pass |
 
 ### `wi-a-v1-text-rules-2`: Read amounts in text as numbers
 
@@ -196,7 +196,7 @@ Status: landed (`7f45bdc1d17a`) · depends on `wi-a-v1-text-rules-1`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-tr-b2` | b2 | `tests/values/checks/a_v1_tr_b2_numbers.sh` | red | — |
+| `ac-tr-b2` | b2 | `tests/values/checks/a_v1_tr_b2_numbers.sh` | red | pass |
 
 ### `wi-a-v1-text-rules-3`: Product tests for the text rules
 
@@ -217,15 +217,15 @@ Status: landed (`c7551f3fb394`) · depends on `wi-a-v1-text-rules-2`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-tr-suite` | b1, b2 | `tests/values/checks/a_v1_tr_suite.sh` | red | — |
+| `ac-tr-suite` | b1, b2 | `tests/values/checks/a_v1_tr_suite.sh` | red | pass |
 | `ac-tr-judge` | b1, b2 | `judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried.` | judged | — |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | text comparison with = <> < > matches LibreOffice's default (case-sensitive, locale collation) on a set of cases computed by LibreOffice | `tests/values/checks/a_v1_tr_b1_compare.sh` —, `tests/values/checks/a_v1_tr_suite.sh` —, `judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried.` — |
-| not yet | b2 | text-to-number coercion in arithmetic matches LibreOffice for padded, boolean, currency, thousands-separated and percent text, computed by LibreOffice | `tests/values/checks/a_v1_tr_b2_numbers.sh` —, `tests/values/checks/a_v1_tr_suite.sh` —, `judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried.` — |
+| PASS | b1 | text comparison with = <> < > matches LibreOffice's default (case-sensitive, locale collation) on a set of cases computed by LibreOffice | `tests/values/checks/a_v1_tr_b1_compare.sh` pass, `tests/values/checks/a_v1_tr_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried.` fail |
+| PASS | b2 | text-to-number coercion in arithmetic matches LibreOffice for padded, boolean, currency, thousands-separated and percent text, computed by LibreOffice | `tests/values/checks/a_v1_tr_b2_numbers.sh` pass, `tests/values/checks/a_v1_tr_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried.` fail |
 
 ## 5. Out of scope and risks
 
@@ -246,9 +246,19 @@ Status: landed (`c7551f3fb394`) · depends on `wi-a-v1-text-rules-2`
 | Implemented `wi-a-v1-text-rules-3` | `impl-a1@alebairos` |
 | Reviewed `wi-a-v1-text-rules-3` | `rev-a@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/values/checks/a_v1_tr_b1_compare.sh`: pass
+- `tests/values/checks/a_v1_tr_b2_numbers.sh`: pass
+- `tests/values/checks/a_v1_tr_suite.sh`: pass
+- `judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried.`: judged fail by `alebairos`: fail: I ran sheet-exp-a/engine on scratch/tr_use.json, a list of names and amounts typed " 5 ", $5, 1,000, 50%, (5) and $1,000.50: adding the cells one by one gives 2006 and "Zürich"<"Zuse" is TRUE, but =SUM(B2:B7) gives 0 and =AVERAGE(B2:B7) gives #DIV/0!, the browser grid's parseInput (grid.js:77) keeps $5, 1,000 and (5) typed in a cell as text so a total of them would also be 0, and =IF(C3="Yes",...) with "yes" gives "not paid" while COUNTIF(C2:C7,"yes") counts 4, which an ordinary user would not expect. | delegate: decided by the HITL's delegate (Claude, opus), per the HITL on 2026-11-19 07:05: "from now on until finishing the experiment, do it yourself". Signed as npub1p8lmv897hc9ew45cdjfqlurcgu5e3kg0mwkrptln4r7px4jzs5aqlhr9az.
+
+Outcome report:
+
+- **Built:** Text now compares and converts the way LibreOffice Calc does. ./engine: ="a"="A" is FALSE, "a" sorts before "A" and both before "b", é sorts between e and f, and Zürich comes before Zuse. Amounts typed as text work in arithmetic: " 5 ", TRUE, $5, (5), 5-, 1,000, $1,000.50, 50% and 5 % give 5, 1, 5, -5, -5, 1000, 1000.5, 0.5 and 0.05, and functions that read a number read them the same way (=ROUND("(5)",0) is -5). What Calc refuses still gives #VALUE!: 1,00, 1 000, €5, 5%%, and "1/2" (dates are out of scope). The work is in src/values/text_rules.py and collation_data.py, with compare() and to_number() in src/values and = / <> kept exact in src/eval (+343 −15 in 11 files, 282 of them test lines). It follows the plan in 3 WIs. WI 1 needed a second attempt, because attempt 1 missed held-out symbol pairs. The reviewer re-probed Calc on 153 and 122 held-out cases they wrote themselves: 148/153 and 118/122 match. The misses are scripts outside Latin (Ukrainian ґ ї, katakana, emoji variation selector) and dates. I reran everything on landed main (exp-a bc8b3a4): b1, b2 and the suite check are ok, and ./test.sh runs 152 tests, all OK (landed.txt). As declared at SpecAccept, a-i2's old check a2_b2_coercion.sh now fails on exactly its two hand-written lines, TRUE and "a" vs "A", where Calc gives 1 and -1.
+- **Advice:** Adopt for the engine. One gap for an ordinary user: the browser grid still stores $5, 1,000, (5) and 50% typed into a cell as text. Arithmetic now reads them (=B1+B2+...+B5 is 1005.5), but =SUM(B1:B5) over that column is 0, as Calc gives for text cells. Calc itself would store them as numbers on input. Follow up with a small intent: cell input recognition in web/grid and the formula bar, the same as Calc. A conflict for you to settle in the judge question (usefulness vs fidelity): =IF(A4="Dan",...) with A4 "dan" gives "no" (case-sensitive, as Calc does), while COUNTIF(A1:A5,"dan") counts it (case-insensitive, also as Calc does). Smaller follow-ups: VLOOKUP and MATCH keep their own numeric-text rule (lookup.py), so "$5" as a lookup key reads differently from arithmetic. A typed =1.7976931348623157E308 crashes the CLI's 15-digit output (pre-existing). Ignore emoji variation selectors and add Ukrainian letters to the order. Watch: run the browser tests with TMPDIR off /tmp. This machine's /tmp is out of inodes from leftover Chrome profiles, and that alone makes ./test.sh fail.
+- [a-v1-text-rules/landed.txt](https://github.com/alebairos/sheet-exp-host/blob/4c8e9c4de5e19e318aaeac15b8da8223ab5a9843/a-v1-text-rules/landed.txt)
+- [a-v1-text-rules/README.md](https://github.com/alebairos/sheet-exp-host/blob/4c8e9c4de5e19e318aaeac15b8da8223ab5a9843/a-v1-text-rules/README.md)
 
 Files landed by `wi-a-v1-text-rules-1`:
 
@@ -281,14 +291,15 @@ Landing pull request: [exp-a #41](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 7. The decision
 
-**Judge:a-v1-text-rules:judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried.**: A decision: show your human its options. The question: Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried.
+**Verdict:a-v1-text-rules**: A decision: show your human its options
 
-- Pass: `cooknship decide --answer Judge:a-v1-text-rules:judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried. --option pass`
-- Fail, with the reason: `cooknship decide --answer Judge:a-v1-text-rules:judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried. --option fail --text "<reason>"`
+- Met: `cooknship decide --answer Verdict:a-v1-text-rules --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-v1-text-rules --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-v1-text-rules --option not_met`
 
 ## 8. Metrics
 
-- Lead time: 11 h 15 min so far
+- Lead time: 11 h 35 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 18 min
 - Size: 358 lines (+343 −15, 11 files, ≤400; tests 282 lines); plan check files laid over by land, not in the size: +395 −0, 7 files
