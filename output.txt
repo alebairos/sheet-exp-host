@@ -1,0 +1,1 @@
+ok 22 numbers print as LibreOffice reports them (0.3, 3.3, -34.52, ...)
