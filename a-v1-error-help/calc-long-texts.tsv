@@ -1,0 +1,10 @@
+#DIV/0!	Error: Division by zero
+#VALUE!	Error: No value
+#REF!	Error: Not a valid reference
+#NAME?	Error: Invalid name
+#N/A	Error: Value not available
+#NUM!	Error: Invalid numeric value
+Err:502	Error: Invalid argument
+Err:504	Error in parameter list
+Err:511	Error: Variable missing
+Err:522	Error: Circular reference
