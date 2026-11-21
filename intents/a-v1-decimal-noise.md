@@ -40,7 +40,7 @@ Learned from RECORD.md and the overlapping pages: a-i5 already chose Calc's Kaha
 
 Formulas' + and - and their comparisons use LibreOffice's 2**-48 approximate equality, so =0.1+0.2=0.3 is TRUE and =(0.1+0.2)-0.3 is 0, and ./engine prints numbers to Calc's 15 significant digits (0.3, 3.3, -34.52) instead of binary noise.
 
-Status: landing (`e082958b9e7b`)
+Status: landed (`e082958b9e7b`)
 
 **The passing review noted:** > PASS. Reviewed attempt 2 (a1f1b90, on attempt 1 47bb658, base main b55e9e2) with the plan's checks (faa82a9).
 > 
@@ -71,8 +71,8 @@ Status: accepted · depends on `wi-a-v1-decimal-noise-1`
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | =0.1+0.2=0.3 is TRUE and =(0.1+0.2)-0.3 is 0, and comparisons and subtraction of nearly equal values match LibreOffice over a set of cases whose expected values come from running LibreOffice | no landed check |
-| not yet | b2 | ./engine prints the budget, 0.1+0.2 and 1.1*3 cases with the values LibreOffice reports (0.3, 3.3, -34.52), not binary float noise | no landed check |
+| not yet | b1 | =0.1+0.2=0.3 is TRUE and =(0.1+0.2)-0.3 is 0, and comparisons and subtraction of nearly equal values match LibreOffice over a set of cases whose expected values come from running LibreOffice | `tests/eval/checks/a_v1_dn_b1_compare.sh` — |
+| not yet | b2 | ./engine prints the budget, 0.1+0.2 and 1.1*3 cases with the values LibreOffice reports (0.3, 3.3, -34.52), not binary float noise | `tests/cli/checks/a_v1_dn_b2_cli.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -95,6 +95,19 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-v1-decimal-noise-1`:
+
+- `tests/values/test_approx_arith.py` +197 −0 (test)
+- `src/values/__init__.py` +55 −1
+- `tests/eval/checks/a_v1_dn_probe.py` +49 −0 (plan check)
+- `tests/eval/checks/a_v1_dn_common.py` +35 −0 (plan check)
+- `tests/eval/checks/a_v1_dn_suite.sh` +27 −0 (plan check)
+- `tests/eval/checks/a_v1_dn_b1_compare.sh` +24 −0 (plan check)
+- `tests/cli/checks/a_v1_dn_b2_cli.sh` +21 −0 (plan check)
+- `src/cli.py` +14 −3
+- `src/eval/__init__.py` +8 −2
+- `tests/eval/checks/a_v1_dn_calc.json` +1 −0 (plan check)
+
 Landing pull request: [exp-a #31](https://github.com/alebairos/sheet-exp-a/pull/31)
 
 ## 7. The decision
@@ -103,7 +116,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 3 h 58 min so far
+- Lead time: 4 h 18 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 10 min
-- Size: nothing landed yet
+- Size: 83 lines (+77 −6, 4 files, ≤400; tests 197 lines); plan check files laid over by land, not in the size: +157 −0, 6 files

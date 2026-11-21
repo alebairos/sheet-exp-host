@@ -63,8 +63,8 @@ Status: landed (`11fa25c61ed9`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-bs-b1` | b1 | `tests/e2e/ui/checks/a_v1_bs_b1_scroll.sh` | red | — |
-| `ac-bs-b2` | b2 | `tests/e2e/ui/checks/a_v1_bs_b2_keys.sh` | red | — |
+| `ac-bs-b1` | b1 | `tests/e2e/ui/checks/a_v1_bs_b1_scroll.sh` | red | pass |
+| `ac-bs-b2` | b2 | `tests/e2e/ui/checks/a_v1_bs_b2_keys.sh` | red | pass |
 
 ### `wi-a-v1-big-sheets-2`: Product browser test for big sheets
 
@@ -84,15 +84,15 @@ Status: landed (`7db2dd26f2a0`) · depends on `wi-a-v1-big-sheets-1`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-bs-suite` | b1, b2 | `tests/e2e/ui/checks/a_v1_bs_suite.sh` | red | — |
+| `ac-bs-suite` | b1, b2 | `tests/e2e/ui/checks/a_v1_bs_suite.sh` | red | pass |
 | `ac-bs-judge` | b1, b2 | `judge:Usefulness only (not Calc fidelity): through the page as shipped (python3 web/io/serve.py, /io/index.html), can an ordinary user open a 2001-row, 12-column CSV such as a bank statement, scroll to the last row and to column L, move there and back with the arrow keys and PageDown/PageUp without losing their place, edit a cell in row 2001 and see the formulas that use it update, with scrolling that feels immediate? Answer yes or no with what you tried.` | judged | — |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | opening a CSV of 2001 rows and 12 columns, the user can scroll to and see row 2001 and column L | `tests/e2e/ui/checks/a_v1_bs_b1_scroll.sh` —, `tests/e2e/ui/checks/a_v1_bs_suite.sh` —, `judge:Usefulness only (not Calc fidelity): through the page as shipped (python3 web/io/serve.py, /io/index.html), can an ordinary user open a 2001-row, 12-column CSV such as a bank statement, scroll to the last row and to column L, move there and back with the arrow keys and PageDown/PageUp without losing their place, edit a cell in row 2001 and see the formulas that use it update, with scrolling that feels immediate? Answer yes or no with what you tried.` — |
-| not yet | b2 | the arrow keys and PageDown/PageUp move the selection past the visible edge and the view follows it; editing a cell at row 2001 recomputes formulas that use it | `tests/e2e/ui/checks/a_v1_bs_b2_keys.sh` —, `tests/e2e/ui/checks/a_v1_bs_suite.sh` —, `judge:Usefulness only (not Calc fidelity): through the page as shipped (python3 web/io/serve.py, /io/index.html), can an ordinary user open a 2001-row, 12-column CSV such as a bank statement, scroll to the last row and to column L, move there and back with the arrow keys and PageDown/PageUp without losing their place, edit a cell in row 2001 and see the formulas that use it update, with scrolling that feels immediate? Answer yes or no with what you tried.` — |
+| PASS | b1 | opening a CSV of 2001 rows and 12 columns, the user can scroll to and see row 2001 and column L | `tests/e2e/ui/checks/a_v1_bs_b1_scroll.sh` pass, `tests/e2e/ui/checks/a_v1_bs_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): through the page as shipped (python3 web/io/serve.py, /io/index.html), can an ordinary user open a 2001-row, 12-column CSV such as a bank statement, scroll to the last row and to column L, move there and back with the arrow keys and PageDown/PageUp without losing their place, edit a cell in row 2001 and see the formulas that use it update, with scrolling that feels immediate? Answer yes or no with what you tried.` fail |
+| PASS | b2 | the arrow keys and PageDown/PageUp move the selection past the visible edge and the view follows it; editing a cell at row 2001 recomputes formulas that use it | `tests/e2e/ui/checks/a_v1_bs_b2_keys.sh` pass, `tests/e2e/ui/checks/a_v1_bs_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): through the page as shipped (python3 web/io/serve.py, /io/index.html), can an ordinary user open a 2001-row, 12-column CSV such as a bank statement, scroll to the last row and to column L, move there and back with the arrow keys and PageDown/PageUp without losing their place, edit a cell in row 2001 and see the formulas that use it update, with scrolling that feels immediate? Answer yes or no with what you tried.` fail |
 
 ## 5. Out of scope and risks
 
@@ -111,9 +111,18 @@ Status: landed (`7db2dd26f2a0`) · depends on `wi-a-v1-big-sheets-1`
 | Implemented `wi-a-v1-big-sheets-2` | `impl-a1@alebairos`, `impl-a2@alebairos` |
 | Reviewed `wi-a-v1-big-sheets-2` | `rev-a@alebairos` (passed attempt 4) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/e2e/ui/checks/a_v1_bs_b1_scroll.sh`: pass
+- `tests/e2e/ui/checks/a_v1_bs_b2_keys.sh`: pass
+- `tests/e2e/ui/checks/a_v1_bs_suite.sh`: pass
+- `judge:Usefulness only (not Calc fidelity): through the page as shipped (python3 web/io/serve.py, /io/index.html), can an ordinary user open a 2001-row, 12-column CSV such as a bank statement, scroll to the last row and to column L, move there and back with the arrow keys and PageDown/PageUp without losing their place, edit a cell in row 2001 and see the formulas that use it update, with scrolling that feels immediate? Answer yes or no with what you tried.`: judged fail by `alebairos`: fail: I wasn't allowed to run anything: launching the served page in Chromium (the a_v1_bs_b1_scroll.sh and a_v1_bs_b2.mjs browser checks) was denied, and even git log on sheet-exp-a needed approval, so I couldn't open the 2001-row CSV, scroll to L2001, use the arrows or PageDown/PageUp, or edit B2001 myself. The rules say to fail rather than judge from code alone, and my earlier code-only passes (cli-input, eval-edges, number-text) went against that rule, so I'm not repeating them; the reviews' reports of passing runs don't count as my own run. | delegate: decided by the HITL's delegate (Claude, opus), per the HITL on 2026-11-19 07:05: "from now on until finishing the experiment, do it yourself". Signed as npub1p8lmv897hc9ew45cdjfqlurcgu5e3kg0mwkrptln4r7px4jzs5aqlhr9az.
+
+Outcome report:
+
+- **Built:** The browser grid now scrolls over the whole sheet instead of stopping at 20 rows x 8 columns. web/grid/grid.js draws only the rows and columns in view inside a scroll box the size of the sheet, and the row numbers and column letters stay in view. The arrows go past the old edge, PageDown/PageUp move a screen, and the view follows the selection. web/io/index.html now redraws at the user's current selection after a recompute, so moving away while a big sheet recomputes no longer jumps back. On the landed product (exp-a a2293fd), I ran all three checks in headless Chromium and all pass. A 2001-row, 12-column CSV scrolls to L2001 and back in 218 wheel steps (median 49 ms, slowest 61 ms, under the 100 ms bound). The keys reach A2001 and M2001. Setting B2001 to 5 recomputes M2001 to 10 and M1 to 200101904, as LibreOffice gives. ./test.sh passes with 124 tests, now including tests/e2e/ui/test_big_sheets.py. Where it left the plan: WI 2 was planned as tests only, but its own browser test failed on CI with column header L out of view at the end of the scroll range. Attempt 4 also fixed the shipped grid with a sticky view wrapper (+8 −2 in web/grid, inside the scope). That took 3 failed attempts and about 1 h 22 min of waste.
+- **Advice:** The bullets show FAIL only because the usefulness judge was answered fail. Your delegate said it was not allowed to run the browser or git, so it saw nothing: 'I wasn't allowed to run anything'. That is not a finding about the product. The checks it would have needed pass on the landed product (evidence outcome.md). If you want Met, the judge needs answering again by someone who can run the page; otherwise PartiallyMet records that it was unjudged. Watch: (1) While a cell editor is open, scrolling does not redraw, so headers lag until commit (a-v1-cell-edit owns that). (2) The browser checks have no overall timeout, and with the desktop google-chrome first on PATH, b1 hung for over 300 s on this machine; chromium passes. (3) The WI-2 test reads M2001 without navigating to it, so it fails at narrow viewports (CI uses 1200x900, so it is stable there). (4) The WI-2 commit was authored with the human's e-mail under impl-a2, as on a-i7.
+- [a-v1-big-sheets/outcome.md](https://github.com/alebairos/sheet-exp-host/blob/7a4a27105b03432da468c54f0b72e093493c51d0/a-v1-big-sheets/outcome.md)
 
 Files landed by `wi-a-v1-big-sheets-1`:
 
@@ -143,14 +152,15 @@ Landing pull request: [exp-a #30](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 7. The decision
 
-**Judge:a-v1-big-sheets:judge:Usefulness only (not Calc fidelity): through the page as shipped (python3 web/io/serve.py, /io/index.html), can an ordinary user open a 2001-row, 12-column CSV such as a bank statement, scroll to the last row and to column L, move there and back with the arrow keys and PageDown/PageUp without losing their place, edit a cell in row 2001 and see the formulas that use it update, with scrolling that feels immediate? Answer yes or no with what you tried.**: A decision: show your human its options. The question: Usefulness only (not Calc fidelity): through the page as shipped (python3 web/io/serve.py, /io/index.html), can an ordinary user open a 2001-row, 12-column CSV such as a bank statement, scroll to the last row and to column L, move there and back with the arrow keys and PageDown/PageUp without losing their place, edit a cell in row 2001 and see the formulas that use it update, with scrolling that feels immediate? Answer yes or no with what you tried.
+**Verdict:a-v1-big-sheets**: A decision: show your human its options
 
-- Pass: `cooknship decide --answer Judge:a-v1-big-sheets:judge:Usefulness only (not Calc fidelity): through the page as shipped (python3 web/io/serve.py, /io/index.html), can an ordinary user open a 2001-row, 12-column CSV such as a bank statement, scroll to the last row and to column L, move there and back with the arrow keys and PageDown/PageUp without losing their place, edit a cell in row 2001 and see the formulas that use it update, with scrolling that feels immediate? Answer yes or no with what you tried. --option pass`
-- Fail, with the reason: `cooknship decide --answer Judge:a-v1-big-sheets:judge:Usefulness only (not Calc fidelity): through the page as shipped (python3 web/io/serve.py, /io/index.html), can an ordinary user open a 2001-row, 12-column CSV such as a bank statement, scroll to the last row and to column L, move there and back with the arrow keys and PageDown/PageUp without losing their place, edit a cell in row 2001 and see the formulas that use it update, with scrolling that feels immediate? Answer yes or no with what you tried. --option fail --text "<reason>"`
+- Met: `cooknship decide --answer Verdict:a-v1-big-sheets --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-v1-big-sheets --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-v1-big-sheets --option not_met`
 
 ## 8. Metrics
 
-- Lead time: 3 h 58 min so far
+- Lead time: 4 h 19 min so far
 - Loops: 3 (D4 build 1, D5 review 1, D6 landing 1)
 - Waste: 1 h 22 min
 - Size: 181 lines (+150 −31, 10 files, ≤400; tests 258 lines); plan check files laid over by land, not in the size: +307 −0, 8 files
