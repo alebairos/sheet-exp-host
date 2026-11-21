@@ -1,0 +1,1 @@
+ok b1: text compares as in Calc
