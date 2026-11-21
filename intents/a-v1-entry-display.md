@@ -465,7 +465,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 6 h 26 min so far
+- Lead time: 6 h 30 min so far
 - Loops: 6 (D1 spec 2, D2 plan 4)
 - Waste: 2 h 03 min
 - Size: nothing landed yet

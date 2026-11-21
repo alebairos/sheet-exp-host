@@ -106,7 +106,7 @@ Status: landed (`20a41d6a3891`)
 
 Malformed formulas give Calc's Err:508/509/510/511/520 codes by its left-to-right rule and out-of-range numbers Err:502 instead of #VALUE!, and calls with no arguments give Err:511 (or Calc's empty value for SUM, COUNT, COUNTA, PRODUCT, AVERAGE, CONCATENATE) instead of 0 or a crash.
 
-Status: landing (`60659f1ea40a`) · depends on `wi-a-v1-parse-fidelity-1`
+Status: landed (`60659f1ea40a`) · depends on `wi-a-v1-parse-fidelity-1`
 
 **The passing review noted:** > PASS, attempt 3 (972c16d). Verify reran in a worktree of the WI with the plan's checks (4793976): ac-pf-b2 tests/parser/checks/a_v1_pf_b2_errors.sh ok on all 71 Calc cases (red on main a3ff015, 53 FAIL lines), and b1 is still ok. ./test.sh is OK with 141 tests. Earlier checks: only tests/parser/checks/a1_b3_malformed.sh is red, with output identical to main's. That is the CONFLICT carried from WI-1 (it wants '=(1' and '=SUM(1,2' to be ParseErrors; Calc computes them). It needs a human/Gm decision; this WI did not cause it.
 > 
@@ -140,7 +140,7 @@ Status: accepted · depends on `wi-a-v1-parse-fidelity-2`
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
 | not yet | b1 | formulas with spaces around tokens, ranges with a sheet on both ends, and a missing final parenthesis compute as LibreOffice computes them | `tests/parser/checks/a_v1_pf_b1_accept.sh` — |
-| not yet | b2 | malformed formulas, =1E400 and empty-argument calls give LibreOffice's error codes, with expected values from running LibreOffice | no landed check |
+| not yet | b2 | malformed formulas, =1E400 and empty-argument calls give LibreOffice's error codes, with expected values from running LibreOffice | `tests/parser/checks/a_v1_pf_b2_errors.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -177,6 +177,14 @@ Files landed by `wi-a-v1-parse-fidelity-1`:
 - `tests/eval/test_eval.py` +5 −1 (test)
 - `tests/parser/checks/a_v1_pf_calc.json` +1 −0 (plan check)
 
+Files landed by `wi-a-v1-parse-fidelity-2`:
+
+- `src/parser/parse.py` +106 −21
+- `tests/eval/test_eval.py` +48 −3 (test)
+- `src/eval/__init__.py` +31 −4
+- `tests/recalc/test_recalc.py` +3 −2 (test)
+- `src/recalc/__init__.py` +2 −2
+
 Landing pull request: [exp-a #35](https://github.com/alebairos/sheet-exp-a/pull/35)
 
 ## 7. The decision
@@ -185,7 +193,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 6 h 26 min so far
+- Lead time: 6 h 30 min so far
 - Loops: 5 (D1 spec 1, D2 plan 2, D5 review 2)
 - Waste: 32 min
-- Size: 36 lines (+30 −6, 3 files, ≤400; tests 33 lines); plan check files laid over by land, not in the size: +139 −0, 6 files
+- Size: 202 lines (+169 −33, 8 files, ≤400; tests 89 lines); plan check files laid over by land, not in the size: +139 −0, 6 files
