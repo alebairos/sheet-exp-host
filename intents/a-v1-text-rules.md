@@ -4,7 +4,7 @@
 
 > Text is compared and converted unlike Calc. Observed vs LibreOffice: ="a"="A" gives TRUE (Calc FALSE, case-sensitive by default); ="é">"f" TRUE (Calc FALSE, locale order); " 5 "+0, "TRUE"+0, "$5"+0, "1,000"+0, "50%"+0 give #VALUE! (Calc 5, 1, 5, 1000, 0.5) (G21, G26, G27). (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: accepted · 3 work items · 2 bullets
+Kind: Defect · State: in work · 3 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -149,7 +149,24 @@ tests/values/checks/a_v1_tr_suite.sh: the same as tests/eval/checks/a_v1_ee_suit
 
 Text comparisons become case-sensitive and follow Calc's language order (letters, then accents, then case), with = still exact, so ="a"="A" is FALSE and é sorts between e and f as in Calc.
 
-Status: accepted
+Status: landing (`d45620825e46`)
+
+**The passing review noted:** > PASS. wi-a-v1-text-rules-1 attempt 2 (1b7d8f5) reviewed against b1 / ac-tr-b1.
+> 
+> Evidence:
+> - ac-tr-b1 (tests/values/checks/a_v1_tr_b1_compare.sh, from plan 86f21e8): "ok b1: text compares as in Calc" on the WI; on main aa2fd48 it is red with 166 cases. The WI's ./test.sh: 148 tests OK.
+> - Code: src/values/__init__.py:280-284. compare() orders text by text_rules.collation_key (three levels) and returns TEXT_TIE when different texts sort equal. src/eval/__init__.py:200-201 keeps = and <> exact for TEXT_TIE. collation_data.py comes from Calc via tests/values/calc_collation_probe.py.
+> - Attempt 1's failure is fixed: my 112 held-out pairs from that review, run through LibreOffice 26.8.1.1 over UNO, now give 0 differences. They cover symbols and emoji before digits, ł đ ı ŋ, fullwidth forms and ligatures.
+> - New held-out set (153 pairs never shown to the implementer, Calc answers by UNO) gives 148 matches. They cover Cyrillic and Greek accents, kana and width, CJK, Arabic, Hebrew, Devanagari, IPA letters, math alphanumerics, Roman numerals, digits of other scripts, ligatures, digraphs, multi-position case against accent, currency, emoji with skin-tone modifiers and ZWJ, zero-width and no-break spaces, and dash variants. The 5 misses:
+>   * 'ґ' vs 'д' (Calc <, engine >) and 'ї' vs 'й' (Calc <, engine >): Ukrainian letters outside the probed Cyrillic table fall back to code point.
+>   * 'ア' vs 'い' (Calc <, engine >): katakana sorts after all hiragana rather than interleaved by sound.
+>   * '❤️' vs '❤' (Calc sorts them equal, engine >): U+FE0F VARIATION SELECTOR-16 (category Mn) gets an accent weight. Calc ignores it. Emoji pasted from phones carry it.
+>   * '・' vs '·' (Calc <, engine >).
+>   The plan's beliefs claim no script other than Latin ("whole scripts are not claimed"), and the module's docstring names its known gaps. So these are findings, not a fail. A small follow-up could ignore variation selectors (U+FE00-FE0F) and add Ukrainian і ї є ґ to the probe.
+> - Regressions: I ran all 55 tests/*/checks/*.sh on main and on the WI (CHROME=/usr/bin/chromium) and diffed. Only two changed. a_v1_tr_b1 goes red to green. tests/values/checks/a2_b2_coercion.sh now FAILs on compare('a','A'): got -1, want 0. That is the conflict the plan declared and SpecAccept accepted: Calc gives -1. COUNTIF/SUMIF, MATCH, VLOOKUP and every other check give exactly what they gave on main.
+> - Speed: 20,000 text compares take 0.19 s (collation_key is lru_cached).
+> - Scope: every path is under src/values, src/eval or tests/values, all in scope.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -195,8 +212,8 @@ Status: accepted · depends on `wi-a-v1-text-rules-2`
 | --- | --- |
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
-| Implemented `wi-a-v1-text-rules-1` | — |
-| Reviewed `wi-a-v1-text-rules-1` | — |
+| Implemented `wi-a-v1-text-rules-1` | `impl-a2@alebairos` |
+| Reviewed `wi-a-v1-text-rules-1` | `rev-a@alebairos` (passed attempt 2) |
 | Implemented `wi-a-v1-text-rules-2` | — |
 | Reviewed `wi-a-v1-text-rules-2` | — |
 | Implemented `wi-a-v1-text-rules-3` | — |
@@ -206,13 +223,15 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Landing pull request: [exp-a #37](https://github.com/alebairos/sheet-exp-a/pull/37)
+
 ## 7. The decision
 
 Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 7 h 29 min so far
-- Loops: 0
-- Waste: 0 min
+- Lead time: 8 h 14 min so far
+- Loops: 1 (D5 review 1)
+- Waste: 18 min
 - Size: nothing landed yet

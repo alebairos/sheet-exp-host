@@ -4,7 +4,7 @@
 
 > Formulas Calc accepts fail here, and malformed ones give the wrong error. Observed vs LibreOffice: = SUM( A1 : A2 ) gives #VALUE! (Calc 3); =SUM( 'My Sheet'!A1 : A2 ) #VALUE! (Calc 11); =SUM(S2!A1:S2!A2) #VALUE! (Calc 7); =SUM(1,2 #VALUE! (Calc 3); =(1+ and =1+*2 give #VALUE! (Calc Err:511, Err:510); =1E400 #VALUE! (Calc Err:502); =MAX() 0 and =MEDIAN() #VALUE! (Calc Err:511) (G24, G25; prior S15, S24). (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: awaiting the verdict · 3 work items · 2 bullets
+Kind: Defect · State: Met · 3 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -154,7 +154,7 @@ Status: landed (`1ca6a2287c7b`) · depends on `wi-a-v1-parse-fidelity-2`
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
 | `ac-pf-suite` | b1, b2 | `tests/parser/checks/a_v1_pf_suite.sh` | red | pass |
-| `ac-pf-judge` | b1, b2 | `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, can an ordinary user type formulas the way people do (spaces around operators and ranges, a forgotten closing parenthesis, sheet names on both ends of a range) and get results, and when a formula is really broken, get a specific error rather than a generic #VALUE! or a crash? Answer yes or no with what you tried.` | judged | — |
+| `ac-pf-judge` | b1, b2 | `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, can an ordinary user type formulas the way people do (spaces around operators and ranges, a forgotten closing parenthesis, sheet names on both ends of a range) and get results, and when a formula is really broken, get a specific error rather than a generic #VALUE! or a crash? Answer yes or no with what you tried.` | judged | pass |
 
 **Acceptance**, against the landed checks:
 
@@ -181,9 +181,11 @@ Status: landed (`1ca6a2287c7b`) · depends on `wi-a-v1-parse-fidelity-2`
 | Reviewed `wi-a-v1-parse-fidelity-2` | `rev-a@alebairos` (passed attempt 3) |
 | Implemented `wi-a-v1-parse-fidelity-3` | `impl-a2@alebairos` |
 | Reviewed `wi-a-v1-parse-fidelity-3` | `rev-a@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
+- `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, can an ordinary user type formulas the way people do (spaces around operators and ranges, a forgotten closing parenthesis, sheet names on both ends of a range) and get results, and when a formula is really broken, get a specific error rather than a generic #VALUE! or a crash? Answer yes or no with what you tried.`: pass
 - `tests/parser/checks/a_v1_pf_b1_accept.sh`: pass
 - `tests/parser/checks/a_v1_pf_b2_errors.sh`: pass
 - `tests/parser/checks/a_v1_pf_suite.sh`: pass
@@ -226,15 +228,11 @@ Landing pull request: [exp-a #36](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 7. The decision
 
-**Verdict:a-v1-parse-fidelity**: A decision: show your human its options
-
-- Met: `cooknship decide --answer Verdict:a-v1-parse-fidelity --option met`
-- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-v1-parse-fidelity --option partially`
-- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-v1-parse-fidelity --option not_met`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 7 h 29 min so far
+- Lead time: 7 h 30 min
 - Loops: 5 (D1 spec 1, D2 plan 2, D5 review 2)
 - Waste: 32 min
 - Size: 202 lines (+169 −33, 10 files, ≤400; tests 1218 lines); plan check files laid over by land, not in the size: +139 −0, 6 files
