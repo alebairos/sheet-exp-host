@@ -1,0 +1,128 @@
+diff --git i/web/formula_bar/formula_bar.js w/web/formula_bar/formula_bar.js
+index 30d35d8..bdfc0ea 100644
+--- i/web/formula_bar/formula_bar.js
++++ w/web/formula_bar/formula_bar.js
+@@ -98,10 +98,22 @@ export function renderHTML({ raw, computed, sheet, ref }) {
+ // follows the grid's selection. onCommit(raw, ref, sheet) receives the new workbook.
+ export function mount(container, state, { onCommit = () => {} } = {}) {
+   let s = { ...state };
++  let before = "";
++  // Leaving the bar (a click in the grid, which also moves the selection) commits what was typed, as Enter
++  // does; unchanged text commits nothing.
++  const flush = () => {
++    const input = container.querySelector("input");
++    if (!input || input.value === before) return;
++    before = input.value;
++    s = { ...s, raw: commit(s.raw, s.sheet, s.ref, input.value) };
++    onCommit(s.raw, s.ref, s.sheet);
++  };
+   const draw = () => {
+     container.innerHTML = renderHTML(s);
+     const input = container.querySelector("input");
+     if (!input) return;
++    before = input.value;
++    input.addEventListener("blur", () => { if (container.contains(input)) flush(); });
+     input.addEventListener("keydown", (e) => {
+       if (e.key === "Enter") {
+         e.preventDefault();
+@@ -116,7 +128,7 @@ export function mount(container, state, { onCommit = () => {} } = {}) {
+   };
+   draw();
+   return {
+-    update(next) { s = { ...s, ...next }; draw(); },
++    update(next) { if (next.ref !== undefined && next.ref !== s.ref) flush(); s = { ...s, ...next }; draw(); },
+     get state() { return s; },
+     focus() { const i = container.querySelector("input"); if (i) i.focus(); },
+   };
+diff --git i/web/grid/grid.js w/web/grid/grid.js
+index b8b5b0a..75ef2d5 100644
+--- i/web/grid/grid.js
++++ w/web/grid/grid.js
+@@ -163,10 +163,12 @@ export function mount(container, state, { rows = 20, cols = 8, onChange = () =>
+     if (initial === undefined) input.select();
+     input.addEventListener("keydown", (e) => {
+       e.stopPropagation();
+-      if (e.key === "Enter") {
++      if (e.key === "Enter" || e.key === "Tab") {
+         e.preventDefault();
+         const next = edit(s, ref, input.value);
+-        update(inside(move(next, 0, 1).selected) ? move(next, 0, 1) : next);
++        const [dc, dr] = e.key === "Tab" ? [e.shiftKey ? -1 : 1, 0] : [0, 1];
++        editing = null;
++        update(inside(move(next, dc, dr).selected) ? move(next, dc, dr) : next);
+         container.focus();
+       } else if (e.key === "Escape") {
+         e.preventDefault();
+@@ -179,9 +181,18 @@ export function mount(container, state, { rows = 20, cols = 8, onChange = () =>
+     });
+   };
+ 
++  // Selection on mousedown: an open edit is committed and the pressed cell selected in one step, before the
++  // editor's blur could redraw the table under the click.
+   const onClick = (e) => {
+     const td = e.target.closest("td[data-ref]");
+-    if (td && !td.contains(editing)) update(select(s, td.dataset.ref));
++    if (!td || td.contains(editing)) return;
++    if (editing) {
++      const ref = editing.closest("td[data-ref]").dataset.ref, value = editing.value;
++      editing = null;
++      e.preventDefault();
++      update(select(edit(s, ref, value), td.dataset.ref));
++      container.focus();
++    } else if (td.dataset.ref !== s.selected) update(select(s, td.dataset.ref));
+   };
+   const onDblClick = (e) => {
+     const td = e.target.closest("td[data-ref]");
+@@ -192,7 +203,11 @@ export function mount(container, state, { rows = 20, cols = 8, onChange = () =>
+   };
+   const onKey = (e) => {
+     if (editing) return;
+-    if (ARROWS[e.key]) {
++    if (e.key === "Tab") {
++      const next = move(s, e.shiftKey ? -1 : 1, 0);
++      if (inside(next.selected)) update(next);
++      e.preventDefault();
++    } else if (ARROWS[e.key]) {
+       const next = move(s, ...ARROWS[e.key]);
+       if (inside(next.selected)) update(next);
+       e.preventDefault();
+@@ -209,7 +224,7 @@ export function mount(container, state, { rows = 20, cols = 8, onChange = () =>
+   };
+ 
+   container.tabIndex = 0;
+-  container.addEventListener("click", onClick);
++  container.addEventListener("mousedown", onClick);
+   container.addEventListener("dblclick", onDblClick);
+   container.addEventListener("keydown", onKey);
+   draw();
+@@ -217,7 +232,7 @@ export function mount(container, state, { rows = 20, cols = 8, onChange = () =>
+     get state() { return s; },
+     setState(next) { s = next; draw(); },
+     destroy() {
+-      container.removeEventListener("click", onClick);
++      container.removeEventListener("mousedown", onClick);
+       container.removeEventListener("dblclick", onDblClick);
+       container.removeEventListener("keydown", onKey);
+       container.innerHTML = "";
+diff --git i/web/io/index.html w/web/io/index.html
+index 14913df..57d8c87 100644
+--- i/web/io/index.html
++++ w/web/io/index.html
+@@ -74,7 +74,7 @@
+             controller.state.message = "Could not compute: " + (e && e.message ? e.message : e);
+           }
+           showMessage();
+-          show(ref);
++          show(grid ? grid.state.selected : ref);
+         });
+       },
+     });
+@@ -86,7 +86,7 @@
+       busy = busy.then(async () => {
+         for (const ref of refs) await controller.edit(ref, inputText(typed[ref]));
+         showMessage();
+-        show(s.selected);
++        show(grid ? grid.state.selected : s.selected);
+       });
+     };
+     const show = (ref) => {
