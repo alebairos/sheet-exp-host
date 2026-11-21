@@ -1,0 +1,87 @@
+diff --git i/web/grid/grid.js w/web/grid/grid.js
+index a502b7a..0daacb1 100644
+--- i/web/grid/grid.js
++++ w/web/grid/grid.js
+@@ -76,19 +76,30 @@ const NUMBER_TEXT = /^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/;
+ /** Typed text as a cell value: a number, TRUE/FALSE, text; undefined for "" (a blank). */
+ export function parseInput(text) {
+   if (text === "") return undefined;
++  if (text.startsWith("'")) return text.slice(1) === "" ? undefined : text.slice(1);
+   if (NUMBER_TEXT.test(text)) {
+     const x = Number(text);
+     if (Number.isFinite(x)) return x;
+   }
++  if (/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?%$/.test(text)) return Number(text.slice(0, -1)) / 100;
+   if (/^true$/i.test(text)) return true;
+   if (/^false$/i.test(text)) return false;
+   return text;
+ }
+ 
++/** A value in full, for the editor and Save CSV: numbers with every digit they need to read back exactly. */
++export function fullText(v) {
++  if (typeof v !== "number") return display(v);
++  if (!Number.isFinite(v)) return "#NUM!";
++  return String(v).replace(/e([+-])(\d+)$/, (_, sign, d) => `E${sign}${d.padStart(2, "0")}`);
++}
++
+ /** The text an editor starts with for a cell: its value as typed back. */
+ export function inputText(v) {
+   if (v === null || v === undefined || typeof v === "object") return "";
+-  return display(v);
++  // Text that would read back as something else keeps Calc's leading apostrophe ('123, 'TRUE).
++  if (typeof v === "string" && (v.startsWith("'") || parseInput(v) !== v)) return "'" + v;
++  return fullText(v);
+ }
+ 
+ /** The state whose sheet holds `text` typed into `ref`. */
+diff --git i/web/io/io.js w/web/io/io.js
+index 79439df..ce45957 100644
+--- i/web/io/io.js
++++ w/web/io/io.js
+@@ -3,7 +3,7 @@
+ // parseJSON/toJSON and parseCSV/toCSV are pure text functions over SPEC.md's workbook
+ // ({sheets: {Sheet1: {A1: 1, ...}}}); createController is the page's logic without the DOM.
+ // Only download() touches the DOM. Cells are typed and numbers shown by the grid's rules.
+-import { colName, parseRef, parseInput, display } from "../grid/grid.js";
++import { colName, parseRef, parseInput, display, fullText } from "../grid/grid.js";
+ 
+ const isObject = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
+ 
+@@ -73,14 +73,16 @@ export function parseCSV(text, sheet = "Sheet1") {
+   return { sheets: { [sheet]: cells } };
+ }
+ 
+-const csvField = (v) => {
+-  const s = display(v);
++// A number the user typed is written in full; a formula's result as Calc's General text shows it (15 digits).
++const csvField = (v, typed) => {
++  const s = typeof typed === "number" ? fullText(v) : display(v);
+   return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+ };
+ 
+ /** The sheet's computed values as CSV, from A1 to its last used row and column, LF line ends. */
+-export function toCSV(computed, sheet) {
++export function toCSV(computed, sheet, book) {
+   const cells = (computed && computed.sheets && computed.sheets[sheet]) || {};
++  const typed = (book && book.sheets && book.sheets[sheet]) || {};
+   let rows = 0;
+   let cols = 0;
+   for (const ref of Object.keys(cells)) {
+@@ -92,7 +94,7 @@ export function toCSV(computed, sheet) {
+   let out = "";
+   for (let r = 1; r <= rows; r++) {
+     const fields = [];
+-    for (let c = 0; c < cols; c++) fields.push(csvField(cells[colName(c) + r]));
++    for (let c = 0; c < cols; c++) fields.push(csvField(cells[colName(c) + r], typed[colName(c) + r]));
+     out += fields.join(",") + "\n";
+   }
+   return out;
+@@ -163,7 +165,7 @@ export function createController({ compute = async (book) => book } = {}) {
+       return { name: state.name + ".json", text: toJSON(state.book), type: "application/json" };
+     },
+     saveCSV() {
+-      return { name: state.name + ".csv", text: toCSV(state.computed, state.sheet), type: "text/csv" };
++      return { name: state.name + ".csv", text: toCSV(state.computed, state.sheet, state.book), type: "text/csv" };
+     },
+   };
+ }
