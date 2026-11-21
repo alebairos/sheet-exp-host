@@ -42,7 +42,19 @@ Learned from RECORD.md and the overlapping pages: G1/S12 had been carried as 'by
 
 The grid's in-cell editor opens with the cell as typed (the formula, '007) and only commits text the user changed, through the controller, and a click on the selected cell no longer redraws, so F2 and double-click edit formulas instead of destroying them.
 
-Status: attempt 2 in work by `impl-a2@alebairos`
+Status: landing (`9d4e5cc1936d`)
+
+**The passing review noted:** > Pass (attempt 2). The attempt-1 finding is fixed: web/grid/grid.js:88-97 typedInput reads a leading apostrophe as the bar does (formula_bar.js:62), edit() uses it (:109), and the page's onEdit sends apostrophe text through putTyped(typedInput(text)) (web/io/index.html:91-95), so the editor's opening text and the commit follow one rule. putTyped is the bar's old onCommit body, moved out unchanged (:72-83).
+> 
+> Verify rerun on 3794f33 merged with current main 4367e6e, with plan 82fba32's check files copied in: ac-ce-b1 a_v1_ce_b1_formula.sh ok (F2 and a real double-click open =A1+A2; 31, then 50; Save JSON keeps the formulas). ac-ce-b2 a_v1_ce_b2_unchanged.sh ok (24 round trips). Both red on main 4367e6e (b1: editor shows null; b2: double-click opens no editor). ./test.sh OK, 132 tests. Earlier UI checks green: a_r2_b1_walkthrough, a_v1_bs_b1_scroll, a_v1_bs_b2_keys, a_v1_bs_suite, a9_b1/b2, a10_b1/b2, a11_b1/b2/b3.
+> 
+> Real-browser probes (CDP, real keys, CHROME=/usr/bin/chromium):
+> - F2 on D2 (text 007) opens '007; End, 8, Enter: D2 is the text 0078 (shown 0078, Save JSON "0078", ISTEXT TRUE). Re-opened it reads '0078; adding x gives "0078x". These are the attempt-1 cases, now as in Calc.
+> - Typing '42 in G1 stores the text "42". 'TRUE stores the text "TRUE" and reopens as 'TRUE. Cutting to a lone ' blanks the cell.
+> - Typing 5 over A3 stores 5. hello -> hello! commits by blur when another cell is clicked. 12.5 -> 12.55 stays a number.
+> - C1 =1/0 opens as =1/0; edit to =1/2 then click E1 gives 0.5. Delete clears D1. Empty G5 =E1*2 gives 25. Typing then Escape changes nothing. F2 right after an Enter edit opens the new formula.
+> Scope: web/grid/grid.js and web/io/index.html, both in path_scope.
+> Nit: a lone apostrophe commits as a blank (the bar's rule too). Not checked against Calc; it is an edge case. -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -81,7 +93,7 @@ Status: accepted · depends on `wi-a-v1-cell-edit-1`
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-v1-cell-edit-1` | `impl-a1@alebairos`, `impl-a2@alebairos` |
-| Reviewed `wi-a-v1-cell-edit-1` | `rev-a@alebairos` |
+| Reviewed `wi-a-v1-cell-edit-1` | `rev-a@alebairos` (passed attempt 2) |
 | Implemented `wi-a-v1-cell-edit-2` | — |
 | Reviewed `wi-a-v1-cell-edit-2` | — |
 
@@ -89,13 +101,15 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Landing pull request: [exp-a #33](https://github.com/alebairos/sheet-exp-a/pull/33)
+
 ## 7. The decision
 
 Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 4 h 40 min so far
+- Lead time: 5 h 01 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 18 min
 - Size: nothing landed yet
