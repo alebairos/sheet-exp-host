@@ -1,0 +1,1 @@
+ok output is strict JSON; a2, sheet1!a2, $A$3 and 'my sheet'!a1 read their cells as in Calc; 1e3 prints 1000
