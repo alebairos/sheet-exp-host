@@ -1,0 +1,23 @@
+# On main (f101426), the plan checks:
+FAIL b1: README.md has no command line starting the UI (python3 web/io/serve.py ...)
+exit 1
+FAIL b2: ./test.sh does not run tests/web/grid's Node tests (or skips them)
+exit 1
+
+# On main, ./test.sh (web lines):
+Ran 75 tests in 5.087s
+OK
+(no tests.web lines: tests/web has no __init__.py, so unittest discovery skips all three Node suites)
+
+# On main, the Node suites by hand:
+## grid/grid
+ℹ pass 7
+ℹ fail 0
+## formula_bar/formula_bar
+ℹ pass 6
+ℹ fail 0
+## io/io
+ℹ pass 8
+ℹ fail 1
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/tmp/formula_bar/formula_bar.js' imported from /tmp/io-page-DQrCCQ/page.mjs
+    code: 'ERR_MODULE_NOT_FOUND',

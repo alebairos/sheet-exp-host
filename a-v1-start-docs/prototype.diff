@@ -1,0 +1,98 @@
+diff --git c/README.md i/README.md
+index 16a4bc1..c468a8d 100644
+--- c/README.md
++++ i/README.md
+@@ -14,6 +14,17 @@ Python 3 (standard library only); nothing to install.
+ ./engine - --cell Sheet1!A1 < book.json    # print one cell's value
+ ```
+ 
++## Use it in the browser
++
++```sh
++python3 web/io/serve.py          # or: python3 web/io/serve.py 8080 to use another port
++```
++
++Then open <http://127.0.0.1:8000/io/index.html> (with a port given, use it in place of 8000).
++This is the spreadsheet: Open a `.json` or `.csv` file (or start typing in the empty sheet), edit cells
++in the grid or the formula bar, and Save JSON or Save CSV. Formulas are computed by the same engine as
++`./engine`. Stop the server with Ctrl+C. More in [web/io/README.md](web/io/README.md).
++
+ ## Layout
+ 
+ - `engine`: the CLI launcher; `src/cli.py` reads and writes the workbook JSON.
+diff --git c/tests/web/__init__.py i/tests/web/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git c/tests/web/grid/__init__.py i/tests/web/grid/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git c/tests/web/grid/test_grid.py i/tests/web/grid/test_grid.py
+new file mode 100644
+index 0000000..130e3da
+--- /dev/null
++++ i/tests/web/grid/test_grid.py
+@@ -0,0 +1,21 @@
++"""Runs the grid's Node tests from the unittest suite (skipped without Node.js)."""
++
++import os
++import shutil
++import subprocess
++import unittest
++
++HERE = os.path.dirname(os.path.abspath(__file__))
++ROOT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
++
++
++@unittest.skipUnless(shutil.which("node"), "Node.js is not installed")
++class GridNodeTests(unittest.TestCase):
++    def test_node_suite(self):
++        r = subprocess.run(["node", "--test", os.path.join(HERE, "grid.test.mjs")],
++                           cwd=ROOT, capture_output=True, text=True, timeout=120)
++        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git c/tests/web/io/io.test.mjs i/tests/web/io/io.test.mjs
+index 4346865..244145e 100644
+--- c/tests/web/io/io.test.mjs
++++ i/tests/web/io/io.test.mjs
+@@ -57,7 +57,9 @@ function fakeElement(doc) {
+   const listeners = {};
+   return {
+     ownerDocument: doc, innerHTML: "", textContent: "", className: "", value: "", tabIndex: -1,
+-    listeners,
++    listeners, style: {}, classList: { add() {}, remove() {}, contains() { return false; } },
++    clientHeight: 0, clientWidth: 0, scrollTop: 0, scrollLeft: 0,
++    replaceChildren() {}, appendChild() {},
+     addEventListener(type, fn) { (listeners[type] ||= []).push(fn); },
+     removeEventListener(type, fn) { listeners[type] = (listeners[type] || []).filter((f) => f !== fn); },
+     dispatch(type, event) { for (const fn of [...(listeners[type] || [])]) fn({ target: this, preventDefault() {}, stopPropagation() {}, ...event }); },
+@@ -74,8 +76,10 @@ test("the page mounts the grid once: one Delete is one compute, however many edi
+   let script = /<script type="module">([\s\S]*?)<\/script>/.exec(html)[1];
+   script = script
+     .replace('"./io.js"', JSON.stringify(pathToFileURL(join(root, "web/io/io.js")).href))
+-    .replace('"../grid/grid.js"', JSON.stringify(pathToFileURL(join(root, "web/grid/grid.js")).href));
+-  const doc = { elements: {}, getElementById(id) { return (this.elements[id] ||= fakeElement(this)); } };
++    .replace('"../grid/grid.js"', JSON.stringify(pathToFileURL(join(root, "web/grid/grid.js")).href))
++    .replace('"../formula_bar/formula_bar.js"', JSON.stringify(pathToFileURL(join(root, "web/formula_bar/formula_bar.js")).href));
++  const doc = { elements: {}, defaultView: null, getElementById(id) { return (this.elements[id] ||= fakeElement(this)); },
++               createElement() { return fakeElement(this); } };
+   let computes = 0;
+   globalThis.document = doc;
+   globalThis.fetch = async (url, init) => {
+diff --git c/web/grid/README.md i/web/grid/README.md
+index 380b5f3..b37d55c 100644
+--- c/web/grid/README.md
++++ i/web/grid/README.md
+@@ -1,7 +1,9 @@
+ # web/grid
+ 
+ The spreadsheet grid: `grid.js`, a plain ES module (no build step, no libraries), and `grid.css`.
+-`index.html` shows it on a sample workbook: serve the repo (`python3 -m http.server`) and open `/web/grid/`.
++To use the spreadsheet, start the app as the top-level [README.md](../../README.md) says
++(`python3 web/io/serve.py`, then <http://127.0.0.1:8000/io/index.html>).
++`index.html` here is only a demo of the grid alone, with no engine: formulas stay as typed text.
+ 
+ State is the workbook JSON of SPEC.md plus the sheet shown and the selected cell. All but `mount` are pure:
+ 
