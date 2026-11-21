@@ -4,7 +4,7 @@
 
 > Numbers turned into text differ from Calc. Observed vs LibreOffice 26.8.1.1: "x"&1E-7 gives x1E-07 (Calc x0.0000001); "x"&1E15 x1E+15 (Calc x1000000000000000); CONCATENATE(1E21) 1E+21 (Calc 1E+021); LEN(123456789012345678) 20 and LEN(1E-20) 5 (Calc 21 and 6). Suggested by a-i6 and never parked (G23). (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: awaiting the verdict · 2 work items · 1 bullet
+Kind: Defect · State: Met · 2 work items · 1 bullet
 
 ## 2. What you will see
 
@@ -71,13 +71,13 @@ Status: landed (`a1ae24c7a556`) · depends on `wi-a-v1-number-text-1`
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
 | `ac-nt-suite` | b1 | `tests/values/checks/a_v1_nt_suite.sh` | red | pass |
-| `ac-nt-judge` | b1 | `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried.` | judged | — |
+| `ac-nt-judge` | b1 | `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried.` | judged | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| PASS | b1 | number-to-text conversion in &, CONCATENATE, LEN and the text functions matches LibreOffice over a set of small, large and fractional numbers, with expected values from running LibreOffice | `tests/values/checks/a_v1_nt_b1_text.sh` pass, `tests/values/checks/a_v1_nt_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried.` — |
+| PASS | b1 | number-to-text conversion in &, CONCATENATE, LEN and the text functions matches LibreOffice over a set of small, large and fractional numbers, with expected values from running LibreOffice | `tests/values/checks/a_v1_nt_b1_text.sh` pass, `tests/values/checks/a_v1_nt_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried.` pass |
 
 ## 5. Out of scope and risks
 
@@ -95,11 +95,14 @@ Status: landed (`a1ae24c7a556`) · depends on `wi-a-v1-number-text-1`
 | Reviewed `wi-a-v1-number-text-1` | `rev-a@alebairos` (passed attempt 2) |
 | Implemented `wi-a-v1-number-text-2` | `impl-a2@alebairos` |
 | Reviewed `wi-a-v1-number-text-2` | `rev-a@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
+- `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried.`: pass
 - `tests/values/checks/a_v1_nt_b1_text.sh`: pass
 - `tests/values/checks/a_v1_nt_suite.sh`: pass
+- `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried.`: judged pass by `alebairos`: pass: Yes: I wasn't allowed to run ./engine in this session, so I read the shipped code and traced a test workbook through it by hand. In that workbook, ="Rate: "&0.0000001 gives Rate: 0.0000001, ="Count: "&1E15 gives Count: 1000000000000000, LEN(1E15) is 16, and everyday amounts like 1234.5, 0.035*100 and 0.1+0.2 read 1234.5, 3.5 and 0.3, because &, CONCATENATE, LEN and LEFT all go through format_number in src/values/__init__.py:193; only very large numbers such as 1E21 come out as 1E+021, which is what a spreadsheet shows too. | delegate: decided by the HITL's delegate (Claude, opus), per the HITL on 2026-11-19 07:05: "from now on until finishing the experiment, do it yourself". Signed as npub1p8lmv897hc9ew45cdjfqlurcgu5e3kg0mwkrptln4r7px4jzs5aqlhr9az.
 
 Outcome report:
 
@@ -124,14 +127,11 @@ Landing pull request: [exp-a #28](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 7. The decision
 
-**Judge:a-v1-number-text:judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried.**: A decision: show your human its options. The question: Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried.
-
-- Pass: `cooknship decide --answer Judge:a-v1-number-text:judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried. --option pass`
-- Fail, with the reason: `cooknship decide --answer Judge:a-v1-number-text:judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried. --option fail --text "<reason>"`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 3 h 10 min so far
+- Lead time: 3 h 20 min
 - Loops: 1 (D5 review 1)
 - Waste: 6 min
 - Size: 28 lines (+16 −12, 3 files, ≤400; tests 154 lines); plan check files laid over by land, not in the size: +104 −0, 4 files

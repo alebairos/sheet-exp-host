@@ -4,7 +4,7 @@
 
 > The CLI fails badly on bad input. Observed: malformed or empty JSON, {"sheets":[]}, a missing file and a directory print Python tracebacks; [] and {"foo":1} silently give an empty workbook with exit 0; NaN and 1e999 print as NaN and Infinity (invalid JSON); a lowercase key "a2" is echoed but =A2 reads it blank; --cell sheet1!a1 gives #REF! and --cell Sheet1!$A$1 null; a constant 1e3 echoes as 1000.0 (G28, G29; prior S6, T7). (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: awaiting the verdict · 2 work items · 2 bullets
+Kind: Defect · State: Met · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -79,14 +79,14 @@ Status: landed (`eaab2bf659df`) · depends on `wi-a-v1-cli-input-1`
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
 | `ac-ci-suite` | b1, b2 | `tests/cli/checks/a_v1_ci_suite.sh` | red | pass |
-| `ac-ci-judge` | b1, b2 | `judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.` | judged | — |
+| `ac-ci-judge` | b1, b2 | `judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.` | judged | pass |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| PASS | b1 | bad input (malformed JSON, wrong shape, missing file, directory) prints one plain error line on stderr and exits non-zero, with no traceback | `tests/cli/checks/a_v1_ci_b1_bad_input.sh` pass, `tests/cli/checks/a_v1_ci_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.` — |
-| PASS | b2 | every output is valid JSON numbers; --cell accepts lower-case and $ references; lower-case cell keys are read as their cell | `tests/cli/checks/a_v1_ci_b2_refs.sh` pass, `tests/cli/checks/a_v1_ci_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.` — |
+| PASS | b1 | bad input (malformed JSON, wrong shape, missing file, directory) prints one plain error line on stderr and exits non-zero, with no traceback | `tests/cli/checks/a_v1_ci_b1_bad_input.sh` pass, `tests/cli/checks/a_v1_ci_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.` pass |
+| PASS | b2 | every output is valid JSON numbers; --cell accepts lower-case and $ references; lower-case cell keys are read as their cell | `tests/cli/checks/a_v1_ci_b2_refs.sh` pass, `tests/cli/checks/a_v1_ci_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.` pass |
 
 ## 5. Out of scope and risks
 
@@ -104,12 +104,15 @@ Status: landed (`eaab2bf659df`) · depends on `wi-a-v1-cli-input-1`
 | Reviewed `wi-a-v1-cli-input-1` | `rev-a@alebairos` (passed attempt 2) |
 | Implemented `wi-a-v1-cli-input-2` | `impl-a1@alebairos` |
 | Reviewed `wi-a-v1-cli-input-2` | `rev-a@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
+- `judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.`: pass
 - `tests/cli/checks/a_v1_ci_b1_bad_input.sh`: pass
 - `tests/cli/checks/a_v1_ci_b2_refs.sh`: pass
 - `tests/cli/checks/a_v1_ci_suite.sh`: pass
+- `judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.`: judged pass by `alebairos`: pass: I wasn't allowed to run ./engine in this session, so I read the shipped src/cli.py on origin/main and the code each mistake goes through. A missing file, a directory, an unreadable or non-UTF-8 file, truncated or empty JSON, NaN, 1e999, a huge integer, [], {"foo":1}, sheets as a list and a bad cell each end in one `engine: …` line on stderr with exit 1 and nothing on stdout; output is written with allow_nan=False, and a2, $B$1, sheet1!a1 and 'my sheet'!$a$1 (cell keys and --cell, sheet names regardless of case) are read as their cells, which matches the reviewer's real runs and the b1, b2 and suite checks that pass on main. The one traceback left is a formula with 1000 or more terms, which this intent leaves to a-v1-engine-failure and is not one of the ordinary mistakes asked about. | delegate: decided by the HITL's delegate (Claude, opus), per the HITL on 2026-11-19 07:05: "from now on until finishing the experiment, do it yourself". Signed as npub1p8lmv897hc9ew45cdjfqlurcgu5e3kg0mwkrptln4r7px4jzs5aqlhr9az.
 
 Outcome report:
 
@@ -137,14 +140,11 @@ Landing pull request: [exp-a #26](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 7. The decision
 
-**Judge:a-v1-cli-input:judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.**: A decision: show your human its options. The question: Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.
-
-- Pass: `cooknship decide --answer Judge:a-v1-cli-input:judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried. --option pass`
-- Fail, with the reason: `cooknship decide --answer Judge:a-v1-cli-input:judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried. --option fail --text "<reason>"`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 3 h 10 min so far
+- Lead time: 3 h 16 min
 - Loops: 1 (D5 review 1)
 - Waste: 14 min
 - Size: 160 lines (+147 −13, 3 files, ≤400; tests 162 lines); plan check files laid over by land, not in the size: +165 −0, 6 files

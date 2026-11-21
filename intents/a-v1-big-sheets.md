@@ -70,15 +70,16 @@ Status: landed (`11fa25c61ed9`)
 
 Adds tests/e2e/ui/test_big_sheets.py, run by ./test.sh in headless Chrome, which opens a 2001-row CSV, scrolls to its last cell, moves with the arrows and PageDown/PageUp and edits row 2001, so the product keeps this behaviour.
 
-Status: attempt 4 in work by `impl-a2@alebairos` · depends on `wi-a-v1-big-sheets-1`
+Status: landing (`7db2dd26f2a0`) · depends on `wi-a-v1-big-sheets-1`
 
-**The passing review noted:** > PASS. Reviewed attempt 3 (4ea210b, on attempt 2 5c56524, base main 2070717, which already has WI-1) with the plan's checks (b9932e3). Runs used CHROME=/usr/bin/chromium.
+**The passing review noted:** > PASS. Reviewed attempt 4 (b488404, on attempt 3 4ea210b, base main 2070717) with the plan's checks (b9932e3). Runs used CHROME=/usr/bin/chromium.
 > 
-> - My attempt-2 finding is fixed at tests/e2e/ui/browser.mjs:80-96. close() is now best effort. rmSync gets maxRetries 5 and retryDelay 100 (Node retries ENOTEMPTY) inside try/catch. done() is idempotent and clears a 5 s timer, so close() resolves even if "exit" never comes. proc.kill() is guarded. No path throws, and the timer is declared before any done() can run.
-> - ac-bs-suite (tests/e2e/ui/checks/a_v1_bs_suite.sh): "ok the product's big-sheet browser tests run and pass". Red on base, as in my attempt-2 review. ./test.sh: 77 tests OK (34.7 s).
-> - Stability: 8 back-to-back rounds of big_sheets.mjs and walkthrough.mjs, all 16 runs exit 0. Each big_sheets run prints "ok big sheets: wheel to L2001 and back ...".
-> - The rest is unchanged since attempt 2 and still holds. The test fails on the grid from before WI-1 ("ArrowRight selects I1 ... the page shows H1") and covers b1 (big_sheets.mjs:124-131) and b2 (:141-175), with Calc's values from checks/a_v1_bs_calc.json.
-> - Note, outside this scope: tests/e2e/workbooks/browser_walk.mjs still leaves its temp directory behind, as the record's a-r0 note says.
+> - What changed: land attempt 3 failed on CI ("the column header L is in view ... false"). web/grid/grid.js:198-203 now wraps the drawn table in a sticky .grid-view the size of the scroll box, with overflow hidden (grid.css:14-15). The table is one row and one column larger than the box, and sticky positioning no longer pushes it back at the end of the scroll range. big_sheets.mjs:126-135 now asserts that the column headers sit at the box's top and the row headers at its left, at the bottom and right ends.
+> - Scope: web/grid/grid.js and grid.css are in the intent's path scope (web/grid/**). This WI was planned as tests only, so I am flagging it as asked: the change belongs here. It fixes the shipped grid that the WI's own test exposed, and it is small (+8 -2).
+> - Checks on the WI: ac-bs-suite gives "ok the product's big-sheet browser tests run and pass". WI-1's ac b1 gives "ok b1: scrolled to L2001 (200111) and back ... median 49.3 ms". ac b2 gives "ok b2: keys reach A2001 and M2001 ... M2001 10, M1 200101904 as in Calc". node --test tests/web/grid: 7/7. ./test.sh: 77 OK. big_sheets.mjs 3 times in a row: ok. close() is as I passed it on attempt 3.
+> - The fix is real. I re-ran big_sheets.mjs under CDP Emulation.setDeviceMetricsOverride, with and without a 15px serif grid font injected, on the attempt-3 grid (old) and this attempt (wi). At 1200x900 (dpr 1), 1200x900 with the serif font, and 1013x701 (dpr 1.25), old fails "the column header L is in view" and wi passes the header steps. At 1500x1000 with serif and at 1280x760 (dpr 1.5), both pass.
+> - Note (the test, not the product; same on old and wi): at narrow viewports (1013x701 dpr 1.25, 900x640 dpr 2) the test fails later with "M2001 recomputes to Calc's 10 ... shows null". After Enter in B2001 the view follows B2002, and with fewer than 12 columns visible M is not drawn. launch() fixes the window at 1200x900, so this is not a flake on CI. Reading M2001 after navigating back to it would make the test independent of the viewport.
+> - Attribution note: this commit's author is "impl-a2@alebairos" with the human's e-mail address, not an implementer address. Attempts 1-3 used impl-a1@alebairos.invalid. The record noted the same on a-i7.
 > -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
@@ -108,7 +109,7 @@ Status: attempt 4 in work by `impl-a2@alebairos` · depends on `wi-a-v1-big-shee
 | Implemented `wi-a-v1-big-sheets-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-v1-big-sheets-1` | `rev-a@alebairos` (passed attempt 1) |
 | Implemented `wi-a-v1-big-sheets-2` | `impl-a1@alebairos`, `impl-a2@alebairos` |
-| Reviewed `wi-a-v1-big-sheets-2` | `rev-a@alebairos` (passed attempt 3) |
+| Reviewed `wi-a-v1-big-sheets-2` | `rev-a@alebairos` (passed attempt 4) |
 
 Product checks: not recorded yet.
 
@@ -129,7 +130,7 @@ Files landed by `wi-a-v1-big-sheets-1`:
 - `web/grid/grid.css` +9 −0
 - `tests/e2e/ui/checks/a_v1_bs_calc.json` +1 −0 (plan check)
 
-Landing pull request: [exp-a #22](https://github.com/alebairos/sheet-exp-a/pull/22)
+Landing pull request: [exp-a #30](https://github.com/alebairos/sheet-exp-a/pull/30)
 
 ## 7. The decision
 
@@ -137,7 +138,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 3 h 11 min so far
+- Lead time: 3 h 32 min so far
 - Loops: 3 (D4 build 1, D5 review 1, D6 landing 1)
 - Waste: 1 h 22 min
 - Size: 171 lines (+142 −29, 4 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +307 −0, 8 files

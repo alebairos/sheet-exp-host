@@ -4,7 +4,7 @@
 
 > Formulas Calc accepts fail here, and malformed ones give the wrong error. Observed vs LibreOffice: = SUM( A1 : A2 ) gives #VALUE! (Calc 3); =SUM( 'My Sheet'!A1 : A2 ) #VALUE! (Calc 11); =SUM(S2!A1:S2!A2) #VALUE! (Calc 7); =SUM(1,2 #VALUE! (Calc 3); =(1+ and =1+*2 give #VALUE! (Calc Err:511, Err:510); =1E400 #VALUE! (Calc Err:502); =MAX() 0 and =MEDIAN() #VALUE! (Calc Err:511) (G24, G25; prior S15, S24). (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: certified · 3 work items · 2 bullets
+Kind: Defect · State: accepted · 3 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -76,7 +76,7 @@ def check(lo, hi, ok):
 
 The parser skips spaces between tokens, lets both ends of a range name the sheet, and closes open parentheses at the end of the formula, so formulas Calc computes compute here too.
 
-Status: planned
+Status: accepted
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -86,7 +86,7 @@ Status: planned
 
 Malformed formulas give Calc's Err:508/509/510/511/520 codes by its left-to-right rule and out-of-range numbers Err:502 instead of #VALUE!, and calls with no arguments give Err:511 (or Calc's empty value for SUM, COUNT, COUNTA, PRODUCT, AVERAGE, CONCATENATE) instead of 0 or a crash.
 
-Status: planned · depends on `wi-a-v1-parse-fidelity-1`
+Status: accepted · depends on `wi-a-v1-parse-fidelity-1`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -96,7 +96,7 @@ Status: planned · depends on `wi-a-v1-parse-fidelity-1`
 
 Adds tests/parser/test_parse_fidelity.py, run by ./test.sh, covering the accepted forms, the parse error codes and empty calls, so the product keeps Calc's behaviour.
 
-Status: planned · depends on `wi-a-v1-parse-fidelity-2`
+Status: accepted · depends on `wi-a-v1-parse-fidelity-2`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -135,15 +135,11 @@ Outcome report: none yet.
 
 ## 7. The decision
 
-**SpecAccept:a-v1-parse-fidelity**: A decision: show your human its options
-
-- Accept the spec: claims freeze, it can be admitted: `cooknship decide --answer SpecAccept:a-v1-parse-fidelity --option accept`
-- Send the plan back with a reason: `cooknship decide --answer SpecAccept:a-v1-parse-fidelity --option reject --text "<reason>"`
-- Shelve it; when another intent takes its place, the reason is replaced:<that intent's id>, and what waits on this one waits for it instead: `cooknship decide --answer SpecAccept:a-v1-parse-fidelity --option shelve --text "<reason>"`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 3 h 10 min so far
+- Lead time: 3 h 31 min so far
 - Loops: 3 (D1 spec 1, D2 plan 2)
 - Waste: 8 min
 - Size: nothing landed yet

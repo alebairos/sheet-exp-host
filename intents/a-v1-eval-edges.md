@@ -60,7 +60,7 @@ Status: landed (`03bcf7aa5657`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-ee-b1` | b1 | `tests/eval/checks/a_v1_ee_b1_intersect.sh` | red | — |
+| `ac-ee-b1` | b1 | `tests/eval/checks/a_v1_ee_b1_intersect.sh` | red | pass |
 
 ### `wi-a-v1-eval-edges-2`: Untaken branches don't make cycles
 
@@ -82,7 +82,7 @@ Status: landed (`24bf5780a006`) · depends on `wi-a-v1-eval-edges-1`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-ee-b2` | b2 | `tests/eval/checks/a_v1_ee_b2_branch.sh` | red | — |
+| `ac-ee-b2` | b2 | `tests/eval/checks/a_v1_ee_b2_branch.sh` | red | pass |
 
 ### `wi-a-v1-eval-edges-3`: Product tests for evaluation edges
 
@@ -102,15 +102,15 @@ Status: landed (`85df36ac019e`) · depends on `wi-a-v1-eval-edges-2`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-ee-suite` | b1, b2 | `tests/eval/checks/a_v1_ee_suite.sh` | red | — |
+| `ac-ee-suite` | b1, b2 | `tests/eval/checks/a_v1_ee_suite.sh` | red | pass |
 | `ac-ee-judge` | b1, b2 | `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, does a user who writes =C2:C3-style formulas next to their data, or guards a self-reference with IF/IFERROR (e.g. =IF(A1="",0,B1+B1) patterns), get the numbers they would expect from a spreadsheet instead of #VALUE! or Err:522? Answer yes or no with what you tried.` | judged | — |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | a range used where one value is expected takes the cell in the formula's row or column, as LibreOffice does, on cases computed by LibreOffice | `tests/eval/checks/a_v1_ee_b1_intersect.sh` —, `tests/eval/checks/a_v1_ee_suite.sh` —, `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, does a user who writes =C2:C3-style formulas next to their data, or guards a self-reference with IF/IFERROR (e.g. =IF(A1="",0,B1+B1) patterns), get the numbers they would expect from a spreadsheet instead of #VALUE! or Err:522? Answer yes or no with what you tried.` — |
-| not yet | b2 | a self-reference through a branch IF or IFERROR does not take gives LibreOffice's value, not Err:522, on cases computed by LibreOffice | `tests/eval/checks/a_v1_ee_b2_branch.sh` —, `tests/eval/checks/a_v1_ee_suite.sh` —, `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, does a user who writes =C2:C3-style formulas next to their data, or guards a self-reference with IF/IFERROR (e.g. =IF(A1="",0,B1+B1) patterns), get the numbers they would expect from a spreadsheet instead of #VALUE! or Err:522? Answer yes or no with what you tried.` — |
+| PASS | b1 | a range used where one value is expected takes the cell in the formula's row or column, as LibreOffice does, on cases computed by LibreOffice | `tests/eval/checks/a_v1_ee_b1_intersect.sh` pass, `tests/eval/checks/a_v1_ee_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, does a user who writes =C2:C3-style formulas next to their data, or guards a self-reference with IF/IFERROR (e.g. =IF(A1="",0,B1+B1) patterns), get the numbers they would expect from a spreadsheet instead of #VALUE! or Err:522? Answer yes or no with what you tried.` pass |
+| PASS | b2 | a self-reference through a branch IF or IFERROR does not take gives LibreOffice's value, not Err:522, on cases computed by LibreOffice | `tests/eval/checks/a_v1_ee_b2_branch.sh` pass, `tests/eval/checks/a_v1_ee_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, does a user who writes =C2:C3-style formulas next to their data, or guards a self-reference with IF/IFERROR (e.g. =IF(A1="",0,B1+B1) patterns), get the numbers they would expect from a spreadsheet instead of #VALUE! or Err:522? Answer yes or no with what you tried.` pass |
 
 ## 5. Out of scope and risks
 
@@ -131,9 +131,18 @@ Status: landed (`85df36ac019e`) · depends on `wi-a-v1-eval-edges-2`
 | Implemented `wi-a-v1-eval-edges-3` | `impl-a2@alebairos` |
 | Reviewed `wi-a-v1-eval-edges-3` | `rev-a@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/eval/checks/a_v1_ee_b1_intersect.sh`: pass
+- `tests/eval/checks/a_v1_ee_b2_branch.sh`: pass
+- `tests/eval/checks/a_v1_ee_suite.sh`: pass
+- `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, does a user who writes =C2:C3-style formulas next to their data, or guards a self-reference with IF/IFERROR (e.g. =IF(A1="",0,B1+B1) patterns), get the numbers they would expect from a spreadsheet instead of #VALUE! or Err:522? Answer yes or no with what you tried.`: judged pass by `alebairos`: pass: I couldn't run ./engine in this session, so I read the shipped code on main. A range used where one value is expected now gives the cell in the formula's own row or column: in operators, unary minus, %, and as the cell's value (`Range.collapse(pos)` and `_scalar`). So =C2:C3 or =C2:C3*10 next to the data gives numbers, not #VALUE!. IF and IFERROR now compute only the branch they use (`_LAZY`), and cells in a cycle are worked out one by one in Calc's order (`_evaluate_cycle`), so =IF(A1="",0,B1+B1) in B1 and =IFERROR(B9,0) give 0, while only real cycles show Err:522; the reviewer's own LibreOffice cases (13 range and 36 cycle formulas) all matched. One gap, which the plan left out of scope: a range passed straight to a function that takes one value, such as =ABS(C2:C3), or a bare range as IF's condition, is still #VALUE! where Calc would give a number, and that should be a follow-up defect. | delegate: decided by the HITL's delegate (Claude, opus), per the HITL on 2026-11-19 07:05: "from now on until finishing the experiment, do it yourself". Signed as npub1p8lmv897hc9ew45cdjfqlurcgu5e3kg0mwkrptln4r7px4jzs5aqlhr9az.
+
+Outcome report:
+
+- **Built:** Two LibreOffice evaluation rules the engine lacked, built as planned in src/eval and src/recalc (+174 −37). (1) Implicit intersection. A range used where one value is expected (an operator's operand, unary minus, %, or a cell's own value) takes the cell in the formula's row or column. So =C2:C3*10 in row 2 gives 30, not #VALUE!. Outside the range, or for a 2-D range, it is #VALUE! as in Calc. (2) Untaken branches. IF and IFERROR now evaluate only the argument they use. Cells in a cycle are computed on demand in Calc's column-major order, without Python recursion. So =IF(TRUE,1,A16) in A16 gives 1 and =IFERROR(B9,0) with B9 =B8 gives 0, while a real cycle (E1 =E2, E2 =E1) still shows Err:522. On the landed product (exp-a 36e13b4), b1 matches LibreOffice on 16 formulas and b2 on 20. tests/eval/test_eval_edges.py adds 11 tests, all of them Calc-computed, and ./test.sh passes with 110 tests. The reviewer's own held-out LibreOffice probes matched: 13 intersection cases and 36 cycle/branch formulas. A 10,000-cell cycle through IFERROR takes 0.26 s (0.17 s before). All three WIs passed on the first attempt.
+- **Advice:** Adopt, knowing that b1 is met only for operators and cell values. That is the plan's stated limit. A range passed straight to a single-value function is still #VALUE! where Calc intersects it: =ABS(C2:C3) in row 2 (Calc 3), and ROUND, LEN and IF's bare condition behave the same. The reviewer flagged that the bullet's wording reads wider. Follow up: park a Defect in src/functions for intersection in single-value function arguments. Watch: one formula that reads many still-pending cells of its own cycle restarts once per cell. Values stay right, but it takes 3.2 s at 3000 cells (0.1 s before). It is rare and untested, so it is a follow-up candidate. The usefulness judge is yours to answer.
+- [a-v1-eval-edges/outcome.md](https://github.com/alebairos/sheet-exp-host/blob/964f1a3d880d2caa44759ecf99c07522bd0b44f2/a-v1-eval-edges/outcome.md)
 
 Files landed by `wi-a-v1-eval-edges-1`:
 
@@ -161,14 +170,15 @@ Landing pull request: [exp-a #29](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 7. The decision
 
-**Judge:a-v1-eval-edges:judge:Usefulness only (not Calc fidelity): through ./engine as shipped, does a user who writes =C2:C3-style formulas next to their data, or guards a self-reference with IF/IFERROR (e.g. =IF(A1="",0,B1+B1) patterns), get the numbers they would expect from a spreadsheet instead of #VALUE! or Err:522? Answer yes or no with what you tried.**: A decision: show your human its options. The question: Usefulness only (not Calc fidelity): through ./engine as shipped, does a user who writes =C2:C3-style formulas next to their data, or guards a self-reference with IF/IFERROR (e.g. =IF(A1="",0,B1+B1) patterns), get the numbers they would expect from a spreadsheet instead of #VALUE! or Err:522? Answer yes or no with what you tried.
+**Verdict:a-v1-eval-edges**: A decision: show your human its options
 
-- Pass: `cooknship decide --answer Judge:a-v1-eval-edges:judge:Usefulness only (not Calc fidelity): through ./engine as shipped, does a user who writes =C2:C3-style formulas next to their data, or guards a self-reference with IF/IFERROR (e.g. =IF(A1="",0,B1+B1) patterns), get the numbers they would expect from a spreadsheet instead of #VALUE! or Err:522? Answer yes or no with what you tried. --option pass`
-- Fail, with the reason: `cooknship decide --answer Judge:a-v1-eval-edges:judge:Usefulness only (not Calc fidelity): through ./engine as shipped, does a user who writes =C2:C3-style formulas next to their data, or guards a self-reference with IF/IFERROR (e.g. =IF(A1="",0,B1+B1) patterns), get the numbers they would expect from a spreadsheet instead of #VALUE! or Err:522? Answer yes or no with what you tried. --option fail --text "<reason>"`
+- Met: `cooknship decide --answer Verdict:a-v1-eval-edges --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-v1-eval-edges --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-v1-eval-edges --option not_met`
 
 ## 8. Metrics
 
-- Lead time: 3 h 10 min so far
+- Lead time: 3 h 31 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: 211 lines (+174 −37, 7 files, ≤400; tests 220 lines); plan check files laid over by land, not in the size: +129 −0, 6 files
