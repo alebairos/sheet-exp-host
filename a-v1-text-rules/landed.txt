@@ -1,0 +1,46 @@
+a-v1-text-rules: the landed engine, exp-a bc8b3a4 (main), run by gm-a for the outcome report
+
+1. The review's cases (G21, G26, G27), one formula per cell:
+  ="a"="A"               -> false
+  ="a"<"A"               -> true
+  ="A"<"b"               -> true
+  ="é">"f"               -> false
+  ="é">"e"               -> true
+  ="Zürich"<"Zuse"       -> true
+  =" 5 "+0               -> 5
+  ="TRUE"+0              -> 1
+  ="$5"+0                -> 5
+  ="1,000"+0             -> 1000
+  ="50%"+0               -> 0.5
+  ="(5)"+0               -> -5
+  ="5-"+0                -> -5
+  ="$1,000.50"+0         -> 1000.5
+  ="5 %"+0               -> 0.05
+  =ROUND("(5)",0)        -> -5
+  ="1,00"+0              -> {"error": "#VALUE!"}
+  ="1 000"+0             -> {"error": "#VALUE!"}
+  ="€5"+0                -> {"error": "#VALUE!"}
+  ="5%%"+0               -> {"error": "#VALUE!"}
+  ="1/2"+0               -> {"error": "#VALUE!"}
+
+2. A small list typed the way people type it (amounts as text cells), ./engine:
+  C1 =B1+B2+B3+B4+B5            -> 1005.5
+  C2 =SUM(B1:B5)                -> 0
+  C3 =IF(A4="Dan","yes","no")   -> "no"
+  C4 =COUNTIF(A1:A5,"dan")      -> 1
+  C5 =A3<A4                     -> true
+  C6 =B3*2                      -> 2000
+
+3. Checks on landed main:
+  $ sh tests/values/checks/a_v1_tr_b1_compare.sh
+    ok b1: text compares as in Calc
+  $ sh tests/values/checks/a_v1_tr_b2_numbers.sh
+    ok b2: text reads as a number as in Calc
+  $ sh tests/values/checks/a_v1_tr_suite.sh
+    ok the product's text-rule tests run and pass (4)
+  $ sh tests/values/checks/a2_b2_coercion.sh
+    FAIL to_number('TRUE'): got 1, want {'error': '#VALUE!'}
+    FAIL compare('a', 'A'): got -1, want 0
+  $ ./test.sh
+    Ran 152 tests in 37.723s
+    OK
