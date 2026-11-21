@@ -1,0 +1,9 @@
+FAIL = SUM( A1 : A2 ) gives {"error": "#VALUE!"}, Calc gives {"number": 3.0}
+FAIL =SUM( 'My Sheet'!A1 : A2 ) gives {"error": "#VALUE!"}, Calc gives {"number": 11.0}
+FAIL =SUM(S2!A1:S2!A2) gives {"error": "#VALUE!"}, Calc gives {"number": 7.0}
+FAIL =SUM(1,2 gives {"error": "#VALUE!"}, Calc gives {"number": 3.0}
+FAIL =(1+2 gives {"error": "#VALUE!"}, Calc gives {"number": 3.0}
+FAIL =SUM(A1:A2 gives {"error": "#VALUE!"}, Calc gives {"number": 3.0}
+FAIL =SUM(A1 :A2) gives {"error": "#VALUE!"}, Calc gives {"number": 3.0}
+FAIL =SUM('My Sheet'!A1:'My Sheet'!A2) gives {"error": "#VALUE!"}, Calc gives {"number": 11.0}
+FAIL =IF(A1=1,"one","other" gives {"error": "#VALUE!"}, Calc gives {"text": "one"}
