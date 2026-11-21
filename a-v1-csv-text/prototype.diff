@@ -1,0 +1,73 @@
+diff --git i/web/io/io.js w/web/io/io.js
+index 79439df..a07cf11 100644
+--- i/web/io/io.js
++++ w/web/io/io.js
+@@ -73,13 +73,24 @@ export function parseCSV(text, sheet = "Sheet1") {
+   return { sheets: { [sheet]: cells } };
+ }
+ 
++/** Each non-empty CSV field as written in the file, by cell: {A1: "02134", ...}. */
++export function csvText(text) {
++  const out = {};
++  csvRows(String(text).replace(/^\uFEFF/, "")).forEach((fields, r) =>
++    fields.forEach((t, c) => { if (parseInput(t) !== undefined) out[colName(c) + (r + 1)] = t; }),
++  );
++  return out;
++}
++
++const quote = (s) => (/[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s);
+ const csvField = (v) => {
+   const s = display(v);
+   return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+ };
+ 
+-/** The sheet's computed values as CSV, from A1 to its last used row and column, LF line ends. */
+-export function toCSV(computed, sheet) {
++/** The sheet's computed values as CSV, from A1 to its last used row and column, LF line ends;
++ * a cell in `asWritten` is written as that text instead (an untouched field of the opened file). */
++export function toCSV(computed, sheet, asWritten = {}) {
+   const cells = (computed && computed.sheets && computed.sheets[sheet]) || {};
+   let rows = 0;
+   let cols = 0;
+@@ -92,7 +103,10 @@ export function toCSV(computed, sheet) {
+   let out = "";
+   for (let r = 1; r <= rows; r++) {
+     const fields = [];
+-    for (let c = 0; c < cols; c++) fields.push(csvField(cells[colName(c) + r]));
++    for (let c = 0; c < cols; c++) {
++      const ref = colName(c) + r;
++      fields.push(ref in asWritten ? quote(asWritten[ref]) : csvField(cells[ref]));
++    }
+     out += fields.join(",") + "\n";
+   }
+   return out;
+@@ -118,6 +132,7 @@ export function createController({ compute = async (book) => book } = {}) {
+     sheet: "Sheet1",
+     name: "workbook",
+     message: "",
++    opened: null, // the CSV as opened: {sheet, text: {ref: field as written}, value: {ref: value as opened}}
+   };
+   const recompute = async () => {
+     try {
+@@ -140,6 +155,9 @@ export function createController({ compute = async (book) => book } = {}) {
+         return { ok: false, message: state.message };
+       }
+       state.book = book;
++      state.opened = /\.csv$/i.test(fileName)
++        ? { sheet: Object.keys(book.sheets)[0], text: csvText(text), value: { ...Object.values(book.sheets)[0] } }
++        : null;
+       state.sheet = Object.keys(book.sheets)[0] || "Sheet1";
+       state.name = String(fileName).replace(/^.*[\\/]/, "").replace(/\.[^.]*$/, "") || "workbook";
+       state.message = `Opened ${fileName}`;
+@@ -163,7 +181,10 @@ export function createController({ compute = async (book) => book } = {}) {
+       return { name: state.name + ".json", text: toJSON(state.book), type: "application/json" };
+     },
+     saveCSV() {
+-      return { name: state.name + ".csv", text: toCSV(state.computed, state.sheet), type: "text/csv" };
++      // Fields the user did not change go back as the file wrote them (02134, 4.50).
++      const o = state.opened, cells = state.book.sheets[state.sheet] || {}, asWritten = {};
++      if (o && o.sheet === state.sheet) for (const [ref, t] of Object.entries(o.text)) if (cells[ref] === o.value[ref]) asWritten[ref] = t;
++      return { name: state.name + ".csv", text: toCSV(state.computed, state.sheet, asWritten), type: "text/csv" };
+     },
+   };
+ }
