@@ -1,0 +1,1 @@
+FAIL reloading with an unsaved edit did not ask for confirmation (dialogs: [])
