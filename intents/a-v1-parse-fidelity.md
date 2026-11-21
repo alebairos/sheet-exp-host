@@ -106,7 +106,19 @@ Status: landed (`20a41d6a3891`)
 
 Malformed formulas give Calc's Err:508/509/510/511/520 codes by its left-to-right rule and out-of-range numbers Err:502 instead of #VALUE!, and calls with no arguments give Err:511 (or Calc's empty value for SUM, COUNT, COUNTA, PRODUCT, AVERAGE, CONCATENATE) instead of 0 or a crash.
 
-Status: accepted · depends on `wi-a-v1-parse-fidelity-1`
+Status: landing (`60659f1ea40a`) · depends on `wi-a-v1-parse-fidelity-1`
+
+**The passing review noted:** > PASS, attempt 3 (972c16d). Verify reran in a worktree of the WI with the plan's checks (4793976): ac-pf-b2 tests/parser/checks/a_v1_pf_b2_errors.sh ok on all 71 Calc cases (red on main a3ff015, 53 FAIL lines), and b1 is still ok. ./test.sh is OK with 141 tests. Earlier checks: only tests/parser/checks/a1_b3_malformed.sh is red, with output identical to main's. That is the CONFLICT carried from WI-1 (it wants '=(1' and '=SUM(1,2' to be ParseErrors; Calc computes them). It needs a human/Gm decision; this WI did not cause it.
+> 
+> Attempt-2 findings are fixed, checked against Calc 26.8.1.1 over UNO. =STDEV() and =STDEV( are #DIV/0! (src/eval/__init__.py _EMPTY_CALL_OK). The group-list family is now right: =(2, =(2; =(2,, =((2, =SUM((2, =SUM(1,(2, =1+(2, =IF((1, give Err:511, and =(2,3) =(2,) =(1,2 =SUM((2,3)) =SUM((1,2),3) give Err:509 (src/parser/parse.py primary(), the group branch, plus the deferred code). All of my earlier 129 held-out cases (all 40 functions called empty and half-open, the separator/%/')'/Err:502 corners) still match Calc, apart from the 5 below that were already wrong on main. I sent 51 new held-out cases at the new ':' handling and the deferred list code, and 36 match Calc: A1:(A2), A1:+A2, A1:+-A2 520, A1:1 / A1:TRUE / A1:"A2" / A1:(A2+1) / A1:(2,3) 502, A1:B #NAME?, (1,2)+1E400 502, IFERROR((1,2),0) 509, (2,3)+( 511, A1:2+ 520. A 60,000-formula random fuzz of evaluate() raised no Python exception. All 5 paths are in scope.
+> 
+> Left for WI-3 or the Gm (none of these is a malformed-formula case the bullets name, and none was right on main, so they are not grounds to fail the last attempt):
+> - =SUM(A1:+ gives Err:520; Calc gives Err:511 (a sign then the end inside an open '('; main gave #VALUE!). This is the only malformed-code mismatch I found.
+> - A range whose end is a function, =SUM(A1:INDEX(A1:A2,2)) and =SUM(A1:IF(1,A2,A1)), now gives Err:502; Calc computes 3 (main gave #VALUE!). A reference union in a group, =SUM((A1,A2)) or =SUM((A1;A2)), gives Err:509; Calc gives 3 (main #VALUE!). Both are reference forms the plan does not cover: worth a follow-up intent.
+> - Implicit intersection is not done (already so on main): =A1:A2, =(A1:A2), =-A1:A2 and =SUM(-A1:A2) give 1 or -1 where Calc in C1 gives #VALUE!. Because of that, =A1:+A2 now gives 1 where main matched Calc's #VALUE!: that comes from the existing intersection gap, not from a wrong parse.
+> - Already wrong on main, outside this plan: =SUM(1:2) (whole rows, out of scope), =SUM(A1:A2:A2) 3 in Calc, =SUM(A1:A2:) Err:511 in Calc, =SUM(A1:S2!A2) #NAME? in Calc; =COUNTIF(A1:A2) Err:504 (Calc Err:511), =INDEX(A1:A2) 1 (Calc #VALUE!), =TRUE()/=FALSE() #NAME? (Calc 1/0).
+> Usefulness is not judged here (that is the judge check on WI-3); this review is about fidelity only.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -144,8 +156,8 @@ Status: accepted · depends on `wi-a-v1-parse-fidelity-2`
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-v1-parse-fidelity-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-v1-parse-fidelity-1` | `rev-a@alebairos` (passed attempt 1) |
-| Implemented `wi-a-v1-parse-fidelity-2` | — |
-| Reviewed `wi-a-v1-parse-fidelity-2` | — |
+| Implemented `wi-a-v1-parse-fidelity-2` | `impl-a1@alebairos`, `impl-a2@alebairos` |
+| Reviewed `wi-a-v1-parse-fidelity-2` | `rev-a@alebairos` (passed attempt 3) |
 | Implemented `wi-a-v1-parse-fidelity-3` | — |
 | Reviewed `wi-a-v1-parse-fidelity-3` | — |
 
@@ -165,7 +177,7 @@ Files landed by `wi-a-v1-parse-fidelity-1`:
 - `tests/eval/test_eval.py` +5 −1 (test)
 - `tests/parser/checks/a_v1_pf_calc.json` +1 −0 (plan check)
 
-Landing pull request: [exp-a #34](https://github.com/alebairos/sheet-exp-a/pull/34)
+Landing pull request: [exp-a #35](https://github.com/alebairos/sheet-exp-a/pull/35)
 
 ## 7. The decision
 
@@ -173,7 +185,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 5 h 47 min so far
-- Loops: 3 (D1 spec 1, D2 plan 2)
-- Waste: 8 min
+- Lead time: 6 h 26 min so far
+- Loops: 5 (D1 spec 1, D2 plan 2, D5 review 2)
+- Waste: 32 min
 - Size: 36 lines (+30 −6, 3 files, ≤400; tests 33 lines); plan check files laid over by land, not in the size: +139 −0, 6 files
