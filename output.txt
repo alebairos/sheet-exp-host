@@ -1,0 +1,13 @@
+FAIL Cyc!A16 =IF(TRUE,1,A16) gives {"error": "Err:522"}, Calc gives {"number": 1.0}
+FAIL Cyc!B7 =IF(FALSE,B7,2) gives {"error": "Err:522"}, Calc gives {"number": 2.0}
+FAIL Cyc!B8 =IFERROR(B9,0) gives {"error": "Err:522"}, Calc gives {"number": 0.0}
+FAIL Cyc!C8 =C9 gives {"error": "Err:522"}, Calc gives {"number": 0.0}
+FAIL Cyc!C9 =IFERROR(C8,0) gives {"error": "Err:522"}, Calc gives {"number": 0.0}
+FAIL Cyc!D1 =IF(D2>0,D1,5) gives {"error": "Err:522"}, Calc gives {"number": 5.0}
+FAIL Cyc!F1 =IFERROR(F1,7) gives {"error": "Err:522"}, Calc gives {"number": 7.0}
+FAIL Cyc!G1 =A16+1 gives {"error": "Err:522"}, Calc gives {"number": 2.0}
+FAIL Cyc!J2 =IFERROR(K1,0) gives {"error": "Err:522"}, Calc gives {"number": 0.0}
+FAIL Cyc!L2 =IFERROR(L1,0) gives {"error": "Err:522"}, Calc gives {"number": 0.0}
+FAIL Cyc!L1 =L2 gives {"error": "Err:522"}, Calc gives {"number": 0.0}
+FAIL Cyc!N1 =IFERROR(M2,0) gives {"error": "Err:522"}, Calc gives {"number": 0.0}
+FAIL Cyc!M2 =N1 gives {"error": "Err:522"}, Calc gives {"number": 0.0}
