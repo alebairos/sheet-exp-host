@@ -1,0 +1,10 @@
+FAIL Data!G2 =C2:C3 gives {"error": "#VALUE!"}, Calc gives {"number": 3.0}
+FAIL Data!G3 =C2:C3*2 gives {"error": "#VALUE!"}, Calc gives {"number": 8.0}
+FAIL Data!C7 =B1:D1 gives {"error": "#VALUE!"}, Calc gives {"number": 20.0}
+FAIL Data!H3 =C2:C3&"x" gives {"error": "#VALUE!"}, Calc gives {"text": "4x"}
+FAIL Data!H2 =IF(C2:C3>3,"big","small") gives {"error": "#VALUE!"}, Calc gives {"text": "small"}
+FAIL Data!I3 =C2:C3=4 gives {"error": "#VALUE!"}, Calc gives {"bool": true}
+FAIL T!A2 =Data!C2:C3 gives {"error": "#VALUE!"}, Calc gives {"number": 3.0}
+FAIL T!A1 =Data!G2 gives {"error": "#VALUE!"}, Calc gives {"number": 3.0}
+FAIL T!A3 =Data!C2:C3 gives {"error": "#VALUE!"}, Calc gives {"number": 4.0}
+FAIL T!B5 =Data!B1:D1 gives {"error": "#VALUE!"}, Calc gives {"number": 10.0}
