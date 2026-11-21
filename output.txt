@@ -1,0 +1,1 @@
+ok b1: 220 number-to-text results match LibreOffice
