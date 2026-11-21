@@ -1,0 +1,1 @@
+FAIL F2 on A3 opens the in-cell editor with its formula as typed: wanted "=A1+A2", the page shows "30"
