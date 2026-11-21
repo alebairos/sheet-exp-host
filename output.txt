@@ -1,0 +1,1 @@
+ok b2: malformed formulas and empty calls give Calc's results
