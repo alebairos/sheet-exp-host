@@ -35,11 +35,12 @@ export async function serve(root) {
   return { url: `http://127.0.0.1:${port}`, close: () => p.kill() };
 }
 
-// Starts the browser headless and attaches to its page: send(method, params) -> result, on(event, fn), close().
+// Starts the browser headless and attaches to its page: send(method, params) -> result, on(event, fn), close(),
+// targetId (the attached page's).
 export async function launch(browser) {
   const profile = mkdtempSync(join(tmpdir(), "e2e-ui-profile-"));
   const proc = spawn(browser, ["--headless=new", "--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage",
-    "--no-first-run", "--remote-debugging-pipe", `--user-data-dir=${profile}`, "--window-size=1200,900", "about:blank"],
+    "--no-first-run", "--disable-extensions", "--remote-debugging-pipe", `--user-data-dir=${profile}`, "--window-size=1200,900", "about:blank"],
   { stdio: ["ignore", "ignore", "ignore", "pipe", "pipe"] });
   const toBrowser = proc.stdio[3], fromBrowser = proc.stdio[4];
   let id = 0, buf = "";
@@ -69,9 +70,12 @@ export async function launch(browser) {
     if (!pages.length) await sleep(100);
   }
   if (!pages.length) { proc.kill(); throw new Error("the browser opened no page"); }
-  const { sessionId } = await call("Target.attachToTarget", { targetId: pages[0].targetId, flatten: true });
+  const targetId = pages[0].targetId;
+  const { sessionId } = await call("Target.attachToTarget", { targetId, flatten: true });
   return {
-    send: (method, params) => call(method, params, method.startsWith("Browser.") ? undefined : sessionId),
+    targetId,
+    // Browser.* and Target.* go to the browser itself, everything else to the attached page.
+    send: (method, params) => call(method, params, /^(Browser|Target)\./.test(method) ? undefined : sessionId),
     on: (ev, fn) => handlers.push([ev, fn]),
     close: () => proc.kill(),
   };
