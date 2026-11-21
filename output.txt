@@ -1,0 +1,1 @@
+FAIL held, back mid-formula: after typing "=SUM(A1:" into A3 the editor is null (focus BODY)
