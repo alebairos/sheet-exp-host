@@ -76,7 +76,7 @@ def check(lo, hi, ok):
 
 The parser skips spaces between tokens, lets both ends of a range name the sheet, and closes open parentheses at the end of the formula, so formulas Calc computes compute here too.
 
-Status: landing (`20a41d6a3891`)
+Status: landed (`20a41d6a3891`)
 
 **The passing review noted:** > Pass, with one CONFLICT for the human/Gm (below). The WI cannot settle it: check edits are dropped.
 > 
@@ -127,7 +127,7 @@ Status: accepted · depends on `wi-a-v1-parse-fidelity-2`
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | formulas with spaces around tokens, ranges with a sheet on both ends, and a missing final parenthesis compute as LibreOffice computes them | no landed check |
+| not yet | b1 | formulas with spaces around tokens, ranges with a sheet on both ends, and a missing final parenthesis compute as LibreOffice computes them | `tests/parser/checks/a_v1_pf_b1_accept.sh` — |
 | not yet | b2 | malformed formulas, =1E400 and empty-argument calls give LibreOffice's error codes, with expected values from running LibreOffice | no landed check |
 
 ## 5. Out of scope and risks
@@ -153,6 +153,18 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-v1-parse-fidelity-1`:
+
+- `tests/parser/checks/a_v1_pf_probe.py` +56 −0 (plan check)
+- `src/parser/parse.py` +30 −6
+- `tests/parser/checks/a_v1_pf_common.py` +31 −0 (plan check)
+- `tests/parser/checks/a_v1_pf_suite.sh` +27 −0 (plan check)
+- `tests/parser/test_parser.py` +26 −1 (test)
+- `tests/parser/checks/a_v1_pf_b2_errors.sh` +14 −0 (plan check)
+- `tests/parser/checks/a_v1_pf_b1_accept.sh` +10 −0 (plan check)
+- `tests/eval/test_eval.py` +5 −1 (test)
+- `tests/parser/checks/a_v1_pf_calc.json` +1 −0 (plan check)
+
 Landing pull request: [exp-a #34](https://github.com/alebairos/sheet-exp-a/pull/34)
 
 ## 7. The decision
@@ -161,7 +173,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 5 h 42 min so far
+- Lead time: 5 h 47 min so far
 - Loops: 3 (D1 spec 1, D2 plan 2)
 - Waste: 8 min
-- Size: nothing landed yet
+- Size: 36 lines (+30 −6, 3 files, ≤400; tests 33 lines); plan check files laid over by land, not in the size: +139 −0, 6 files
