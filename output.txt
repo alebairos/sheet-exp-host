@@ -1,0 +1,1 @@
+ok the product's number-to-text tests run and pass (7)
