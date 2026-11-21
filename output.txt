@@ -1,0 +1,1 @@
+ok 13 kinds of bad input each give one plain error line and a non-zero exit
