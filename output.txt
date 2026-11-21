@@ -1,0 +1,4 @@
+FAIL 50% typed in a grid cell (A1) holds "50%", Calc enters 0.5
+FAIL 'abc typed in a grid cell (A4) holds "'abc", Calc enters "abc"
+FAIL 50% read from a CSV (A1) holds "50%", Calc enters 0.5
+FAIL 'abc read from a CSV (D1) holds "'abc", Calc enters "abc"
