@@ -128,7 +128,28 @@ Status: landed (`60659f1ea40a`) · depends on `wi-a-v1-parse-fidelity-1`
 
 Adds tests/parser/test_parse_fidelity.py, run by ./test.sh, covering the accepted forms, the parse error codes and empty calls, so the product keeps Calc's behaviour.
 
-Status: accepted · depends on `wi-a-v1-parse-fidelity-2`
+Status: landing (`1ca6a2287c7b`) · depends on `wi-a-v1-parse-fidelity-2`
+
+**The passing review noted:** > PASS (166fa9d, attempt 1). Only test files, both in scope: tests/parser/test_parse_fidelity.py (+74) and tests/parser/parse_fidelity_calc.json (+1055). No product code changed.
+> 
+> Verify, rerun in a worktree of the WI with the plan's checks (4793976):
+> - ac-pf-suite (tests/parser/checks/a_v1_pf_suite.sh): ok, "the product's parse-fidelity tests run and pass (5)". On main 140fa03 it is red ("no tests in tests/parser/test_parse_fidelity.py").
+> - b1 and b2 still pass.
+> - ./test.sh: OK, 146 tests (141 before), so ./test.sh's discovery picks the new tests up. None is skipped.
+> - Earlier checks: only tests/parser/checks/a1_b3_malformed.sh is red, the same as on main. That is the CONFLICT carried since WI-1: it wants '=(1' and '=SUM(1,2' to be ParseErrors, but Calc computes them. It needs the Gm's or the human's decision.
+> 
+> Fidelity of the expected values: I reran LibreOffice Calc 26.8.1.1 headless over UNO (the plan's probe on another port) on all 259 formulas of parse_fidelity_calc.json, with its data. Result: 0 mismatches, and the data is identical. So the values come from Calc and none is hand-written.
+> - The tests cover what the plan names: formulas Calc accepts (spaces, sheets on both ends of a range, a missing final ')'); Err:508/509/510/511/520 for malformed formulas; Err:502 for out-of-range numbers; and empty calls, STDEV included. Each formula is computed alone through src.cli.compute, the same path as ./engine. Numbers are compared within 1e-9, and errors and text exactly.
+> - test_parse_fidelity.py:46 subTest reports each formula on its own.
+> 
+> Not covered, as follow-ups for the Gm. These are the gaps I found reviewing WI-2; the file leaves them out, which is consistent with pinning only what was fixed, but its "source" line names only =IF((1 as excluded:
+> - =SUM(A1:+ gives Err:520 (Calc Err:511).
+> - =SUM(A1:INDEX(A1:A2,2)) and =SUM(A1:IF(1,A2,A1)) give Err:502 (Calc 3).
+> - =SUM((A1,A2)) gives Err:509 (Calc 3).
+> - No implicit intersection: =A1:A2 and =A1:+A2 in C1 give 1 (Calc #VALUE!).
+> - =SUM(1:2), =COUNTIF(A1:A2), =INDEX(A1:A2), =TRUE()/=FALSE().
+> The judge check ac-pf-judge (usefulness) is for a signer, not this review.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -158,8 +179,8 @@ Status: accepted · depends on `wi-a-v1-parse-fidelity-2`
 | Reviewed `wi-a-v1-parse-fidelity-1` | `rev-a@alebairos` (passed attempt 1) |
 | Implemented `wi-a-v1-parse-fidelity-2` | `impl-a1@alebairos`, `impl-a2@alebairos` |
 | Reviewed `wi-a-v1-parse-fidelity-2` | `rev-a@alebairos` (passed attempt 3) |
-| Implemented `wi-a-v1-parse-fidelity-3` | — |
-| Reviewed `wi-a-v1-parse-fidelity-3` | — |
+| Implemented `wi-a-v1-parse-fidelity-3` | `impl-a2@alebairos` |
+| Reviewed `wi-a-v1-parse-fidelity-3` | `rev-a@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
@@ -185,7 +206,7 @@ Files landed by `wi-a-v1-parse-fidelity-2`:
 - `tests/recalc/test_recalc.py` +3 −2 (test)
 - `src/recalc/__init__.py` +2 −2
 
-Landing pull request: [exp-a #35](https://github.com/alebairos/sheet-exp-a/pull/35)
+Landing pull request: [exp-a #36](https://github.com/alebairos/sheet-exp-a/pull/36)
 
 ## 7. The decision
 
@@ -193,7 +214,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 6 h 30 min so far
+- Lead time: 6 h 54 min so far
 - Loops: 5 (D1 spec 1, D2 plan 2, D5 review 2)
 - Waste: 32 min
 - Size: 202 lines (+169 −33, 8 files, ≤400; tests 89 lines); plan check files laid over by land, not in the size: +139 −0, 6 files
