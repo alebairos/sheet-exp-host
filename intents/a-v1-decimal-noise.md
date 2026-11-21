@@ -4,7 +4,7 @@
 
 > Decimal arithmetic looks and compares wrong. Observed: =0.1+0.2=0.3 gives FALSE where LibreOffice gives TRUE; =(0.1+0.2)-0.3 gives 5.55E-17 where Calc gives 0; the CLI prints 0.30000000000000004, 3.3000000000000003, and the budget's D5 as -34.51999999999998 (G19, G17; prior S2, S8). Expected: Calc's approximate equality and subtraction, and CLI numbers as Calc reports them. (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: awaiting the verdict · 2 work items · 2 bullets
+Kind: Defect · State: Met · 2 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -67,7 +67,7 @@ Status: landed (`1b954275cc6b`) · depends on `wi-a-v1-decimal-noise-1`
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
 | `ac-dn-suite` | b1, b2 | `tests/eval/checks/a_v1_dn_suite.sh` | red | pass |
-| `ac-dn-judge` | b1, b2 | `judge:Usefulness only (not Calc fidelity): using ./engine and the app page as shipped on an ordinary household budget and a few decimal calculations (=0.1+0.2, =1.1*3, a balance that should be -34.52, a check like =IF(total=expected,"ok","wrong")), does an ordinary user see the numbers and yes/no answers they would expect, with no 0.30000000000000004-style noise or a FALSE that should be TRUE? Answer yes or no with what you tried.` | judged | — |
+| `ac-dn-judge` | b1, b2 | `judge:Usefulness only (not Calc fidelity): using ./engine and the app page as shipped on an ordinary household budget and a few decimal calculations (=0.1+0.2, =1.1*3, a balance that should be -34.52, a check like =IF(total=expected,"ok","wrong")), does an ordinary user see the numbers and yes/no answers they would expect, with no 0.30000000000000004-style noise or a FALSE that should be TRUE? Answer yes or no with what you tried.` | judged | fail |
 
 **Acceptance**, against the landed checks:
 
@@ -92,9 +92,11 @@ Status: landed (`1b954275cc6b`) · depends on `wi-a-v1-decimal-noise-1`
 | Reviewed `wi-a-v1-decimal-noise-1` | `rev-a@alebairos` (passed attempt 2) |
 | Implemented `wi-a-v1-decimal-noise-2` | `impl-a1@alebairos` |
 | Reviewed `wi-a-v1-decimal-noise-2` | `rev-a@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
+- `judge:Usefulness only (not Calc fidelity): using ./engine and the app page as shipped on an ordinary household budget and a few decimal calculations (=0.1+0.2, =1.1*3, a balance that should be -34.52, a check like =IF(total=expected,"ok","wrong")), does an ordinary user see the numbers and yes/no answers they would expect, with no 0.30000000000000004-style noise or a FALSE that should be TRUE? Answer yes or no with what you tried.`: fail
 - `tests/cli/checks/a_v1_dn_b2_cli.sh`: pass
 - `tests/eval/checks/a_v1_dn_b1_compare.sh`: pass
 - `tests/eval/checks/a_v1_dn_suite.sh`: pass
@@ -127,15 +129,11 @@ Landing pull request: [exp-a #32](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 7. The decision
 
-**Verdict:a-v1-decimal-noise**: A decision: show your human its options
-
-- Met: `cooknship decide --answer Verdict:a-v1-decimal-noise --option met`
-- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-v1-decimal-noise --option partially`
-- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-v1-decimal-noise --option not_met`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 5 h 20 min so far
+- Lead time: 5 h 21 min
 - Loops: 1 (D5 review 1)
 - Waste: 10 min
 - Size: 83 lines (+77 −6, 5 files, ≤400; tests 310 lines); plan check files laid over by land, not in the size: +157 −0, 6 files

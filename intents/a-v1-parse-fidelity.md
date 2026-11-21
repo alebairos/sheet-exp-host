@@ -4,7 +4,7 @@
 
 > Formulas Calc accepts fail here, and malformed ones give the wrong error. Observed vs LibreOffice: = SUM( A1 : A2 ) gives #VALUE! (Calc 3); =SUM( 'My Sheet'!A1 : A2 ) #VALUE! (Calc 11); =SUM(S2!A1:S2!A2) #VALUE! (Calc 7); =SUM(1,2 #VALUE! (Calc 3); =(1+ and =1+*2 give #VALUE! (Calc Err:511, Err:510); =1E400 #VALUE! (Calc Err:502); =MAX() 0 and =MEDIAN() #VALUE! (Calc Err:511) (G24, G25; prior S15, S24). (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: accepted · 3 work items · 2 bullets
+Kind: Defect · State: in work · 3 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -76,7 +76,27 @@ def check(lo, hi, ok):
 
 The parser skips spaces between tokens, lets both ends of a range name the sheet, and closes open parentheses at the end of the formula, so formulas Calc computes compute here too.
 
-Status: accepted
+Status: landing (`20a41d6a3891`)
+
+**The passing review noted:** > Pass, with one CONFLICT for the human/Gm (below). The WI cannot settle it: check edits are dropped.
+> 
+> Verify rerun on 0773715 (parent: current main 4367e6e), with plan 4793976's check files copied in. ac-pf-b1 tests/parser/checks/a_v1_pf_b1_accept.sh: "ok b1: 14 formulas Calc accepts compute as in Calc". Red on main: 9 FAILs (= SUM( A1 : A2 ), =SUM( 'My Sheet'!A1 : A2 ), =SUM(S2!A1:S2!A2), =SUM(1,2, =(1+2, =SUM(A1:A2, =SUM(A1 :A2), the two-'My Sheet' range, =IF(...,"other"). ./test.sh OK, 136 tests. Other check scripts green: tests/eval, recalc, e2e/engine, cli checks, a1_b1_refs, a1_b2_precedence.
+> No regression on b2 (WI 2's check, run for information): 57 FAILs on main, 53 on the WI, and no new FAILs. The WI fixes =(1, =((1, =((1+2) and =SUM(A1:A2, as in Calc.
+> 
+> AC b1 against the diff:
+> - src/parser/parse.py:166-169 close(): a missing ")" is accepted only at the end of the formula (primary :268, call args :286).
+> - :171-186 range_end(): A1 : A2 with spaces, and a second end that names the same sheet (case-insensitive), rebased to the first end's sheet.
+> - :31 _REF_END stops a reference before "!", so S2!A1:S2!A2 tokenizes as two references.
+> - :47 ":" is an operator token.
+> - Tests: tests/parser/test_parser.py:75-98 (spaces, both-ends sheet, the closing at end, and cases that stay malformed: =(1+, =SUM(1,, =(1 2). tests/eval/test_eval.py:118-123 moves "=SUM(1" from malformed to "computes 1", and adds =(1+2 -> 3.
+> Scope: src/parser, tests/parser, tests/eval are all in path_scope.
+> 
+> Held-out fidelity probe (my own UNO run of LibreOffice 26.8, a copy of a_v1_pf_probe.py on a new port, 20 formulas next to the same data, vs ./engine on the WI). These match Calc: =(1 -> 1; =SUM(1,2 -> 3; =SUM (1,2) -> 3; =-(1 -> -1; =SUM(A1:A2,(3 -> 6; =SUM( A1 : A2 ) * 2 -> 6; =IF(A1=1,SUM(1,2 -> 3; =  1 + 2   -> 3; =SUM(A1:A2 ) -> 3; =SUM(A1 : B1) -> 1; =ABS(-(2 -> 2; =1+(2 -> 3; =SUM($A$1 : A2) -> 3; =(1)+(2 -> 3. These differ, none claimed by b1 and none made worse:
+> (a) =A1:A2 and =A1 : A2 in C1 give 1, where Calc (via UNO) gives #VALUE!. =A1:A2 already gives 1 on main: the evaluator's implicit intersection, not this parser change. =s2!A1:S2!A2 gives 3 the same way.
+> (b) Range chaining =SUM(A1:A2:A1): Calc 3, the engine #VALUE! (main too; the WI's test pins =A1:B2:C3 as a ParseError).
+> (c) 3-D ranges across sheets (=SUM(S2!A1:Sheet1!A2), Calc 21): #VALUE! here, as on main. Possible follow-ups for the Gm, not this intent's bullets.
+> 
+> CONFLICT: a-i1's landed check tests/parser/checks/a1_b3_malformed.sh now fails on this WI: "FAIL '=(1' parsed as 1.0, want ParseError" and "FAIL '=SUM(1,2' parsed as (SUM 1.0 2.0), want ParseError". It passes on main. That check's list predates this intent. LibreOffice computes =(1 as 1 and =SUM(1,2 as 3 (the plan's a_v1_pf_calc.json, and my rerun above), and this intent's certified b1 requires it. So the new behaviour is right and a1_b3's two entries are stale. It is not in ./test.sh, so landing is not blocked. Whoever keeps product checks (Gm/human) should retire or replan those two a1_b3 entries, or a later rerun of a-i1's checks will report a false regression. -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -122,8 +142,8 @@ Status: accepted · depends on `wi-a-v1-parse-fidelity-2`
 | --- | --- |
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
-| Implemented `wi-a-v1-parse-fidelity-1` | — |
-| Reviewed `wi-a-v1-parse-fidelity-1` | — |
+| Implemented `wi-a-v1-parse-fidelity-1` | `impl-a2@alebairos` |
+| Reviewed `wi-a-v1-parse-fidelity-1` | `rev-a@alebairos` (passed attempt 1) |
 | Implemented `wi-a-v1-parse-fidelity-2` | — |
 | Reviewed `wi-a-v1-parse-fidelity-2` | — |
 | Implemented `wi-a-v1-parse-fidelity-3` | — |
@@ -133,13 +153,15 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Landing pull request: [exp-a #34](https://github.com/alebairos/sheet-exp-a/pull/34)
+
 ## 7. The decision
 
 Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 5 h 20 min so far
+- Lead time: 5 h 42 min so far
 - Loops: 3 (D1 spec 1, D2 plan 2)
 - Waste: 8 min
 - Size: nothing landed yet
