@@ -1,0 +1,1 @@
+ok b1: 14 formulas Calc accepts compute as in Calc
