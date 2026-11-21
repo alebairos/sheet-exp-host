@@ -1,0 +1,1 @@
+FAIL Tab on A1: the selection: wanted "B1", the page shows "A1"
