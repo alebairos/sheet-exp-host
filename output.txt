@@ -1,0 +1,1 @@
+FAIL the product suite has no tests in tests/values/test_number_text.py (discovered as ./test.sh does)
