@@ -1,0 +1,1 @@
+ok the product's CLI input tests run and pass (10)
