@@ -53,8 +53,8 @@ Status: landed (`e082958b9e7b`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-dn-b1` | b1 | `tests/eval/checks/a_v1_dn_b1_compare.sh` | red | — |
-| `ac-dn-b2` | b2 | `tests/cli/checks/a_v1_dn_b2_cli.sh` | red | — |
+| `ac-dn-b1` | b1 | `tests/eval/checks/a_v1_dn_b1_compare.sh` | red | pass |
+| `ac-dn-b2` | b2 | `tests/cli/checks/a_v1_dn_b2_cli.sh` | red | pass |
 
 ### `wi-a-v1-decimal-noise-2`: Product tests for approximate arithmetic
 
@@ -66,15 +66,15 @@ Status: landed (`1b954275cc6b`) · depends on `wi-a-v1-decimal-noise-1`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-dn-suite` | b1, b2 | `tests/eval/checks/a_v1_dn_suite.sh` | red | — |
+| `ac-dn-suite` | b1, b2 | `tests/eval/checks/a_v1_dn_suite.sh` | red | pass |
 | `ac-dn-judge` | b1, b2 | `judge:Usefulness only (not Calc fidelity): using ./engine and the app page as shipped on an ordinary household budget and a few decimal calculations (=0.1+0.2, =1.1*3, a balance that should be -34.52, a check like =IF(total=expected,"ok","wrong")), does an ordinary user see the numbers and yes/no answers they would expect, with no 0.30000000000000004-style noise or a FALSE that should be TRUE? Answer yes or no with what you tried.` | judged | — |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | =0.1+0.2=0.3 is TRUE and =(0.1+0.2)-0.3 is 0, and comparisons and subtraction of nearly equal values match LibreOffice over a set of cases whose expected values come from running LibreOffice | `tests/eval/checks/a_v1_dn_b1_compare.sh` —, `tests/eval/checks/a_v1_dn_suite.sh` —, `judge:Usefulness only (not Calc fidelity): using ./engine and the app page as shipped on an ordinary household budget and a few decimal calculations (=0.1+0.2, =1.1*3, a balance that should be -34.52, a check like =IF(total=expected,"ok","wrong")), does an ordinary user see the numbers and yes/no answers they would expect, with no 0.30000000000000004-style noise or a FALSE that should be TRUE? Answer yes or no with what you tried.` — |
-| not yet | b2 | ./engine prints the budget, 0.1+0.2 and 1.1*3 cases with the values LibreOffice reports (0.3, 3.3, -34.52), not binary float noise | `tests/cli/checks/a_v1_dn_b2_cli.sh` —, `tests/eval/checks/a_v1_dn_suite.sh` —, `judge:Usefulness only (not Calc fidelity): using ./engine and the app page as shipped on an ordinary household budget and a few decimal calculations (=0.1+0.2, =1.1*3, a balance that should be -34.52, a check like =IF(total=expected,"ok","wrong")), does an ordinary user see the numbers and yes/no answers they would expect, with no 0.30000000000000004-style noise or a FALSE that should be TRUE? Answer yes or no with what you tried.` — |
+| PASS | b1 | =0.1+0.2=0.3 is TRUE and =(0.1+0.2)-0.3 is 0, and comparisons and subtraction of nearly equal values match LibreOffice over a set of cases whose expected values come from running LibreOffice | `tests/eval/checks/a_v1_dn_b1_compare.sh` pass, `tests/eval/checks/a_v1_dn_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): using ./engine and the app page as shipped on an ordinary household budget and a few decimal calculations (=0.1+0.2, =1.1*3, a balance that should be -34.52, a check like =IF(total=expected,"ok","wrong")), does an ordinary user see the numbers and yes/no answers they would expect, with no 0.30000000000000004-style noise or a FALSE that should be TRUE? Answer yes or no with what you tried.` fail |
+| PASS | b2 | ./engine prints the budget, 0.1+0.2 and 1.1*3 cases with the values LibreOffice reports (0.3, 3.3, -34.52), not binary float noise | `tests/cli/checks/a_v1_dn_b2_cli.sh` pass, `tests/eval/checks/a_v1_dn_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): using ./engine and the app page as shipped on an ordinary household budget and a few decimal calculations (=0.1+0.2, =1.1*3, a balance that should be -34.52, a check like =IF(total=expected,"ok","wrong")), does an ordinary user see the numbers and yes/no answers they would expect, with no 0.30000000000000004-style noise or a FALSE that should be TRUE? Answer yes or no with what you tried.` fail |
 
 ## 5. Out of scope and risks
 
@@ -93,9 +93,18 @@ Status: landed (`1b954275cc6b`) · depends on `wi-a-v1-decimal-noise-1`
 | Implemented `wi-a-v1-decimal-noise-2` | `impl-a1@alebairos` |
 | Reviewed `wi-a-v1-decimal-noise-2` | `rev-a@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/cli/checks/a_v1_dn_b2_cli.sh`: pass
+- `tests/eval/checks/a_v1_dn_b1_compare.sh`: pass
+- `tests/eval/checks/a_v1_dn_suite.sh`: pass
+- `judge:Usefulness only (not Calc fidelity): using ./engine and the app page as shipped on an ordinary household budget and a few decimal calculations (=0.1+0.2, =1.1*3, a balance that should be -34.52, a check like =IF(total=expected,"ok","wrong")), does an ordinary user see the numbers and yes/no answers they would expect, with no 0.30000000000000004-style noise or a FALSE that should be TRUE? Answer yes or no with what you tried.`: judged fail by `alebairos`: fail: I ran sheet-exp-a/engine on scratch/dn_budget.json, and the cases named in the question work: 0.3, 3.3, a budget of -34.52, TRUE for =0.1+0.2=0.3 and =1.1*3=3.3, 0 for =(0.1+0.2)-0.3, and "ok" from =IF(B4=B5,"ok","wrong"). But other everyday sums in scratch/dn_more.json still show float noise and a wrong FALSE: =100-99.99 prints 0.0100000000000051 and that cell =0.01 gives FALSE, =10.1-10 gives 0.0999999999999996, =50-49.95 gives 0.0499999999999972 and =1000-999.9 gives 0.100000000000023, and the page's grid.js formats to the same 15 digits, so the page would show those too (I read that code but did not open the page in a browser). | delegate: decided by the HITL's delegate (Claude, opus), per the HITL on 2026-11-19 07:05: "from now on until finishing the experiment, do it yourself". Signed as npub1p8lmv897hc9ew45cdjfqlurcgu5e3kg0mwkrptln4r7px4jzs5aqlhr9az.
+
+Outcome report:
+
+- **Built:** Decimal arithmetic now compares and subtracts as LibreOffice Calc does, and ./engine prints numbers as Calc reports them. src/values gains Calc's approximate equality: within 2^-48, or equal at 15 digits, with an integer guard. This was refined on attempt 2 after the reviewer found =1E15+1-1E15 and 2^52 cases wrong. Formulas' + and - and their comparisons use it. src/cli.py prints every number to 15 significant digits, while values inside keep full doubles, as Calc does. On the landed product (exp-a 4367e6e): =0.1+0.2=0.3 is TRUE, =(0.1+0.2)-0.3 is 0, and ./engine prints 0.3, 3.3 and the budget's -34.52. b1 matches Calc on 35 cases, b2 on 22 printed numbers, the 8-test suite passes and ./test.sh is green. The reviewer's held-out LibreOffice probe matched 82 of 85. The 3 misses are all 16-digit inputs at a 15-digit half. Nothing left the plan, with 77 product lines changed.
+- **Advice:** Conflict for you to settle (usefulness vs fidelity). The usefulness judge failed it because =100-99.99 prints 0.0100000000000051 and =(100-99.99)=0.01 is FALSE, and likewise 10.1-10, 50-49.95 and 1000-999.9. I ran those exact formulas in LibreOffice 26.8.1.1: Calc gives the same values and the same FALSE, and the engine matches it on every one (evidence outcome.md). The engine is faithful to Calc, which is what SPEC asks. An ordinary user would still expect 0.01 and TRUE. If you take Calc as the judge, this meets its bullets, and the judge's fail is the known Calc/Excel behaviour, not a defect here. If you want users to see 0.01, that is a new display intent: the grid could shorten General numbers to the column width as Calc's window does. It should not be another arithmetic change, which would break fidelity. Watch: the 3 sixteen-digit half cases the reviewer found, and the reviewer's nit that test_approx.py hard-codes two Calc values instead of reading the probe file.
+- [a-v1-decimal-noise/outcome.md](https://github.com/alebairos/sheet-exp-host/blob/3eae779d3ede09442ba427420e65c2bfb253701a/a-v1-decimal-noise/outcome.md)
 
 Files landed by `wi-a-v1-decimal-noise-1`:
 
@@ -118,14 +127,15 @@ Landing pull request: [exp-a #32](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 7. The decision
 
-**Judge:a-v1-decimal-noise:judge:Usefulness only (not Calc fidelity): using ./engine and the app page as shipped on an ordinary household budget and a few decimal calculations (=0.1+0.2, =1.1*3, a balance that should be -34.52, a check like =IF(total=expected,"ok","wrong")), does an ordinary user see the numbers and yes/no answers they would expect, with no 0.30000000000000004-style noise or a FALSE that should be TRUE? Answer yes or no with what you tried.**: A decision: show your human its options. The question: Usefulness only (not Calc fidelity): using ./engine and the app page as shipped on an ordinary household budget and a few decimal calculations (=0.1+0.2, =1.1*3, a balance that should be -34.52, a check like =IF(total=expected,"ok","wrong")), does an ordinary user see the numbers and yes/no answers they would expect, with no 0.30000000000000004-style noise or a FALSE that should be TRUE? Answer yes or no with what you tried.
+**Verdict:a-v1-decimal-noise**: A decision: show your human its options
 
-- Pass: `cooknship decide --answer Judge:a-v1-decimal-noise:judge:Usefulness only (not Calc fidelity): using ./engine and the app page as shipped on an ordinary household budget and a few decimal calculations (=0.1+0.2, =1.1*3, a balance that should be -34.52, a check like =IF(total=expected,"ok","wrong")), does an ordinary user see the numbers and yes/no answers they would expect, with no 0.30000000000000004-style noise or a FALSE that should be TRUE? Answer yes or no with what you tried. --option pass`
-- Fail, with the reason: `cooknship decide --answer Judge:a-v1-decimal-noise:judge:Usefulness only (not Calc fidelity): using ./engine and the app page as shipped on an ordinary household budget and a few decimal calculations (=0.1+0.2, =1.1*3, a balance that should be -34.52, a check like =IF(total=expected,"ok","wrong")), does an ordinary user see the numbers and yes/no answers they would expect, with no 0.30000000000000004-style noise or a FALSE that should be TRUE? Answer yes or no with what you tried. --option fail --text "<reason>"`
+- Met: `cooknship decide --answer Verdict:a-v1-decimal-noise --option met`
+- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-v1-decimal-noise --option partially`
+- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-v1-decimal-noise --option not_met`
 
 ## 8. Metrics
 
-- Lead time: 5 h 00 min so far
+- Lead time: 5 h 20 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 10 min
 - Size: 83 lines (+77 −6, 5 files, ≤400; tests 310 lines); plan check files laid over by land, not in the size: +157 −0, 6 files
