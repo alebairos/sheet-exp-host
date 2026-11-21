@@ -88,7 +88,17 @@ Status: landed (`24bf5780a006`) · depends on `wi-a-v1-eval-edges-1`
 
 Adds tests/eval/test_eval_edges.py, run by ./test.sh, covering implicit intersection and the untaken-branch and cycle-order cases, so the product keeps this behaviour.
 
-Status: accepted · depends on `wi-a-v1-eval-edges-2`
+Status: landing (`85df36ac019e`) · depends on `wi-a-v1-eval-edges-2`
+
+**The passing review noted:** > PASS. Reviewed 2004ee4 (tests/eval/test_eval_edges.py) on main 1969234, which already has WI-1 and WI-2. I used the plan's checks (327bfff).
+> 
+> - ac-ee-suite (tests/eval/checks/a_v1_ee_suite.sh): "ok the product's evaluation-edge tests run and pass (11)". Red on base: "no tests in tests/eval/test_eval_edges.py". b1/b2 checks pass. ./test.sh: 110 tests OK.
+> - The expected values are not hand-written. I checked programmatically that BOOK == a_v1_ee_calc.json["book"] and CALC == ["results"]: both True. Every Calc result is asserted by some test (:124-157): Data 12 of 12, T 4 of 4, Cyc 20 of 20.
+> - The tests pin both WIs. With src/eval and src/recalc from before WI-1 (31fc901^): FAILED (failures=7). With WI-1 but not WI-2 (31fc901): FAILED (failures=3), the untaken-branch tests. With WI-2: OK.
+> - Optional nit: LongCycleTest (:160-169) accepts 0 or Err:522 for every cell, so it only guards against overflow. The engine gives 0 for all 5000 cells: A1 starts, A5000 reads A1 while it is busy, IFERROR gives 0, and that flows back. Asserting all 0 would pin the order too, but that value is not from Calc, so leaving it loose is defensible.
+> - Carried from my WI-2 review: the quadratic restart when one formula reads many pending cells of its own cycle (3.2 s at 3000 cells) has no test here. It is a follow-up candidate, not this WI's.
+> - Scope: tests/eval only, inside the intent's scope. The judge is answered elsewhere.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -118,8 +128,8 @@ Status: accepted · depends on `wi-a-v1-eval-edges-2`
 | Reviewed `wi-a-v1-eval-edges-1` | `rev-a@alebairos` (passed attempt 1) |
 | Implemented `wi-a-v1-eval-edges-2` | `impl-a1@alebairos` |
 | Reviewed `wi-a-v1-eval-edges-2` | `rev-a@alebairos` (passed attempt 1) |
-| Implemented `wi-a-v1-eval-edges-3` | — |
-| Reviewed `wi-a-v1-eval-edges-3` | — |
+| Implemented `wi-a-v1-eval-edges-3` | `impl-a2@alebairos` |
+| Reviewed `wi-a-v1-eval-edges-3` | `rev-a@alebairos` (passed attempt 1) |
 
 Product checks: not recorded yet.
 
@@ -143,7 +153,7 @@ Files landed by `wi-a-v1-eval-edges-2`:
 - `tests/recalc/test_recalc.py` +46 −0 (test)
 - `src/eval/__init__.py` +31 −7
 
-Landing pull request: [exp-a #27](https://github.com/alebairos/sheet-exp-a/pull/27)
+Landing pull request: [exp-a #29](https://github.com/alebairos/sheet-exp-a/pull/29)
 
 ## 7. The decision
 
@@ -151,7 +161,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 2 h 29 min so far
+- Lead time: 2 h 50 min so far
 - Loops: 0
 - Waste: 0 min
 - Size: 211 lines (+174 −37, 6 files, ≤400; tests 54 lines); plan check files laid over by land, not in the size: +129 −0, 6 files

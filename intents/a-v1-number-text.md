@@ -4,7 +4,7 @@
 
 > Numbers turned into text differ from Calc. Observed vs LibreOffice 26.8.1.1: "x"&1E-7 gives x1E-07 (Calc x0.0000001); "x"&1E15 x1E+15 (Calc x1000000000000000); CONCATENATE(1E21) 1E+21 (Calc 1E+021); LEN(123456789012345678) 20 and LEN(1E-20) 5 (Calc 21 and 6). Suggested by a-i6 and never parked (G23). (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: in work · 2 work items · 1 bullet
+Kind: Defect · State: awaiting the verdict · 2 work items · 1 bullet
 
 ## 2. What you will see
 
@@ -57,7 +57,7 @@ Status: landed (`1f715b03add3`)
 
 Adds tests/values/test_number_text.py, run by ./test.sh, covering the decimal/E edges, exact integers, halves and the 3-digit exponent, so the product keeps Calc's form.
 
-Status: landing (`a1ae24c7a556`) · depends on `wi-a-v1-number-text-1`
+Status: landed (`a1ae24c7a556`) · depends on `wi-a-v1-number-text-1`
 
 **The passing review noted:** > PASS. Reviewed ce485f3 (tests/values/test_number_text.py, +141) on main 1f715b0, which already has WI-1. I used the plan's checks (d4364ad).
 > 
@@ -77,7 +77,7 @@ Status: landing (`a1ae24c7a556`) · depends on `wi-a-v1-number-text-1`
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | number-to-text conversion in &, CONCATENATE, LEN and the text functions matches LibreOffice over a set of small, large and fractional numbers, with expected values from running LibreOffice | `tests/values/checks/a_v1_nt_b1_text.sh` — |
+| not yet | b1 | number-to-text conversion in &, CONCATENATE, LEN and the text functions matches LibreOffice over a set of small, large and fractional numbers, with expected values from running LibreOffice | `tests/values/checks/a_v1_nt_b1_text.sh` —, `tests/values/checks/a_v1_nt_suite.sh` —, `judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried.` — |
 
 ## 5. Out of scope and risks
 
@@ -109,15 +109,22 @@ Files landed by `wi-a-v1-number-text-1`:
 - `tests/values/test_values.py` +12 −1 (test)
 - `tests/values/checks/a_v1_nt_calc.json` +1 −0 (plan check)
 
+Files landed by `wi-a-v1-number-text-2`:
+
+- `tests/values/test_number_text.py` +141 −0 (test)
+
 Landing pull request: [exp-a #28](https://github.com/alebairos/sheet-exp-a/pull/28)
 
 ## 7. The decision
 
-Nothing waits on you.
+**Judge:a-v1-number-text:judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried.**: A decision: show your human its options. The question: Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried.
+
+- Pass: `cooknship decide --answer Judge:a-v1-number-text:judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried. --option pass`
+- Fail, with the reason: `cooknship decide --answer Judge:a-v1-number-text:judge:Usefulness only (not Calc fidelity): through ./engine as shipped, when an ordinary user builds labels and messages from numbers (="Total: "&A1 for amounts, tiny rates and big counts, CONCATENATE, LEN of a number), do they get readable text (0.0000001, not 1E-07; 1000000000000000, not 1E+15) as they would in a spreadsheet? Answer yes or no with what you tried. --option fail --text "<reason>"`
 
 ## 8. Metrics
 
-- Lead time: 2 h 29 min so far
+- Lead time: 2 h 50 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 6 min
-- Size: 28 lines (+16 −12, 2 files, ≤400; tests 13 lines); plan check files laid over by land, not in the size: +104 −0, 4 files
+- Size: 28 lines (+16 −12, 3 files, ≤400; tests 154 lines); plan check files laid over by land, not in the size: +104 −0, 4 files

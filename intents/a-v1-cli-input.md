@@ -56,8 +56,8 @@ Status: landed (`f55be7543b50`)
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-ci-b1` | b1 | `tests/cli/checks/a_v1_ci_b1_bad_input.sh` | red | — |
-| `ac-ci-b2` | b2 | `tests/cli/checks/a_v1_ci_b2_refs.sh` | red | — |
+| `ac-ci-b1` | b1 | `tests/cli/checks/a_v1_ci_b1_bad_input.sh` | red | pass |
+| `ac-ci-b2` | b2 | `tests/cli/checks/a_v1_ci_b2_refs.sh` | red | pass |
 
 ### `wi-a-v1-cli-input-2`: Product tests for CLI input
 
@@ -78,15 +78,15 @@ Status: landed (`eaab2bf659df`) · depends on `wi-a-v1-cli-input-1`
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
-| `ac-ci-suite` | b1, b2 | `tests/cli/checks/a_v1_ci_suite.sh` | red | — |
+| `ac-ci-suite` | b1, b2 | `tests/cli/checks/a_v1_ci_suite.sh` | red | pass |
 | `ac-ci-judge` | b1, b2 | `judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.` | judged | — |
 
 **Acceptance**, against the landed checks:
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | bad input (malformed JSON, wrong shape, missing file, directory) prints one plain error line on stderr and exits non-zero, with no traceback | `tests/cli/checks/a_v1_ci_b1_bad_input.sh` —, `tests/cli/checks/a_v1_ci_suite.sh` —, `judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.` — |
-| not yet | b2 | every output is valid JSON numbers; --cell accepts lower-case and $ references; lower-case cell keys are read as their cell | `tests/cli/checks/a_v1_ci_b2_refs.sh` —, `tests/cli/checks/a_v1_ci_suite.sh` —, `judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.` — |
+| PASS | b1 | bad input (malformed JSON, wrong shape, missing file, directory) prints one plain error line on stderr and exits non-zero, with no traceback | `tests/cli/checks/a_v1_ci_b1_bad_input.sh` pass, `tests/cli/checks/a_v1_ci_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.` — |
+| PASS | b2 | every output is valid JSON numbers; --cell accepts lower-case and $ references; lower-case cell keys are read as their cell | `tests/cli/checks/a_v1_ci_b2_refs.sh` pass, `tests/cli/checks/a_v1_ci_suite.sh` pass, `judge:Usefulness only (not Calc fidelity): using ./engine as shipped on their own files, mistakes included (a truncated JSON file, a wrong path, a directory, a JSON file that is not a workbook, cells or --cell typed in lower case or with $), does an ordinary user always get either the right values or one plain message saying what is wrong, never a Python traceback or invalid JSON? Answer yes or no with what you tried.` — |
 
 ## 5. Out of scope and risks
 
@@ -105,9 +105,18 @@ Status: landed (`eaab2bf659df`) · depends on `wi-a-v1-cli-input-1`
 | Implemented `wi-a-v1-cli-input-2` | `impl-a1@alebairos` |
 | Reviewed `wi-a-v1-cli-input-2` | `rev-a@alebairos` (passed attempt 1) |
 
-Product checks: not recorded yet.
+Product checks:
 
-Outcome report: none yet.
+- `tests/cli/checks/a_v1_ci_b1_bad_input.sh`: pass
+- `tests/cli/checks/a_v1_ci_b2_refs.sh`: pass
+- `tests/cli/checks/a_v1_ci_suite.sh`: pass
+
+Outcome report:
+
+- **Built:** ./engine no longer shows Python tracebacks on bad input. A truncated JSON file, a wrong path, a directory, NaN or 1e999, a huge integer, or JSON that is not a workbook ([], {"foo":1}, "sheets" as a list) each print one plain line such as `engine: no such file: /nonexistent.json` on stderr and exit 1, with nothing on stdout. Output is always strict JSON. Cells and sheets are read regardless of case and $, as in Calc: a key a2 is A2, and --cell sheet1!a3, --cell '$A$4' and --cell "'my sheet'!a1" work. A constant 1e3 prints as 1000. All of this is in src/cli.py (+147 −13), with 10 product tests in tests/cli (./test.sh: 86 tests OK). It follows the plan. WI 1 needed a second attempt: attempt 1 still gave a traceback on an integer too large for a float. landed.txt is the output of the landed engine (exp-a 1969234), which I reran for this report.
+- **Advice:** Adopt. Follow up: a formula with 1000 or more terms still crashes with a traceback; a-v1-engine-failure owns that. {"error":"#FOO"} is still accepted as an error value (a-i2's note); park it if it matters to you. Watch: input JSON integers above 2^53 are echoed as typed, while computed results print as floats. Both are valid JSON.
+- [a-v1-cli-input/landed.txt](https://github.com/alebairos/sheet-exp-host/blob/cc547d99086da884ba8915dc22b1f3a56fbd6546/a-v1-cli-input/landed.txt)
+- [a-v1-cli-input/prototype.txt](https://github.com/alebairos/sheet-exp-host/blob/cc547d99086da884ba8915dc22b1f3a56fbd6546/a-v1-cli-input/prototype.txt)
 
 Files landed by `wi-a-v1-cli-input-1`:
 
@@ -135,7 +144,7 @@ Landing pull request: [exp-a #26](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 8. Metrics
 
-- Lead time: 2 h 29 min so far
+- Lead time: 2 h 50 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 14 min
 - Size: 160 lines (+147 −13, 3 files, ≤400; tests 162 lines); plan check files laid over by land, not in the size: +165 −0, 6 files
