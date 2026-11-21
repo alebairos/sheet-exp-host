@@ -4,7 +4,7 @@
 
 > Text is compared and converted unlike Calc. Observed vs LibreOffice: ="a"="A" gives TRUE (Calc FALSE, case-sensitive by default); ="é">"f" TRUE (Calc FALSE, locale order); " 5 "+0, "TRUE"+0, "$5"+0, "1,000"+0, "50%"+0 give #VALUE! (Calc 5, 1, 5, 1000, 0.5) (G21, G26, G27). (review: https://github.com/alebairos/sheet-exp-host/blob/567e74b/a-v1-review/README.md)
 
-Kind: Defect · State: awaiting the verdict · 3 work items · 2 bullets
+Kind: Defect · State: Met · 3 work items · 2 bullets
 
 ## 2. What you will see
 
@@ -218,7 +218,7 @@ Status: landed (`c7551f3fb394`) · depends on `wi-a-v1-text-rules-2`
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
 | `ac-tr-suite` | b1, b2 | `tests/values/checks/a_v1_tr_suite.sh` | red | pass |
-| `ac-tr-judge` | b1, b2 | `judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried.` | judged | — |
+| `ac-tr-judge` | b1, b2 | `judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried.` | judged | fail |
 
 **Acceptance**, against the landed checks:
 
@@ -245,9 +245,11 @@ Status: landed (`c7551f3fb394`) · depends on `wi-a-v1-text-rules-2`
 | Reviewed `wi-a-v1-text-rules-2` | `rev-a@alebairos` (passed attempt 1) |
 | Implemented `wi-a-v1-text-rules-3` | `impl-a1@alebairos` |
 | Reviewed `wi-a-v1-text-rules-3` | `rev-a@alebairos` (passed attempt 1) |
+| Verdict (Met) | `alebairos` |
 
 Product checks:
 
+- `judge:Usefulness only (not Calc fidelity): through the product as shipped, ./engine on a workbook and the browser page (python3 web/io/serve.py, /io/index.html), can an ordinary user keep a small list with names and amounts typed the way people type them (" 5 ", $5, 1,000, 50%, (5)), total and compare them, and sort or test names with IF (=IF(A1="Yes",...), names with accents and capitals), getting results that make sense to them and no unexpected #VALUE!? Answer yes or no with what you tried.`: fail
 - `tests/values/checks/a_v1_tr_b1_compare.sh`: pass
 - `tests/values/checks/a_v1_tr_b2_numbers.sh`: pass
 - `tests/values/checks/a_v1_tr_suite.sh`: pass
@@ -291,15 +293,11 @@ Landing pull request: [exp-a #41](https://github.com/alebairos/sheet-exp-a/pull/
 
 ## 7. The decision
 
-**Verdict:a-v1-text-rules**: A decision: show your human its options
-
-- Met: `cooknship decide --answer Verdict:a-v1-text-rules --option met`
-- Partially met: unmet bullets park as follow-ups: `cooknship decide --answer Verdict:a-v1-text-rules --option partially`
-- Not met: every unmet bullet parks as a follow-up: `cooknship decide --answer Verdict:a-v1-text-rules --option not_met`
+Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 11 h 35 min so far
+- Lead time: 11 h 36 min
 - Loops: 1 (D5 review 1)
 - Waste: 18 min
 - Size: 358 lines (+343 −15, 11 files, ≤400; tests 282 lines); plan check files laid over by land, not in the size: +395 −0, 7 files
