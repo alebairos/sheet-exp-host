@@ -1,0 +1,97 @@
+diff --git i/src/cli.py w/src/cli.py
+index ae875d4..5b94b29 100644
+--- i/src/cli.py
++++ w/src/cli.py
+@@ -30,6 +30,15 @@ def cell_value(book, ref):
+     return cells.get(addr, None)
+ 
+ 
++def _reported(v):
++    """Numbers as Calc reports them: 15 significant digits, so 0.1+0.2 prints 0.3, not binary noise."""
++    if isinstance(v, float):
++        return float(f"{v:.15g}")
++    if isinstance(v, dict):
++        return {k: _reported(x) for k, x in v.items()}
++    return v
++
++
+ def usage():
+     sys.stderr.write("usage: engine <file|-> [--cell Sheet1!A1]\n")
+     return 2
+@@ -49,7 +58,7 @@ def main(argv=None):
+     out = compute(load(args[0]))
+     if cell is not None:
+         out = cell_value(out, cell)
+-    json.dump(out, sys.stdout, ensure_ascii=False)
++    json.dump(_reported(out), sys.stdout, ensure_ascii=False)
+     sys.stdout.write("\n")
+     return 0
+ 
+diff --git i/src/eval/__init__.py w/src/eval/__init__.py
+index c65fa18..7e7a1d0 100644
+--- i/src/eval/__init__.py
++++ w/src/eval/__init__.py
+@@ -24,6 +24,7 @@ import math
+ from src import parser as p
+ from src.functions import registry
+ from src.values import (
++    approx_add, approx_equal, approx_sub,
+     BLANK,
+     DIV0,
+     NAME,
+@@ -139,9 +140,9 @@ def _power(a, b):
+ 
+ def _arith(op, a, b):
+     if op == "+":
+-        return _num(a + b)
++        return _num(approx_add(a, b))
+     if op == "-":
+-        return _num(a - b)
++        return _num(approx_sub(a, b))
+     if op == "*":
+         return _num(a * b)
+     if op == "/":
+@@ -180,6 +181,9 @@ def _binary(op, left, right):
+         return Text(a.value + b.value)
+     if op in _COMPARE:
+         c = compare(left, right)
++        # Calc compares two numbers within 2**-48 (relative) as equal: =0.1+0.2=0.3 is TRUE.
++        if c != 0 and isinstance(left, Number) and isinstance(right, Number) and approx_equal(left.value, right.value):
++            c = 0
+         return c if isinstance(c, Error) else Bool(_COMPARE[op](c))
+     return VALUE
+ 
+diff --git i/src/values/__init__.py w/src/values/__init__.py
+index 06af60b..f2b92a8 100644
+--- i/src/values/__init__.py
++++ w/src/values/__init__.py
+@@ -265,3 +265,29 @@ def compare(a, b):
+     x = 1.0 if a.value is True else 0.0 if a.value is False else a.value
+     y = 1.0 if b.value is True else 0.0 if b.value is False else b.value
+     return _sign(x, y)
++
++
++# LibreOffice's rtl::math approximate arithmetic: two doubles within 2**-48 of each other (relative) are equal,
++# and adding opposites / subtracting near-equals gives exactly 0.
++_E48 = 2.0 ** -48
++
++
++def approx_equal(a, b):
++    if a == b:
++        return True
++    if a == 0.0 or b == 0.0:
++        return False
++    d = abs(a - b)
++    return d < abs(a) * _E48 and d < abs(b) * _E48
++
++
++def approx_add(a, b):
++    if ((a < 0.0 < b) or (b < 0.0 < a)) and approx_equal(a, -b):
++        return 0.0
++    return a + b
++
++
++def approx_sub(a, b):
++    if ((a < 0.0 and b < 0.0) or (a > 0.0 and b > 0.0)) and approx_equal(a, b):
++        return 0.0
++    return a - b
