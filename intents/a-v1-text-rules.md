@@ -176,7 +176,23 @@ Status: landed (`d45620825e46`)
 
 Text such as " 5 ", TRUE, $5, (5), 1,000 and 50% reads as a number in arithmetic and in the functions that read numbers, exactly where Calc reads it, so it no longer gives #VALUE!.
 
-Status: accepted · depends on `wi-a-v1-text-rules-1`
+Status: landing (`7f45bdc1d17a`) · depends on `wi-a-v1-text-rules-1`
+
+**The passing review noted:** > PASS. wi-a-v1-text-rules-2 attempt 1 (f03f26f, on main ad46068) reviewed against b2 / ac-tr-b2.
+> 
+> Evidence:
+> - ac-tr-b2 (tests/values/checks/a_v1_tr_b2_numbers.sh, plan 86f21e8): "ok b2: text reads as a number as in Calc" on the WI; on main ad46068 it is red, 173 cases. b1 stays green. ./test.sh: 148 tests OK. ac-tr-suite is still red, as expected: it belongs to WI-3 (tests/values/test_text_rules.py).
+> - Code: src/values/__init__.py:183-184. to_number() calls text_rules.parse_number(); the old ASCII regex is gone. src/values/text_rules.py:144-190 tokenises the text into one number and symbols (sign, $, parentheses, %) and applies the rules stated in the plan. TRUE/FALSE in any case with spaces around read as 1/0. The test_values.py change follows Calc (" 12", "12 ", "TRUE", "$5", "1,000", "50%").
+> - Fresh held-out probe: 122 cases never shown to the implementer, with Calc answers from LibreOffice 26.8.1.1 over UNO, laid out with the plan's a_v1_tr_common.layout. They are 98 texts through =A+0, =-A and =A*2, and 24 formulas through ROUND, ROUNDUP, MOD, POWER, SQRT, INT, ABS, MID, LEFT, COUNT, SUM, MAX, MIN, AVERAGE, IF, NOT, AND and OR. Cases include "1 e3", "1,000e3", "( 5 )", "(5)%", "$(5)", "(5$)", "5$-", "$+5", "1,000.", "0,001", "1,0000", "12,345,678", "1e400", "-1e400" (Calc: +max, and *2 is #NUM!), "1e-400", "+-5", "5 -", "  -  5  ", "TRUE ", " true", "fAlSe", NBSP padding, tab, "١٢", "５", "0x1A", "Inf", "$$5", "5-%", "(5%)-", "€5", "1'000", "TRUE5", "1e3e3" and "1E+308%". Result: 118 match; main has 61 differences on the same set.
+>   The 4 misses: "1/2", "3:00" and "2026-01-01" are dates, times and fractions, out of scope by the plan. ISNUMBER("5") differs only because UNO returns FALSE as 0.0 (a probe artifact).
+>   The WI also fixes a main bug: Arabic-Indic "١٢" and fullwidth "５" were read as numbers through Python float(); Calc and the WI give #VALUE!.
+> - Regressions: I ran all landed tests/*/checks/*.sh (CHROME=/usr/bin/chromium) on main and on the WI and diffed. a_v1_tr_b2 goes red to green. tests/values/checks/a2_b2_coercion.sh adds "FAIL to_number('TRUE'): got 1, want #VALUE!", the second half of the conflict the plan declared and SpecAccept accepted (Calc gives 1). Every other check is unchanged: COUNTIF/SUMIF, lookups, the parse, decimal and number-text checks, and the UI checks.
+> 
+> Findings (non-blocking):
+> - An overflowing text such as "1e400" gives 1.79769313486231E+308, where Calc shows 1.79769313486232E+308. The code says this is deliberate (text_rules.py:151-155): the exact maximum double makes src/cli.py's 15-digit output crash, as it already does on main for a typed =1.7976931348623157E308. That CLI crash is pre-existing; worth a Defect for the Gm.
+> - src/functions/lookup/lookup.py:30 keeps its own _NUMBER_TEXT regex for VLOOKUP and MATCH numeric-text queries. It was not changed and is out of this WI's scope, so lookup numeric text now follows different rules from arithmetic ("$5" or "1,000" as a lookup key). No check covers this; it is for the Gm if it matters.
+> - Scope: src/values/__init__.py, src/values/text_rules.py and tests/values/test_values.py, all in scope.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -214,8 +230,8 @@ Status: accepted · depends on `wi-a-v1-text-rules-2`
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-v1-text-rules-1` | `impl-a2@alebairos` |
 | Reviewed `wi-a-v1-text-rules-1` | `rev-a@alebairos` (passed attempt 2) |
-| Implemented `wi-a-v1-text-rules-2` | — |
-| Reviewed `wi-a-v1-text-rules-2` | — |
+| Implemented `wi-a-v1-text-rules-2` | `impl-a1@alebairos` |
+| Reviewed `wi-a-v1-text-rules-2` | `rev-a@alebairos` (passed attempt 1) |
 | Implemented `wi-a-v1-text-rules-3` | — |
 | Reviewed `wi-a-v1-text-rules-3` | — |
 
@@ -240,7 +256,7 @@ Files landed by `wi-a-v1-text-rules-1`:
 - `src/eval/__init__.py` +3 −1
 - `tests/values/test_values.py` +1 −1 (test)
 
-Landing pull request: [exp-a #37](https://github.com/alebairos/sheet-exp-a/pull/37)
+Landing pull request: [exp-a #39](https://github.com/alebairos/sheet-exp-a/pull/39)
 
 ## 7. The decision
 
@@ -248,7 +264,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 9 h 34 min so far
+- Lead time: 9 h 50 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 18 min
 - Size: 284 lines (+281 −3, 7 files, ≤400; tests 200 lines); plan check files laid over by land, not in the size: +395 −0, 7 files
