@@ -41,7 +41,7 @@ Learned from RECORD.md and the overlapping pages: S17/G5 is this outcome, and th
 
 The grid draws only the rows and columns in view inside a scroll box the size of the sheet, the arrows and PageDown/PageUp move past the old 20 x 8 edge with the view following, and the page keeps the user's selection when a recompute returns, so every row and column of a big CSV can be seen and edited.
 
-Status: landing (`11fa25c61ed9`)
+Status: landed (`11fa25c61ed9`)
 
 **The passing review noted:** > PASS. Reviewed commit 1c3ef7a (wi/wi-a-v1-big-sheets-1) against plan b9932e3 (base 5ed792b). Diff: web/grid/{grid.js,grid.css,README.md}, web/io/index.html, all inside the path scope.
 > Verify, rerun (CHROME=/usr/bin/chromium, Linux):
@@ -81,8 +81,8 @@ Status: accepted · depends on `wi-a-v1-big-sheets-1`
 
 | Result | Bullet | Text | Landed checks |
 | --- | --- | --- | --- |
-| not yet | b1 | opening a CSV of 2001 rows and 12 columns, the user can scroll to and see row 2001 and column L | no landed check |
-| not yet | b2 | the arrow keys and PageDown/PageUp move the selection past the visible edge and the view follows it; editing a cell at row 2001 recomputes formulas that use it | no landed check |
+| not yet | b1 | opening a CSV of 2001 rows and 12 columns, the user can scroll to and see row 2001 and column L | `tests/e2e/ui/checks/a_v1_bs_b1_scroll.sh` — |
+| not yet | b2 | the arrow keys and PageDown/PageUp move the selection past the visible edge and the view follows it; editing a cell at row 2001 recomputes formulas that use it | `tests/e2e/ui/checks/a_v1_bs_b2_keys.sh` — |
 
 ## 5. Out of scope and risks
 
@@ -105,6 +105,21 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Files landed by `wi-a-v1-big-sheets-1`:
+
+- `web/grid/grid.js` +116 −20
+- `tests/e2e/ui/checks/a_v1_bs_page.mjs` +98 −0 (plan check)
+- `tests/e2e/ui/checks/a_v1_bs_b2.mjs` +65 −0 (plan check)
+- `tests/e2e/ui/checks/a_v1_bs_probe.py` +42 −0 (plan check)
+- `tests/e2e/ui/checks/a_v1_bs_suite.sh` +39 −0 (plan check)
+- `tests/e2e/ui/checks/a_v1_bs_b1.mjs` +34 −0 (plan check)
+- `tests/e2e/ui/checks/a_v1_bs_b2_keys.sh` +15 −0 (plan check)
+- `web/grid/README.md` +10 −4
+- `tests/e2e/ui/checks/a_v1_bs_b1_scroll.sh` +13 −0 (plan check)
+- `web/io/index.html` +7 −5
+- `web/grid/grid.css` +9 −0
+- `tests/e2e/ui/checks/a_v1_bs_calc.json` +1 −0 (plan check)
+
 Landing pull request: [exp-a #22](https://github.com/alebairos/sheet-exp-a/pull/22)
 
 ## 7. The decision
@@ -113,7 +128,7 @@ Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 1 h 16 min so far
+- Lead time: 1 h 38 min so far
 - Loops: 0
 - Waste: 0 min
-- Size: nothing landed yet
+- Size: 171 lines (+142 −29, 4 files, ≤400; tests 0 lines); plan check files laid over by land, not in the size: +307 −0, 8 files

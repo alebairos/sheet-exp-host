@@ -40,7 +40,19 @@ Learned from RECORD.md and the overlapping pages: S6/T7 lost a point only for tr
 
 src/cli.py refuses bad input (malformed JSON, NaN/Infinity, wrong shape, missing file, directory) with one plain stderr line and exit 1, writes only strict JSON, and reads cell keys and --cell sheet and cell names case-insensitively with $, as Calc does.
 
-Status: attempt 2 built, awaiting review
+Status: landing (`f55be7543b50`)
+
+**The passing review noted:** > PASS. Reviewed commit db38593 (attempt 2; wi/wi-a-v1-cli-input-1) against plan 2ec3d06. Attempt 1 failed on one point: a JSON integer too large for a float gave a traceback. Attempt 2 adds _integer as parse_int (src/cli.py:37-46, wired at src/cli.py:52). It catches OverflowError, and also ValueError from Python's 4300-digit int limit.
+> Verify, rerun: ac-ci-b1 a_v1_ci_b1_bad_input.sh ok (13 kinds); ac-ci-b2 a_v1_ci_b2_refs.sh ok. Both were red on base (see attempt-1 review). ./test.sh: OK (75 tests).
+> Probes:
+> - 1 followed by 309 zeros, and by 5000 zeros, each give the one-line "engine: the input is not valid JSON: 100000000000... (N digits) is too large for a number" with exit 1.
+> - 1 followed by 308 zeros (still a finite float) is accepted. -5, 0 and 12345678901234567890 echo unchanged, and =A1*2 gives -10.
+> - Every attempt-1 probe still holds (lower-case keys, #NUM! on overflow, deep nesting, BOM, --cell forms, missing file, usage exit 2).
+> Per AC:
+> - b1: BadInput is caught once in main() (src/cli.py, main) and load()/_parse/check() raise it for every bad-input kind.
+> - b2: _number/_integer/_strict plus allow_nan=False keep the output strict JSON; CELL_KEY plus check() upper-case the keys; cell_value()/_sheet() read --cell regardless of case, quotes and $.
+> Note (non-blocking): integers above 2^53 that still fit a float are echoed as typed (exact digits) while computed results print as floats. Both are valid JSON. WI 2's suite should pin the 310-digit case, since the check file is frozen.
+> -- rev-a@alebairos
 
 | AC | Covers | Check | Red on base | On product |
 | --- | --- | --- | --- | --- |
@@ -78,7 +90,7 @@ Status: accepted · depends on `wi-a-v1-cli-input-1`
 | Planned | `plan-a@alebairos` |
 | Certified | `gate-a@alebairos` |
 | Implemented `wi-a-v1-cli-input-1` | `impl-a2@alebairos` |
-| Reviewed `wi-a-v1-cli-input-1` | `rev-a@alebairos` |
+| Reviewed `wi-a-v1-cli-input-1` | `rev-a@alebairos` (passed attempt 2) |
 | Implemented `wi-a-v1-cli-input-2` | — |
 | Reviewed `wi-a-v1-cli-input-2` | — |
 
@@ -86,13 +98,15 @@ Product checks: not recorded yet.
 
 Outcome report: none yet.
 
+Landing pull request: [exp-a #23](https://github.com/alebairos/sheet-exp-a/pull/23)
+
 ## 7. The decision
 
 Nothing waits on you.
 
 ## 8. Metrics
 
-- Lead time: 1 h 16 min so far
+- Lead time: 1 h 37 min so far
 - Loops: 1 (D5 review 1)
 - Waste: 14 min
 - Size: nothing landed yet
