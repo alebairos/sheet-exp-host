@@ -1,0 +1,1 @@
+FAIL typing 5 in E1 then clicking E3: the selection: wanted "E3", the page shows "E1"
