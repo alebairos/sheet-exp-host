@@ -1,0 +1,50 @@
+diff --git i/web/io/index.html w/web/io/index.html
+index 14913df..2ed8804 100644
+--- i/web/io/index.html
++++ w/web/io/index.html
+@@ -14,6 +14,10 @@
+     #formula-bar .fx { font-style: italic; color: #666; }
+     #formula-bar .text { flex: 1; max-width: 40em; font-family: ui-monospace, monospace; }
+     #formula-bar .error { color: #b00020; font-weight: 600; }
++    #sheet-name { font-weight: 600; color: #555; }
++    #sheet-tabs { display: flex; gap: 2px; margin-top: .25rem; }
++    #sheet-tabs [role=tab] { border: 1px solid #ccc; border-top: 0; background: #f1f3f4; padding: 2px 10px; cursor: pointer; }
++    #sheet-tabs [role=tab][aria-selected=true] { background: #fff; font-weight: 600; }
+   </style>
+ </head>
+ <body>
+@@ -23,8 +27,9 @@
+     <button id="save-csv">Save CSV</button>
+   </div>
+   <p id="message"></p>
+-  <div id="formula-bar"></div>
++  <div class="bar"><span id="sheet-name"></span><div id="formula-bar"></div></div>
+   <div id="grid" tabindex="0"></div>
++  <div id="sheet-tabs" role="tablist"></div>
+   <script type="module">
+     import { createController, download } from "./io.js";
+     import { createState, mount, select, inputText } from "../grid/grid.js";
+@@ -89,8 +94,23 @@
+         show(s.selected);
+       });
+     };
++    // One tab per sheet of the open workbook; a click shows that sheet (edits then go to it: controller.edit).
++    const tabsEl = document.getElementById("sheet-tabs");
++    const drawTabs = () => {
++      tabsEl.innerHTML = "";
++      for (const name of Object.keys(controller.state.book.sheets)) {
++        const t = document.createElement("button");
++        t.setAttribute("role", "tab");
++        t.setAttribute("aria-selected", String(name === controller.state.sheet));
++        t.textContent = name;
++        t.addEventListener("click", () => { busy = busy.then(() => { controller.state.sheet = name; show("A1"); }); });
++        tabsEl.appendChild(t);
++      }
++      document.getElementById("sheet-name").textContent = controller.state.sheet;
++    };
+     const show = (ref) => {
+       selected = ref || "A1";
++      drawTabs();
+       const { computed, sheet } = controller.state;
+       shown = computed.sheets[sheet] || {};
+       const state = select(createState(computed, sheet), selected);
